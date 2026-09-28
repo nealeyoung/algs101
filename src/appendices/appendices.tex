@@ -30,11 +30,16 @@ then links to the assignment (PDF), to a LaTeX template for writing up solutions
 and to the template opened in Overleaf.
 
 % \homework{topics}{problems}: the next homework, as a section (so that it is
-% listed in the table of contents)
+% listed in the table of contents), but with a smaller heading font (\large,
+% as for subsections) than \section's \Large, as the titles are long
+\makeatletter
+\newcommand{\homeworkSection}{\@startsection{section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}{2.3ex \@plus.2ex}{\normalfont\large\bfseries}}
+\makeatother
 \newcounter{homework}
 \newcommand{\homework}[2]{%
   \stepcounter{homework}%
-  \section[Homework \thehomework: #1]{\raggedright Homework \thehomework: #1}
+  \homeworkSection[#1]{\raggedright #1}
   \begin{enumerate}[label=\arabic*.]
   #2
   \item[] \href{\siteURL homeworks/homework_\thehomework.pdf}{PDF},
