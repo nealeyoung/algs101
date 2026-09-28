@@ -8,7 +8,7 @@ Suppose you want to know the prime factors of the following 186-digit number:
 {\footnotesize
 11679847981112819759721399310592745791658017001955007325132913837831330495881519756453703742878526148\textbackslash\\84146888067442512219413748768010657572575384986457405973985247465176041951676954461208131403777}. 
 Like every positive integer, this one has a unique set of prime factors.
-In principle you could find the factors by exhaustive search---after all, there are only finitely many possibilities.
+In principle, you could find the factors by exhaustive search---after all, there are only finitely many possibilities.
 But there are about $10^{93}$ possible factors to check,
 so that would take too long, even for a computer.
 In fact, no algorithm is known that can factor large integers
@@ -21,7 +21,11 @@ in any reasonable amount of time
 The information is (in some sense) ``there'', but it is out of reach,
 because we don't know an efficient algorithm to compute it.
 
-This kind of barrier to knowledge is common.  For example, Google has a database with details of all the roads in the United States.  From that data, Google Maps can quickly compute, say, a shortest possible route from New York City to San Francisco.  But what about a shortest possible route that \emph{visits all 50 U.S. capitols in any order}?  Nobody knows how to find such a route with a reasonable amount of computation time.
+This kind of barrier to knowledge is common.
+For example, Google has a database with details of all the roads in the United States.
+From that data, Google Maps can quickly compute, say, a shortest possible route from New York City to San Francisco.
+But what about a shortest possible route that \emph{visits all 50 U.S. capitols in any order}?
+Nobody knows how to find such a route with a reasonable amount of computation time.
 
 Whether or not we can learn a desired piece of information often depends on whether there is an \emph{efficient algorithm to solve the underlying computational problem}.  Further, for many important and easily stated problems, whether the problem has an efficient algorithm \emph{is not currently known}.  New algorithms can lead to advances in science, medicine, biology, business, and so on.  % This is a fundamental scientific frontier, one that is accessible to you sitting at a desk and working only with paper and pencil.
 
@@ -116,7 +120,7 @@ The numbering allows each step to be identified unambiguously.
 (This is useful during the proof to make it easy to tell the reader which previous steps a particular step follows from.
 It also makes communicating about the proof, including giving feedback on it, easier.)
 
-In long-form proofs, assumptions are explicitly managed by using what we call \emph{blocks}.  
+In long-form proofs, assumptions are explicitly managed by using what we call \emph{blocks}.
 Each block introduces an assumption, which then holds for the scope of the block.
 Blocks nest like code blocks in computer programs.
 There are four block types---one for each of the four standard proof forms mentioned above. 

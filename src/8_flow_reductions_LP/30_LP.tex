@@ -50,7 +50,8 @@ so formulating a problem as an integer linear program can be an effective way to
 \begin{figure}\centering
 {\includegraphics[width=3in]{31_linear_program}}
 \caption{The two-dimensional linear program $\max\{ x + y : x, y\ge 0; x + 2y \le 10; 5x+3y \le 20\}$.
-  The feasible region the white portion of the positive quadrant.  The optimal point is marked with an asterisk.}\label{flow: fig: LP}
+The feasible region is the white portion of the positive quadrant.
+The optimal point is marked with an asterisk.}\label{flow: fig: LP}
 \end{figure}
 
 Consider the problem $\textsf{maximize } x+y$ subject to
@@ -71,8 +72,8 @@ is a $1\frac{1}{4}$-approximate solution to the integer linear program
 and a $1\frac{3}{7}$-approximate solution to the linear program.
 
 \paragraph{Algorithms for \prob{Linear Programming}.}
-% [dash 2026-09-28] discretionary hyphens in "polynomial": without the spaces around the dash, this line overflowed in the book
-\LPprob\ is efficiently solvable---there are poly\-no\-mial-time algorithms that,
+\LPprob\ is efficiently solvable.
+That is, there are poly\-no\-mial-time algorithms that,
 given any linear program, find an optimal solution.
 Historically the so-called \emph{Simplex algorithm} is the most common.
 Its worst-case run time is not polynomial, but it usually works quickly in practice.
@@ -126,7 +127,8 @@ So, in this case, this linear program always has an optimal integer solution,
 and finding one is not hard.
 
 Recall that \prob{Bipartite Matching} and \prob{Disjoint Paths} reduce in polynomial time
-to \prob{Max Flow}.  Since \prob{Max Flow} reduces to \LPprob, it follows that
+to \prob{Max Flow}.
+Since \prob{Max Flow} reduces to \LPprob, it follows that
 these two problems also reduce to \LPprob.
 As an exercise, you could try formulating each of these problems as a linear program directly.
 
