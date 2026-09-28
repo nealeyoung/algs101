@@ -511,6 +511,14 @@
     \@for\LN@tag:=prelim,proofs,matching,dc,greedy,graphs,dp,flow,np\do{%
       \externaldocument{refs/\LNfile{\LN@tag}}[\notePDF{\LN@tag}]}%
     \externaldocument{refs/book}[\siteURL lecture_notes_on_algorithms.pdf]}
+  % hyperref links a \ref to another document's label as URL#anchor; browsers'
+  % PDF viewers need URL#nameddest=anchor (the form \noteLink and \bookLink use)
+  \def\Hy@setref@link#1#2#3#4#5#6\@nil#7{%
+    \begingroup
+      \ifx\\#5\\\toks0={\hyper@@link{#5}{#4}}\else\toks0={\hyper@@link{#5}{nameddest=#4}}\fi
+      \toks1=\expandafter{#7{#1}{#2}{#3}{#4}{#5}}%
+      \edef\x{\endgroup\the\toks0 {\the\toks1 }}%
+    \x}
   \makeatother
 \fi
 
