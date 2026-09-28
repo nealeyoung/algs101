@@ -3,6 +3,7 @@
 % \newcommand{\answerDirectory}{solutions}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 \inputAnswer{problem_0_answer}
 
@@ -31,8 +32,8 @@
 % \setcounter{problem}{1}
 
 \newpage 
-\problem \emph{(Section 5.3)}
-Consider executing the \prob{Activity Selection} algorithm \textsf{rselect} (as defined in Section 5.3)
+\problem \emph{(Section \ref{greedy: sec: activity selection})}
+Consider executing the \prob{Activity Selection} algorithm \textsf{rselect} (as defined in Section \ref{greedy: sec: activity selection})
 on the following instance of the \prob{Activity Selection} problem:
 
 \[I = \{[0, 4], [2, 6], [3, 8], [7, 11], [9, 13], [10, 14], [12, 15], [12, 16], [14, 18]\}.\]
@@ -58,7 +59,7 @@ on the following instance of the \prob{Activity Selection} problem:
 
 \item What set of jobs does \textsf{rselect}$(I)$ output?
 
-\item Consider running the linear-time iterative implementation, \textsf{iselect} (Section 5.3, second definition)
+\item Consider running the linear-time iterative implementation, \textsf{iselect} (Section \ref{greedy: sec: activity selection}, second definition)
   on input $I$.  What values does the variable $\ell$ take on during the execution?  Give them in increasing order.
 
 \item Consider the following ``theorem'' and ``proof''.  Is the proof correct?
@@ -117,7 +118,7 @@ on the following instance of the \prob{Activity Selection} problem:
 %%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
 
 \newpage
-\problem\emph{(Section 5.2)}
+\problem\emph{(Section \ref{greedy: sec: making change})}
 {\small
   For each $d\in\{6,7,8,9,11\}$, 
   consider \prob{Making Change} with denominations (coin values) $\{1, 5, d\}$.
@@ -165,7 +166,7 @@ on the following instance of the \prob{Activity Selection} problem:
 %%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
 
 \newpage
-\problem \emph{(see Exercise 5.14)}\emph{(Greedy step for \prob{Puncturing Intervals})} {\small
+\problem \emph{(see Exercise \ref{greedy: exercise: puncturing intervals example})}\emph{(Greedy step for \prob{Puncturing Intervals})} {\small
 
   The \prob{Puncturing Intervals} problem is defined as follows: 
 

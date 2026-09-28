@@ -18,6 +18,7 @@ The PDFs are built from this repository by GitHub Actions and published at
 - `src/code/` — Python code
 - `src/homeworks/` — homework templates
 - `src/macros/macros.tex` — LaTeX macros shared by all of the above
+- `src/refs/` — the lecture notes' label records (made by `tools/refs.sh`), which let the homeworks refer to the notes' sections, exercises and lemmas by `\ref`, with links
 
 To build locally: `latexmk -pdf main.tex` in `src/` (or the same with any
 lecture note or homework template, in its own folder).

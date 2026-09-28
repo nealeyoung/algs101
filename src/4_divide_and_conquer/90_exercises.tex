@@ -13,7 +13,7 @@ Each previous section of this note also contains at least one exercise.
 
 \newcommand{\seg}[2]{#1\!\to\! #2}
 
-\exercise \emph{(\prob{Recursive Bus Routes})}
+\exercise\label{dc: exercise: bus routes} \emph{(\prob{Recursive Bus Routes})}
 You have been commissioned to design a new bus system that will run along Huntington Avenue.  The bus system must provide service to $n$ stops (numbered $1,2,\ldots,n$) on the eastbound route.  Commuters may begin their trip at any stop $i$ and end at any step $j$ where $1\le i < j \le n$.  Here are some naive ways to design the system:
 \begin{itemize}
 \item You could have a bus run from stop 1 to stop $n$, stopping at every stop in between. The system would be cheap because it would only require $n-1$ route segments, $\{\seg 1 2, \seg 2 3, \ldots, \seg{(n-1)}n\}$, for the entire system. However, a person traveling from stop $1$ to stop $n$ would have to wait while the bus makes $n-1$ stops.

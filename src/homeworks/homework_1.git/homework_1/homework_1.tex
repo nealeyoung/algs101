@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 \input{problem_0_answer}
 
@@ -28,7 +29,7 @@
 
 \newpage 
 
-\problem \emph{(Section 1.4)}
+\problem \emph{(Section \ref{prelim: sec: background})}
 Give the asymptotic values of the following functions, using the $\Theta$-notation.
 Give the simplest possible answer (e.g., use $\Theta(n^5)$ instead of $\Theta(2n^5)$).
 You don't have show your work, but you can if you want feedback on it
@@ -56,8 +57,8 @@ You don't have show your work, but you can if you want feedback on it
 
 \newpage 
 
-\problem\emph{(Sections 1.4 and 2.6.1)}
-Use the definition of big-O from Section 1.4 to prove the following theorem:
+\problem\emph{(Sections \ref{prelim: sec: background} and \ref{proofs: sec: exercises with solutions})}
+Use the definition of big-O from Section \ref{prelim: sec: background} to prove the following theorem:
 
 \begin{theorem}
   Suppose $f(n), g(n), h(n)$ are non-negative functions where $f(n) = O(h(n))$ and $g(n) = O(h(n))$.
@@ -106,8 +107,8 @@ Be careful to get your reasoning about the quantifiers (in the definitions of bi
 
   \end{enumerate}
   % [review 2026-09-27] fix: Section 2.6.2's only inductive long-form proof is the deliberately wrong one (Exercise 2.9); point to a correct example too
-  (For examples of inductive long-form proofs, see the proof in Section 4.7.1 of Lecture Note 4,
-  and Exercise 2.9 in Section 2.6.2, whose proof has the right form but contains an error for you to find.)
+  (For examples of inductive long-form proofs, see the proof in Section \ref{dc: sec: 1D local max} of \LN{dc},
+  and Exercise \ref{proofs: exercise: understanding induction} in Section \ref{proofs: sec: exercises without solutions}, whose proof has the right form but contains an error for you to find.)
 }
 
 \input{problem_3_answer}
@@ -124,7 +125,7 @@ Be careful to get your reasoning about the quantifiers (in the definitions of bi
 
 \newpage
 
-\problem\emph{(Section 3.1)}
+\problem\emph{(Section \ref{matching: sec: problem definition})}
 
 \begin{enumerate}[label=(\alph*)]
 
@@ -152,8 +153,8 @@ Be careful to get your reasoning about the quantifiers (in the definitions of bi
 
 \newpage
 
-\problem\emph{(Sections 3.1 and 3.7.1; Lecture Note 2)} 
-Recall the algorithm from Figure 3.2:
+\problem\emph{(Sections \ref{matching: sec: problem definition} and \ref{matching: sec: exercises with solutions}; \LN{proofs})} 
+Recall the algorithm from Figure \ref{matching: fig: other alg}:
 
 \begin{myframed}
 
@@ -228,7 +229,7 @@ Consider the following proof.
   Describe an input instance on which the algorithm fails.
   Use hospitals $X, Y, Z$ and doctors $A, B, C$.
   Describe the instance by specifying the $3\times 3$ table of mutual ranks for each pair,
-  as in the solution to Exercise 3.4.
+  as in the solution to Exercise \ref{matching: prob: before gale shapley}.
 
 \item
   Describe the execution of the algorithm on that input, and the resulting matching.

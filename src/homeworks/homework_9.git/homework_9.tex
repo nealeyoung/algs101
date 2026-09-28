@@ -3,6 +3,7 @@
 % \providecommand{\answerDirectory}{solutions}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 % Local override, kept so this homework's PDF matches its original exactly:
 % the shared macros (src/macros/macros.tex) now define answerBox differently (with an overflow check and a tick at the bottom).
@@ -40,7 +41,7 @@
 
 \newpage 
 
-\problem\emph{(Sections 7.5 and 7.6; Lecture Note 2)}
+\problem\emph{(Sections \ref{dp: sec: subset sum} and \ref{dp: sec: knapsack}; \LN{proofs})}
 
 Consider the following problem, \prob{Counting Subset Sums}:
 
@@ -76,7 +77,7 @@ The correct output for the given input is $N(n, T)$.
 
 \item
   Complete the partial long-form proof of the lemma given in the template.
-  You can use a proof structure similar to the one for the long-form proof of correctness for \prob{Knapsack} in Section 7.6.
+  You can use a proof structure similar to the one for the long-form proof of correctness for \prob{Knapsack} in Section \ref{dp: sec: knapsack}.
 
 \end{enumerate}
 
@@ -106,7 +107,7 @@ at \url{https://www.hackerrank.com/nealeyoung-algs101-subset-sums-and-piles}
 
 %%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
 
-\problem\emph{(Sections 7.5 and 7.6)} \GradescopeComment{This should be on page 4 (top) of your PDF.}
+\problem\emph{(Sections \ref{dp: sec: subset sum} and \ref{dp: sec: knapsack})} \GradescopeComment{This should be on page 4 (top) of your PDF.}
 
 Design a dynamic-programming algorithm for \prob{Smallest Subset Sum}:
 \begin{mylist}
@@ -123,7 +124,7 @@ Recall that the minimum of the empty set is $\infty$.
 \begin{enumerate}[label=(\alph*)]
 
 \item 
-  Per Section 7.4,
+  Per Section \ref{dp: sec: four steps},
   define the subproblems that your algorithm solves for a given input $(v=(v_1,\ldots, v_n), T)$.
 
 \item Which subproblem gives the final answer?
@@ -156,7 +157,7 @@ You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs10
 
 \newpage
 
-\problem\emph{(Section 7.8)}
+\problem\emph{(Section \ref{dp: sec: LCS})}
 
 Design an $O(\ell m n)$-time dynamic-programming algorithm for the \prob{Three-Way LCS} problem:
 \begin{mylist}
@@ -167,7 +168,7 @@ Design an $O(\ell m n)$-time dynamic-programming algorithm for the \prob{Three-W
 \end{mylist}
 
 \begin{enumerate}[label=(\alph*)]
-\item Per Section 7.4, define the subproblems the algorithm solves given input $(A[1..\ell], B[1..m], C[1..n])$.
+\item Per Section \ref{dp: sec: four steps}, define the subproblems the algorithm solves given input $(A[1..\ell], B[1..m], C[1..n])$.
 \item Which subproblem gives the final answer? 
 \item State the recurrence relation, including boundary cases.
 \item What is the running time of the resulting (iterative, or recursive and memoized) algorithm?

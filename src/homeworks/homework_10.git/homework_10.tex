@@ -3,6 +3,7 @@
 % \providecommand{\answerDirectory}{solutions}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 % Local override, kept so this homework's PDF matches its original exactly:
 % the shared macros (src/macros/macros.tex) now define answerBox differently (with an overflow check and a tick at the bottom).
@@ -40,7 +41,7 @@
 
 \newpage 
 
-\problem\emph{(Section 8.2)}
+\problem\emph{(Section \ref{flow: sec: reductions})}
 In the ruins of Pompeii, the \href{https://en.wikipedia.org/wiki/House_of_the_Tragic_Poet#Vestibule}{House of the Tragic Poet} has a famous mosaic floor proclaiming ``Beware of the Dog.''   In  Boston, a less tragic and wealthier poet has commissioned a mosaic to be built from 1kg bars of solid gold, each 80mm by 40mm.  To know whether her desired mosaic can be built in this way, the poet needs to solve the following problem:
 
 \begin{mylist}
@@ -115,7 +116,7 @@ In the ruins of Pompeii, the \href{https://en.wikipedia.org/wiki/House_of_the_Tr
   in polynomial time.
   Your algorithm may call $B$ and $R$ as subroutines.  You don't need to define $B$ or define $R$.
   Your pseudo-code should have just a few short lines.
-  \emph{Hint: Section 8.2.4, Lemma 8.6.}
+  \emph{Hint: Section \ref{flow: sec: key properties of reductions}, Lemma \ref{flow: reduction}.}
 
   You can use notation such as $B(G, k)$ to denote executing $B$ on a given instance $(G, k)$ of Bipartite Matching,
   and returning the result (`yes' or `no') as the value of the expression $B(G, k)$.
@@ -143,7 +144,7 @@ In the ruins of Pompeii, the \href{https://en.wikipedia.org/wiki/House_of_the_Tr
 
 %%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
 
-\problem\emph{(Section 8.3)} \GradescopeComment{This should be on page 5 (top) of your PDF.}
+\problem\emph{(Section \ref{flow: sec: LP})} \GradescopeComment{This should be on page 5 (top) of your PDF.}
 
 {\small
   
@@ -164,7 +165,7 @@ Find the optimal solution for each of the following linear programs:
   }\parbox[t]{3in}{
     Hint: Since there are only two variables in the linear program, 
     you can plot the constraints in two dimensions on paper,
-    following the example in Section 8.3, Figure 8.5.
+    following the example in Section \ref{flow: sec: LP}, Figure \ref{flow: fig: LP}.
   }
 
 \item
@@ -192,7 +193,7 @@ Find the optimal solution for each of the following linear programs:
         \pi_t - \pi_s & \le & 6 \\
       \end{eqnarray*}
     }}{\parbox[t]{3in}{
-      Hint: Apply Section 8.3.3, Lemma 8.12 to the graph below:
+      Hint: Apply Section \ref{flow: sec: shortest path as LP}, Lemma \ref{flow: lemma: dual LP value} to the graph below:
 
       \centerline{
         \adjustbox{valign=t}{
@@ -231,7 +232,7 @@ Find the optimal solution for each of the following linear programs:
 \newpage 
 
 \refstepcounter{problem}
-\problem[3 part (i)] \emph{(Section 8.1)}
+\problem[3 part (i)] \emph{(Section \ref{flow: sec: max flow})}
 \textbf{\em Do this OR Problem 3 part (ii), not both.}
 
 Define an edge $(u', w')$ of an $s-t$ flow network $G=(V,E)$ to be \emph{critical} 
@@ -366,7 +367,7 @@ Please cite them clearly when you do.
 
 \newpage
 
-\problem[3 part (ii)] \emph{(Section 8.1)}
+\problem[3 part (ii)] \emph{(Section \ref{flow: sec: max flow})}
 \textbf{\em Do this OR Problem 3 part (i), not both.}
 
 Give a long-form proof of the conjecture below,
@@ -381,14 +382,14 @@ suggested by a student in Tuesday's class:
 \end{conjecture}
 
 Recall that $(R, V\setminus R)$ is itself a min-capacity $s$-$t$ cut.
-(See e.g.~the proof of Theorem 8.2 in Section 8.1.4.)
+(See e.g.~the proof of Theorem \ref{flow: theorem: max-flow min-cut} in Section \ref{flow: sec: max-flow min-cut consequences}.)
 One interesting consequence of the conjecture is that,
 for any two max flows $f$ and $f'$,
 the set of vertices reachable from $s$ in $G_f$
 is the same as the set of vertices reachable from $s$ in $G_{f'}$,
 even if $f$ and $f'$ are different flows.
 
-In your proof, use the following notation, as defined in Section 8.1:
+In your proof, use the following notation, as defined in Section \ref{flow: sec: max flow}:
 \begin{mylist}
 \item[$|f|$:] The value of a given flow $f$.
 \item[$G_f$:] The residual graph for a given flow $f$.
@@ -398,7 +399,7 @@ In your proof, use the following notation, as defined in Section 8.1:
 \item[$\capac(S, T)$:] The capacity of an $s$-$t$ cut $(S, T)$ (that is, the total capacity on edges in $E(S, T)$).
 \end{mylist}
 
-And use the following observation, from the proof of Lemma 8.2:
+And use the following observation, from the proof of Lemma \ref{flow: weak}:
 \begin{observation}\label{obs: lemma 2}
   For any $s$-$t$ flow $f$ and $s$-$t$ cut $(S, T)$,
   $f(S, T) \le \capac(S, T)$ and $f(T, S) \ge 0$.  

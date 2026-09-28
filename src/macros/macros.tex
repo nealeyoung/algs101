@@ -411,7 +411,7 @@
 % \codeSection{path, path, ...}: the lecture note's last section, listing its code
 \newcommand{\codeSection}[1]{%
   \newpage
-  \section{Python code}\doHeader{Python code}
+  \section{Python code}\label{\LNtag{\currentLN}: sec: code}\doHeader{Python code}
   This section lists the Python code for this lecture note.
   Click on a file's name to open the file on GitHub.
   Copying code from GitHub is more reliable than copying it from this PDF,
@@ -446,6 +446,7 @@
 
 % load hyperref last to avoid conflicts; long URLs may also break after hyphens
 \PassOptionsToPackage{hyphens}{url}
+\ifdefined\BookMode\else\usepackage{xr-hyper}\fi   % for \lectureNoteRefs (homeworks), below
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -497,6 +498,21 @@
   \ifnum\LNnumber{#1}=\currentLN\relax Lecture Note~\LNnumber{#1}%
   \else\href{\notePDF{#1}}{Lecture Note~\LNnumber{#1}}\fi}
 \pdfstringdefDisableCommands{\def\LN#1{Lecture Note \LNnumber{#1}}}
+
+% Homeworks refer to the notes' sections, exercises and lemmas by \ref: each
+% homework's main file says \lectureNoteRefs after \input{macros}.  A homework
+% folder has a link refs/ to src/refs/, which holds each note's label records
+% (made by tools/refs.sh from the notes' builds).  Read with xr-hyper, they make
+% \ref{greedy: exercise: ...} give the exercise's number in the published note,
+% linked to it there; labels only the book has (its appendices) link to the book.
+\ifdefined\BookMode\else
+  \makeatletter
+  \newcommand{\lectureNoteRefs}{%
+    \@for\LN@tag:=prelim,proofs,matching,dc,greedy,graphs,dp,flow,np\do{%
+      \externaldocument{refs/\LNfile{\LN@tag}}[\notePDF{\LN@tag}]}%
+    \externaldocument{refs/book}[\siteURL lecture_notes_on_algorithms.pdf]}
+  \makeatother
+\fi
 
 % Book mode: main.tex defines \BookMode before \input{macros} to combine the
 % lecture notes into one report-class document, one chapter per note.

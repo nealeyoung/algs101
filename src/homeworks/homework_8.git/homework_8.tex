@@ -8,6 +8,7 @@
 \providecommand{\REPLACEME}{ \textcolor{red}{\ensuremath{\star \cdots \star}}}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 
 \inputAnswer{problem_0_answer}
@@ -38,7 +39,7 @@
 
 \newpage 
 
-\problem\emph{(Lecture Note 7)}
+\problem\emph{(\LN{dp})}
 You are a freelancer who has to choose which jobs to take on each of $n$ days.  
 On each day $i\in\{1,2,\ldots,n\}$ you have three options---take a \emph{light} job, take a \emph{heavy} job, or take no job.
 Your pay for the day $i$ is $\ell_i$ if you take a light job, $h_i$ if you take a heavy job, and nothing if you take no job.
@@ -97,7 +98,7 @@ Explain precisely in at most four lines why your recurrence relation is correct.
 \item
 
 Give pseudo-code for the resulting iterative dynamic-programming algorithm, for computing $M(n)$, given $(\ell, h)$.
-Follow the guidelines in Lecture Note 1 and the examples in Lecture Note 7.
+Follow the guidelines in \LN{prelim} and the examples in \LN{dp}.
 
 For readability, use mathematical expressions (such as a sums, maximums, etc.)
 that any competent programmer could implement in an obvious way,
@@ -126,7 +127,7 @@ You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs10
 
 %%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
 
-\problem\emph{(Lecture Note 7)}
+\problem\emph{(\LN{dp})}
 Consider the following problem:
 
 \begin{mylist}
@@ -316,7 +317,7 @@ You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs10
 \newpage
 
 \small
-\problem\emph{(Lecture Note 7)}
+\problem\emph{(\LN{dp})}
 Design a dynamic-programming algorithm for the following problem:
 
 \noindent\textbf{input:} A sequence $(a_1, a_2, \ldots, a_n)$ of $n$ non-negative numbers, defining the following ``Game of Piles''.
@@ -338,7 +339,7 @@ Each player's score is the negation of the opponents score, so by playing to max
 \begin{enumerate}[label=(\alph*)]
   \item
 
-Per Section 7.4, define the subproblems your algorithm solves.
+Per Section \ref{dp: sec: four steps}, define the subproblems your algorithm solves.
 Which is the final answer?
 
 \item
@@ -420,7 +421,7 @@ This kind of reasoning defines ``optimal play'' for the general case.   Assuming
 
 \newpage
 
-\problem\emph{(Exercise 5.13)}
+\problem\emph{(Exercise \ref{greedy: exercise: reverse greedy MST})}
 Here is a greedy \prob{Minimum Spanning Tree} algorithm:
 
 \begin{myframed}
@@ -438,7 +439,7 @@ Here is a greedy \prob{Minimum Spanning Tree} algorithm:
 \end{myframed}
 
 Complete the incomplete proof of correctness for this algorithm that is given in the template.
-You may wish to review the proof of correctness of Prim's MST algorithm in Section 5.9.1.
+You may wish to review the proof of correctness of Prim's MST algorithm in Section \ref{greedy: sec: prims}.
 We will use the following observation:
 
 % [review 2026-09-27] fix: removed \setcounter{observation}{6}, which numbered this observation to match an old numbering of Lecture Note 5

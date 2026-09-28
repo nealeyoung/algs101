@@ -21,6 +21,8 @@ problem_XX_answer.tex --- Edit each file of this form to add your answers for Pr
    Make sure that no \REPLACEME placeholders remain when you are done.
 
 macros.tex --- Don't edit it.  It loads some LaTeX packages and defines some macros.  
+
+refs/ --- Don't edit.  Where the homework refers to a section, exercise or lemma of the lecture notes, its number comes from here.
 first_page.tex --- Don't edit it. It contains the instructions on the first page.  
 
 

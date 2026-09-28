@@ -770,7 +770,7 @@ So the total time will be $O((m+n)\log n)$, where $m=|E|$ and $n=|V|$.
 
 \paragraph{Exercises without solutions}
 
-\exercise \emph{(Simulate Prim)} % CS 3000 F18 HWK 7 Problem 4
+\exercise\label{greedy: exercise: simulate Prim} \emph{(Simulate Prim)} % CS 3000 F18 HWK 7 Problem 4
 Manually simulate Prim's algorithm (from the lecture notes) on the graph $G$ below, starting from source $s$.
 List the edges that the algorithm chooses, in the order that it chooses them.
 
@@ -809,7 +809,7 @@ List the edges that the algorithm chooses, in the order that it chooses them.
 
 
 
-\exercise\emph{(MST proof check)}
+\exercise\label{greedy: exercise: MST proof check}\emph{(MST proof check)}
 \begin{conjecture}
   Let $G$ be any connected edge-weighted graph $G$ with at least two vertices.
   Let $v$ be any vertex,
@@ -839,7 +839,7 @@ If not, what is the first step that makes an assertion that is not necessarily t
 given the assumptions?
 Why exactly is that assertion not necessarily true?
 
-\exercise\emph{(Reverse greedy MST)}
+\exercise\label{greedy: exercise: reverse greedy MST}\emph{(Reverse greedy MST)}
 Here's another kind of greedy algorithm to consider.
 Start with all edges in the graph,
 and \emph{remove} edges one by one,

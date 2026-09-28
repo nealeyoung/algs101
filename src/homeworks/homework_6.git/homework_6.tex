@@ -3,6 +3,7 @@
 % \providecommand{\answerDirectory}{solutions}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 \inputAnswer{problem_0_answer}
 
@@ -30,7 +31,7 @@
 
 \newpage 
 
-\problem \emph{(Exercise 6.1)}
+\problem \emph{(Exercise \ref{graphs: exercise: DFS})}
 \begin{center}
   \begin{tikzpicture}[
     every node/.style={rounded rectangle, draw},
@@ -65,7 +66,7 @@
 
 The drawing above shows a directed acyclic graph (DAG) $G=(V,E)$,
 on which the depth-first-search-based topological-sort algorithm
-from Section 6.3.5
+from Section \ref{graphs: sec: topological sort}
 has been run.
 Each node is labeled with  its discovery time and its finish time during the DFS.
 Note that the drawing above is \emph{not} the layout from the DFS forest,
@@ -109,7 +110,7 @@ has Python code for DFS and the DFS-based topological-sort algorithm.
 %%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
 
 \newpage
-\problem \emph{(Exercise 5.11)}
+\problem \emph{(Exercise \ref{greedy: exercise: simulate Prim})}
 Manually simulate Prim's algorithm (from the lecture notes) on the graph $G$ below, starting from source $s$.
 For each of the eight iterations of the algorithm,
 list the edge that the algorithm chooses in that iteration.
@@ -163,7 +164,7 @@ has Python code for Prim's algorithm.
 %%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
 
 \newpage
-\problem \emph{(Exercise 5.12)}
+\problem \emph{(Exercise \ref{greedy: exercise: MST proof check})}
 Consider the following conjecture and attempted proof.
 
 \begin{conjecture}
@@ -183,7 +184,7 @@ Consider the following conjecture and attempted proof.
     \step Let $T' = \{(v, w^*)\} \cup T \setminus \{(v, w')\}$ be obtained from $T$ by removing $(v, w')$ and adding $(v, w^*)$.
     \step Then $\weight{v, w^*}$ is strictly less than $\weight{v, w'}$.  That is, $\weight{v, w^*} < \weight{v, w'}$.  
     \step So $\weight{T'} = \weight{T} + \weight{v, w^*} - \weight{v, w'} < \weight T$.
-    \step And by Observation 5.8 (Section 5.9.1), $T'$ is a spanning tree.
+    \step And by Observation \ref{greedy: exchange} (Section \ref{greedy: sec: prims}), $T'$ is a spanning tree.
     \step By the previous two steps, the weight of spanning tree $T'$ is strictly less than the weight of $T$. 
     \step So $T$ is not a minimum spanning tree.
   \end{block}
@@ -220,7 +221,7 @@ Consider the following conjecture and attempted proof.
 %%%%%%%%%%%%%%%% PROBLEM 4  %%%%%%%%%%%%%%%%%
 
 \newpage
-\problem \emph{(Exercise 5.8)}
+\problem \emph{(Exercise \ref{greedy: exercise: simulate Dijkstra})}
 \begin{center}
   \begin{tikzpicture}[
     vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw},
@@ -247,7 +248,7 @@ Consider the following conjecture and attempted proof.
 
 \begin{enumerate}[label=(\alph*)]
 
-\item Simulate Dijkstra's algorithm (Section 5.8)
+\item Simulate Dijkstra's algorithm (Section \ref{greedy: sec: dijkstra})
   on the directed graph $G$ above with source $s$.
   In each iteration of the algorithm,
   for what vertex $v$ does the algorithm set $d[v]$
@@ -288,7 +289,7 @@ has Python code for Dijkstra's algorithm.
 \newpage 
 
 \noindent\adjustbox{valign=t}{\parbox{4.6in}{
-\problem \emph{(Exercise 6.5)}
+\problem \emph{(Exercise \ref{graphs: exercise: street sweeper})}
 You have been hired to clean up the streets of Boston using your street sweeper.  In order to do the job for the lowest cost, you want to devise a way to sweep each street once in each direction.  That is, for each street, you go up the street once and down the street once to sweep each side of the road. All roads are two way.
 To find a good route, you formally define the following \prob{Street Sweeper} problem:
 }}\adjustbox{valign=t}{

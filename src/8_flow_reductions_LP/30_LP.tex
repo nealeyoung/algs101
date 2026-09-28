@@ -203,7 +203,7 @@ Also, there is always an optimal integer solution to this linear program:
 \providecommand{\inbrs}{\text{\sf in}} 
 \providecommand{\onbrs}{\text{\sf out}} 
 
-\subsection{Shortest $s$-$t$ path as a linear program}
+\subsection{Shortest $s$-$t$ path as a linear program}\label{flow: sec: shortest path as LP}
 Given a directed graph $G=(V, E)$ with non-negative edge weights,
 and two vertices $s$ and $t$,
 consider problem of finding a shortest path from $s$ to $t$ in $G$.
@@ -271,7 +271,7 @@ It follows that the value of the linear program (that is, the optimal objective 
 is $\dist s t$.
 Next we consider the dual LP, and show the same for it:
 
-\begin{lemma}
+\begin{lemma}\label{flow: lemma: dual LP value}
   The value of the dual LP is $\dist s t$.
 \end{lemma}
 \begin{proof}

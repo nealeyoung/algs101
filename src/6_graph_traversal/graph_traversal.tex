@@ -340,7 +340,7 @@ are tree edges (or reverses of tree edges).  Since the trees in the DFS forest d
 It follows that an undirected graph $G$ has a cycle
 if and only if DFS on $G$ produces such a back edge.
 
-\subsection{Discovery times and finish times}
+\subsection{Discovery times and finish times}\label{graphs: sec: discovery and finish times}
 
 Executing DFS on a graph implicitly defines
 a \emph{discovery time} $d[u]$ and a \emph{finish time} $f[u]$ for each vertex $u\in V$.
@@ -537,7 +537,7 @@ For a proof, see \CLRS Chapter 22.5.
 
 \paragraph{Exercises without solutions}
 
-\exercise\emph{(DFS)}
+\exercise\label{graphs: exercise: DFS}\emph{(DFS)}
 
 \begin{center}
   \begin{tikzpicture}[
@@ -669,7 +669,7 @@ thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
 % \newpage 
 \noindent
 \adjustbox{valign=t}{\parbox{4.6in}{
-\exercise\emph{(DFS)} Simulate DFS (as described in this note) on the graph to the right.
+\exercise\label{graphs: exercise: simulate DFS}\emph{(DFS)} Simulate DFS (as described in this note) on the graph to the right.
 When there are multiple choices for the next node to visit, break ties alphabetically
 (choose $a$ before $b$, choose $b$ before $c$, etc.).
 
@@ -721,7 +721,7 @@ When there are multiple choices for the next node to visit, break ties alphabeti
   If not, how many strongly connected components does the graph have?  List them all.
 \end{enumerate}
 
-\exercise \emph{(Street Sweeper)}
+\exercise\label{graphs: exercise: street sweeper} \emph{(Street Sweeper)}
 You have been hired to clean up the streets of Boston using your street sweeper.  In order to do the job for the lowest cost, you want to devise a way to sweep each street once in each direction.  (That is, for each street, you go up the street once and down the street once to sweep each side of the road.)  All roads are two way.  To find a good route,
 you formally define the following problem
 \begin{mylist}

@@ -20,6 +20,8 @@ previously existing text colored black, and the text you add colored blue, to ma
 grading easier.  
 
 macros.tex --- This file loads some LaTeX packages and defines some macros.  Don't edit it.
+
+refs/ --- Don't edit.  Where the homework refers to a section, exercise or lemma of the lecture notes, its number comes from here.
 first_page.tex --- Contains the instructions on the first page.  Don't edit it.
 
 

@@ -12,3 +12,4 @@ _site/
 
 # Python
 __pycache__/
+!src/refs/*.aux

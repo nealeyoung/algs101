@@ -3,6 +3,7 @@
 % \providecommand{\answerDirectory}{solutions}
 
 \input{macros}
+\lectureNoteRefs   % the lecture notes' section, exercise and lemma numbers, from refs/
 
 \inputAnswer{problem_0_answer}
 
@@ -31,7 +32,7 @@
 % \setcounter{problem}{1}
 
 \newpage
-\problem \emph{(Greedy algorithm for \prob{Puncturing Intervals}; see Exercise 5.14)}
+\problem \emph{(Greedy algorithm for \prob{Puncturing Intervals}; see Exercise \ref{greedy: exercise: puncturing intervals example})}
 
   Recall the \prob{Puncturing Intervals} problem from Homework 4: 
 
@@ -69,23 +70,23 @@
 
   \begin{enumerate}[label=(\alph*)]
   \item Give a long-form proof of Lemma~\ref{lemma: pi greedy choice}.
-    As much as possible, your proof should mimic the structure of the proof of Lemma 5.4 (for \prob{Activity Selection})
-    in Lecture Note 5.
+    As much as possible, your proof should mimic the structure of the proof of Lemma \ref{greedy: activity selection: first} (for \prob{Activity Selection})
+    in \LN{greedy}.
 
   \item Give a long-form proof of Lemma~\ref{lemma: pi recurse}.
-    As much as possible, your proof should mimic the structure of the proof of Lemma 5.5 (for \prob{Activity Selection})
-    in Lecture Note 5.
+    As much as possible, your proof should mimic the structure of the proof of Lemma \ref{greedy: lemma: recurse} (for \prob{Activity Selection})
+    in \LN{greedy}.
 
   \item Following the lemmas, 
     define a correct recursive algorithm \textsf{rpuncture} for \prob{Puncturing Intervals}.
     As much as possible, your algorithm should mimic the structure
     of the \textsf{rselect} algorithm for \prob{Activity Selection}
-    in Section 5.3.
+    in Section \ref{greedy: sec: activity selection}.
     Define the algorithm precisely in words, then give pseudo-code for it.
 
   \item Prove Theorem~\ref{thm: pi correctness}, below, for your algorithm.
     As much as possible, your proof should mimic the structure
-    of the proof of Theorem 5.2 (for \textsf{rselect}) in Lecture Note 5.
+    of the proof of Theorem \ref{greedy: theorem: rselect} (for \textsf{rselect}) in \LN{greedy}.
     But you must give your proof in long form, following the template given here.
 \end{enumerate}
 
@@ -127,7 +128,7 @@
 %%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
 
 \noindent\adjustbox{valign=t}{\parbox{4.6in}{
-\problem\label{exercise: BFS}\emph{(Exercise 6.3; BFS)}
+\problem\label{exercise: BFS}\emph{(Exercise \ref{graphs: exercise: BFS}; BFS)}
 Simulate BFS on the graph to the right, starting from the node $a$.
 When there are multiple choices for the next node to visit, break ties alphabetically
 (choose $b$ before $c$, etc.).
@@ -178,7 +179,7 @@ thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
 
 \newpage 
 \noindent\adjustbox{valign=t}{\parbox{4.6in}{\small
-    \problem\emph{(Exercise 6.4; DFS)}
+    \problem\emph{(Exercise \ref{graphs: exercise: simulate DFS}; DFS)}
     Simulate DFS (as described in the lecture notes) on the graph to the right.
     When there are multiple choices for the next node to visit, break ties alphabetically
     (choose $a$ before $b$, choose $b$ before $c$, etc.).
@@ -187,7 +188,7 @@ thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
     \item What is the parent of each node in the resulting DFS forest?
       \\(Write ``none'' for each root.)
       
-    \item What's the post-order number (finishing time, Section 6.3.4), of each node?
+    \item What's the post-order number (finishing time, Section \ref{graphs: sec: discovery and finish times}), of each node?
 
     \item Which edges are forward edges?  Back edges?  Cross edges? 
 
