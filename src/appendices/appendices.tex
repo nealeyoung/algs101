@@ -29,20 +29,21 @@ and the topic of each of its problems,
 then links to the assignment (PDF), to a LaTeX template for writing up solutions (a zip file),
 and to the template opened in Overleaf.
 
-% \homework{topics}{problems}: the next homework (numbered by the list)
+% \homework{topics}{problems}: the next homework, as a section (so that it is
+% listed in the table of contents)
+\newcounter{homework}
 \newcommand{\homework}[2]{%
-  \item #1
+  \stepcounter{homework}%
+  \section[Homework \thehomework: #1]{\raggedright Homework \thehomework: #1}
   \begin{enumerate}[label=\arabic*.]
   #2
-  \item[] \href{\siteURL homeworks/homework_\arabic{enumi}.pdf}{PDF},
-    \href{\siteURL homeworks/homework_\arabic{enumi}.zip}{template},
-    \href{https://www.overleaf.com/docs?snip_uri=\siteURL homeworks/homework_\arabic{enumi}.zip}{Overleaf}
+  \item[] \href{\siteURL homeworks/homework_\thehomework.pdf}{PDF},
+    \href{\siteURL homeworks/homework_\thehomework.zip}{template},
+    \href{https://www.overleaf.com/docs?snip_uri=\siteURL homeworks/homework_\thehomework.zip}{Overleaf}
   \end{enumerate}}
 \newcommand{\hwproblem}[1]{\item #1}
 
-\begin{enumerate}[label=\arabic*., itemsep=1.2ex]
 \input{appendices/homework_list}
-\end{enumerate}
 
 \newpage
 \input{appendices/latex_for_homeworks}
