@@ -116,7 +116,7 @@ Throughout these notes, we use the following 4-step recipe for presenting each a
 
 \paragraph{2. Define the algorithm.}  Clearly specify the steps that the algorithm takes on any input.
  Describe the algorithm precisely in English, or pseudo-code if necessary for precision.
- Avoid giving code --- algorithms are not programs.  They are read by people, not computers.
+ Avoid giving code---algorithms are not programs.  They are read by people, not computers.
  A competent programmer should be able to easily translate your description into code.
  Learning to describe algorithms well is one of the main goals of these notes.
  Section~\ref{prelim: sec: algorithm} of this lecture note has more details.
@@ -124,15 +124,15 @@ Throughout these notes, we use the following 4-step recipe for presenting each a
 \paragraph{3. Bound the worst-case run-time.}
   We model the worst-case run time as a function $T$ such that, for any positive integer $N$, $T(N)$ is the maximum, over all inputs of size $N$, of the number of steps the algorithm takes on that input.  Then we give big-O bounds on $T(N)$ in terms of $N$.
   
-  The \emph{actual} number of steps in practice will depend on implementation details (for example: the programming language used, the compiler, and even the particular computer that the implementation runs on).  We want our analysis to be independent of these implementation details.  Generally speaking, these factors will affect the number of steps by at most some \emph{constant factor}.  Also, we are mainly concerned about the run-time for \emph{large} inputs.  For these reasons, we give big-O bounds --- asymptotic bounds, neglecting constant factors and lower-order terms --- on the run time.
+  The \emph{actual} number of steps in practice will depend on implementation details (for example: the programming language used, the compiler, and even the particular computer that the implementation runs on).  We want our analysis to be independent of these implementation details.  Generally speaking, these factors will affect the number of steps by at most some \emph{constant factor}.  Also, we are mainly concerned about the run-time for \emph{large} inputs.  For these reasons, we give big-O bounds---asymptotic bounds, neglecting constant factors and lower-order terms---on the run time.
 
 \paragraph{4. Prove that the algorithm is correct.} (That is, for every input, it returns a correct output.)
 
-In these notes, we model algorithms and the objects they work with mathematically.  That is, we define algorithms as well-defined processes that operate in a precise way on mathematical objects such as numbers, strings, trees, graphs, sequences, sets, and so on.  The advantage of this approach is \emph{precision} --- when we think about or discuss an algorithm, we can understand, and agree on, precisely what we mean.  For example, we know precisely what we mean by an assertion such as ``Algorithm $A$ is correct'' (assuming Algorithm $A$ is itself well-defined).
+In these notes, we model algorithms and the objects they work with mathematically.  That is, we define algorithms as well-defined processes that operate in a precise way on mathematical objects such as numbers, strings, trees, graphs, sequences, sets, and so on.  The advantage of this approach is \emph{precision}---when we think about or discuss an algorithm, we can understand, and agree on, precisely what we mean.  For example, we know precisely what we mean by an assertion such as ``Algorithm $A$ is correct'' (assuming Algorithm $A$ is itself well-defined).
 
 A ``proof'' of such a statement is just a careful explanation of a precise line of reasoning by which it is clear that the statement is true (e.g., why, on \emph{every} possible input, the algorithm produces a correct output).  The guiding standard for written proofs is that, just by reading the proof, the intended reader should be able to \emph{easily} understand and verify that reasoning, step by step.  (As an aside: this means that the level of detail required in a proof depends on the intended reader.)
 
-Learning to read and verify proofs about algorithms is another main goal.  As discussed later, learning to do this is similar to learning a new language and culture --- proofs are expressed using various standard conventions, and to understand or present a proof you must know these conventions.  You'll need to immerse yourself in this language and culture.  At first, you may feel that you have been thrown into the deep end of the pool, but \emph{don't be intimidated}.  Many algorithms work in intuitively accessible ways, with intuitively accessible and familiar structures.  With exposure, as you learn the standard conventions and terminology, you will find algorithms, and reasoning about them, to be natural.
+Learning to read and verify proofs about algorithms is another main goal.  As discussed later, learning to do this is similar to learning a new language and culture---proofs are expressed using various standard conventions, and to understand or present a proof you must know these conventions.  You'll need to immerse yourself in this language and culture.  At first, you may feel that you have been thrown into the deep end of the pool, but \emph{don't be intimidated}.  Many algorithms work in intuitively accessible ways, with intuitively accessible and familiar structures.  With exposure, as you learn the standard conventions and terminology, you will find algorithms, and reasoning about them, to be natural.
 
 We'll do proofs in what we call \emph{long-form} format,
 which is described in \LN{proofs}, on proofs.
@@ -152,7 +152,7 @@ Read that lecture note after this one.
 % \item[4.] Prove correctness. 
 % \end{mylist}
 
-This section is about how to do the second step --- defining the algorithm.
+This section is about how to do the second step---defining the algorithm.
 This step must present the algorithm in a precise and unambiguous way, so that from reading what is written the reader can know exactly what the algorithm does.  The definition should be (i) \emph{precise} and (ii) \emph{accessible} (easy to read).
 For any competent programmer, translating the description into code in their favorite programming language should be a straightforward task.  Describing algorithms well takes a lot of practice.  Here is some guidance.
 
@@ -162,7 +162,7 @@ and is familiar with common algorithm-design techniques
 Also, it should assume that the reader understands the problem definition.
 
 But it is not always easy to give a description in English that specifies the details in a completely precise way.
-If necessary, to make sure the details are clear, it often helps to follow the English description by \emph{pseudo-code} --- for the algorithm or parts of it.  But what is pseudo-code?
+If necessary, to make sure the details are clear, it often helps to follow the English description by \emph{pseudo-code}---for the algorithm or parts of it.  But what is pseudo-code?
 
 \subsection{How to write pseudo-code}\label{prelim: sec: pseudo-code}\doHeader{Pseudo-code}
 
@@ -304,11 +304,8 @@ Your first tentative solutions are likely to have gaps or other errors that you 
 So, you may need to revisit your first drafts after a day or so to find and fix gaps or errors.
 That is, there will be several phases: understanding the problem, coming up with ideas,
 developing them, and checking and correcting them. Each phase will take time.
-So, you should read the problems and start thinking about them early ---
-if they are assigned in a course, at least a week before they are due for the harder problems ---
-and then work on them again several times, a day or two apart.
-If you can get help (for example, office hours or a discussion forum), consider using it in each phase ---
-early on to get clarification on your understanding of the problem,
+So, you should read the problems and start thinking about them early---if they are assigned in a course, at least a week before they are due for the harder problems---and then work on them again several times, a day or two apart.
+If you can get help (for example, office hours or a discussion forum), consider using it in each phase---early on to get clarification on your understanding of the problem,
 midway to get feedback on the direction you are pursuing,
 and towards the end to get feedback on your full attempts.
 

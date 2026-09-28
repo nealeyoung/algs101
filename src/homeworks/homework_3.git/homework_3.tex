@@ -130,7 +130,7 @@
       \step Let $A[i', j']$ be a neighbor of $A[i,j]$ in $A$ with $A[i', j'] > A[i,j]$.  (It exists, as $A[i,j]$ is not a local max.)
 
       \step Partition $A \setminus X$ (the array $A$, minus the cells in $X$) around $X$ into its four
-      $(n-1)/2 \times (n-1)/2$ quadrants --- the upper left, upper right, lower left, and lower right --- in the natural way.
+      $(n-1)/2 \times (n-1)/2$ quadrants---the upper left, upper right, lower left, and lower right---in the natural way.
 
       \step Among those, let $A'$ be the quadrant containing the cell $A[i', j']$.
 
@@ -259,7 +259,7 @@ Here are two naive ways to design the system:
   
 \end{itemize}
 
-Using divide and conquer, you will find a compromise --- a set of at most $N \log_2 N$ route segments, with the property that for any stops $i$ and $j > i$, the \emph{hop length} from $i$ to $j$ in the set is at most 2.
+Using divide and conquer, you will find a compromise---a set of at most $N \log_2 N$ route segments, with the property that for any stops $i$ and $j > i$, the \emph{hop length} from $i$ to $j$ in the set is at most 2.
 That is, either the (direct) route segment $\segment i j$ is in the set (so the hop length is 1),
 or, for some $m$ with $i<m<j$, the set contains the two segments $\segment i m$ and  $\segment m j$
 (so the hop length is 2).

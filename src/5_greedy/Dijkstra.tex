@@ -61,8 +61,7 @@ The \prob{Single-Source Shortest Paths} problem is defined as follows:
   For each vertex $v\in V$,
   the shortest-path distance from $s$ to $v$.
 \end{mylist}
-(For computing shortest paths, any undirected graph $G$ can be considered as a directed graph
---- just replace each undirected edge $(u,v)$ by the two directed edges $(u,v)$ and $(v,u)$.)
+(For computing shortest paths, any undirected graph $G$ can be considered as a directed graph---just replace each undirected edge $(u,v)$ by the two directed edges $(u,v)$ and $(v,u)$.)
 
 \paragraph{Algorithm.}
 Since we are looking for a greedy algorithm,
@@ -197,8 +196,7 @@ Such an algorithm would have the following general form:
 \end{samepage}
 
 As long as it can somehow correctly set $d[w'] = \dist s {w'}$ in Step 3.2,
-it will maintain the greedy invariant ---
-that the partial solution so far is correct:
+it will maintain the greedy invariant---that the partial solution so far is correct:
 
 \smallskip
 

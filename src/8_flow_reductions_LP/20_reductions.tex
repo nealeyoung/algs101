@@ -13,7 +13,7 @@ then illustrate the concept by describing how to reduce some new problems to \pr
 
 \paragraph{Decision problems (definition).} 
 When studying reductions, for simplicity and for historical reasons,
-we usually cast the problems of interest as \emph{decision problems} --- problems with yes/no answers.
+we usually cast the problems of interest as \emph{decision problems}---problems with yes/no answers.
 That is, for any input, the output is either `\textsf{yes}' or `\textsf{no}'.
 Most computational problems can easily be recast in this way.
 For example, here is the decision version of \prob{Max Flow}:
@@ -26,8 +26,7 @@ For example, here is the decision version of \prob{Max Flow}:
 
 \paragraph{Polynomial-time (definition).}
 The first question we consider when approaching a new computational problem
-is whether the problem has an algorithm that runs in \emph{polynomial time} ---
-that is, for every possible input, the algorithm computes a correct output
+is whether the problem has an algorithm that runs in \emph{polynomial time}---that is, for every possible input, the algorithm computes a correct output
 in time bounded by some polynomial in the size of the input.
 The degree of the polynomial can be large, as long as it's constant.
 (For example, $O(n^{1000})$ is polynomial time.  $O(n\log n)$ is also polynomial time,
@@ -76,7 +75,7 @@ To illustrate the concept, consider the following decision problem:
 Note that a \emph{bipartite} graph $G=(U, W, E)$
 is an undirected graph in which the vertices are divided into two parts (sets)  $U$ and $W$,
 and each edge $(u,w)$ in $E$ is in $U\times W$ (that is, $u$ is in $U$ and $w$ is in $W$, so all edges
-go between the parts --- no edge has both endpoints in one part).
+go between the parts---no edge has both endpoints in one part).
 
 \emph{[Consider an example for intuition.]}
 

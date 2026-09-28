@@ -67,7 +67,7 @@ To design an algorithm, first we'll prove Pascal's rule:
   (That is, $\phi(S)$ is in $\calC(n-1, k-1)$,
   and, for each $S'\in\calC(n-1,k-1)$,
   there is exactly one set $S\in\calC(n,k)$ that contains $n$
-  such that $\phi(S)=S'$ --- namely $S = S'\cup\{n\}$.)
+  such that $\phi(S)=S'$---namely $S = S'\cup\{n\}$.)
 
   \step Because there is such a bijection,
   the number of sets in $\calC(n, k)$ that contain $n$
@@ -83,7 +83,7 @@ To design an algorithm, first we'll prove Pascal's rule:
 The proof of Pascal's rule illustrates the first main principle of dynamic programming.
 Namely, to reason about a collection of objects
 (in this case the size-$k$ subsets of $\{1,\ldots,n\}$)
-the proof partitions the collection into a few types --- in this case two:
+the proof partitions the collection into a few types---in this case two:
 \begin{mylist}
 \item[(A)] Those subsets not containing the element $n$.
 \item[(B)] Those subsets containing the element $n$.
@@ -122,8 +122,7 @@ In this case, for computing $n \choose k$:
 Correctness of the algorithm follows by induction and Lemma~\ref{dp: lemma: pascal}.
 
 This seems like a classic \emph{divide-and-conquer} approach.
-But beware!  This implementation is not efficient
---- indeed, its run time is exponential!  Consider its recursion tree,
+But beware!  This implementation is not efficient---indeed, its run time is exponential!  Consider its recursion tree,
 which has branching factor two, and depth between $k$ and $n$,
 so somewhere between $2^k$ and $2^n$ nodes!
 

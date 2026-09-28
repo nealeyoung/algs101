@@ -14,7 +14,7 @@ This problem is about multiplying integers that are too large to fit in a machin
 For example, RSA encryption currently requires arithmetic on 2048-bit integers, or larger,
 while current machine words are typically 64 bits.
 
-\paragraph{Algorithm --- first attempt.}
+\paragraph{Algorithm---first attempt.}
 The standard grade-school algorithm takes time $\Theta(n^2)$.
 We want something faster.
 We start by considering the following recursive algorithm:
@@ -203,7 +203,7 @@ so multiplication and addition of two numbers can be done in constant time.
 We also assume $n$ is a power of 2
 (we can reduce the general case to this one).
 
-\paragraph{Algorithm --- first attempt.}
+\paragraph{Algorithm---first attempt.}
 The obvious algorithm takes time $O(n^3)$.
 We want time $o(n^3)$.
 

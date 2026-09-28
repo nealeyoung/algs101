@@ -219,8 +219,7 @@ Consider the following greedy algorithm for \prob{Maximum Flow}:
 \end{myframed}
 
 In Step 3, the path $p$ with positive residual capacity is called an \emph{augmenting} path.
-Computing one is easy. First delete the \emph{saturated} edges
---- those with $f[u,w] = \capOf{u,w}$.
+Computing one is easy. First delete the \emph{saturated} edges---those with $f[u,w] = \capOf{u,w}$.
 Then the possible augmenting paths (the $s$-$t$ paths with positive residual capacity)
 are the $s$-$t$ paths in the resulting graph.
 Such a path can be found (if it exists) in linear time
@@ -234,8 +233,7 @@ along the $s$-$t$ path $p$ maintains the invariant,
 because it maintains the capacity constraints and the conservation constraints.
 (Verify!)
 So, if the algorithm terminates, it returns a flow.
-Unfortunately, the algorithm doesn't work ---
-it can get stuck before it finds a maximum flow,
+Unfortunately, the algorithm doesn't work---it can get stuck before it finds a maximum flow,
 as shown in Figure~\ref{flow: fig: greedy}.
 
 \begin{figure}

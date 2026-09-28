@@ -71,7 +71,8 @@ is a $1\frac{1}{4}$-approximate solution to the integer linear program
 and a $1\frac{3}{7}$-approximate solution to the linear program.
 
 \paragraph{Algorithms for \prob{Linear Programming}.}
-\LPprob\ is efficiently solvable --- there are polynomial-time algorithms that, 
+% [dash 2026-09-28] discretionary hyphens in "polynomial": without the spaces around the dash, this line overflowed in the book
+\LPprob\ is efficiently solvable---there are poly\-no\-mial-time algorithms that,
 given any linear program, find an optimal solution.
 Historically the so-called \emph{Simplex algorithm} is the most common.
 Its worst-case run time is not polynomial, but it usually works quickly in practice.
@@ -286,8 +287,7 @@ Next we consider the dual LP, and show the same for it:
     % [review 2026-09-27] fix: the telescoping sum equals pi_t - pi_s (it was written as pi_s - pi_t, the negative of the dual objective)
     ~=~ \pi^*_t - \pi^*_s.
   \]
-  The last step follows because the sum ``telescopes'' ---
-  for each vertex $v$ on the interior of the path $P^*$,
+  The last step follows because the sum ``telescopes''---for each vertex $v$ on the interior of the path $P^*$,
   the term $\pi^*_v$ occurs once with positive sign and once with negative sign,
   and these terms cancel each other.
 
@@ -332,7 +332,7 @@ What would happen if we were to drop the explicit integrality constraint, `` $x\
 This would give a linear program instead of an integer linear program.
 But that linear program wouldn't necessarily have optimal solutions that are integer valued.
 Consider for example the \prob{Smallest Subset Sum} instance $(v=(1,3), T=2)$.
-It has no solution ---no subsequence of $v$ sums to 2.
+It has no solution---no subsequence of $v$ sums to 2.
 But the corresponding linear program has many solutions, the optimum being $x=(0, 2/3)$.
 
 \subsection{External sources on linear programming}

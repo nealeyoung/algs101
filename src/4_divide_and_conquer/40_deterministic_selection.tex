@@ -198,10 +198,9 @@ the algorithm partitions into columns of 5 something like this:
 There are $\lceil n/5\rceil$ columns.
 The last column has between 1 and 5 elements.
 After finding the $\lceil n/5\rceil$ medians of those columns in $\Theta(n)$ time
-the algorithm recursively finds the median
-of those medians ---
 % [review 2026-09-27] fix: the pivot is the m-th smallest of the medians, not the m-th largest (the k<i count below already assumes "smallest")
-specifically, the $m$th smallest, where $m=\lfloor n/10 \rfloor$,
+the algorithm recursively finds the median
+of those medians---specifically, the $m$th smallest, where $m=\lfloor n/10 \rfloor$,
 and takes that to be the pivot $p$.
 
 In the case $k>i$ in Step 6 of the algorithm, it discards $p$ and all elements smaller than $p$.

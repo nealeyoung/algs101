@@ -61,7 +61,7 @@ We argue next that there must be an optimal tree for $p$ that is in $\Trees$.
 
 First, does an optimal tree $T$ always have to have \emph{some}
 pair of leaves that are siblings?
-Yes  --- consider any deepest leaf $\ell$ in $T$;
+Yes---consider any deepest leaf $\ell$ in $T$;
 if $\ell$ doesn't have a sibling, then its parent only has one child.
 So we could replace the parent by $\ell$ and get a better tree.
 
@@ -355,8 +355,7 @@ we can store $C$ as two ordered lists:
 the first containing the original singleton subtrees $t_i, t_{i+1}, \ldots, t_n$ in $C$
 and the second containing the other subtrees (each with more than one node) in $C$.
 When we create a new subtree, we add it to the end of the second list (in constant time).
-Then we can find the minimum-frequency subtree in $C$ in constant time
---- it will be the first subtree on one of these two lists.
+Then we can find the minimum-frequency subtree in $C$ in constant time---it will be the first subtree on one of these two lists.
 %
 Here is what we have figured out:
 

@@ -40,8 +40,7 @@
 
 \problem\emph{(Lecture Note 7)}
 You are a freelancer who has to choose which jobs to take on each of $n$ days.  
-On each day $i\in\{1,2,\ldots,n\}$ you have three options
---- take a \emph{light} job, take a \emph{heavy} job, or take no job.
+On each day $i\in\{1,2,\ldots,n\}$ you have three options---take a \emph{light} job, take a \emph{heavy} job, or take no job.
 Your pay for the day $i$ is $\ell_i$ if you take a light job, $h_i$ if you take a heavy job, and nothing if you take no job.
 There is one additional constraint: for each day $i\in\{2, 3, \ldots, n\}$,
 you can take a heavy job on day $i$ only if you took no job in day $i-1$.
@@ -240,7 +239,7 @@ This gives the following iterative algorithm:
 \vspace*{-10pt}
 \paragraph{Run time.}
 By inspection, the running time is dominated by the time for the additions.
-There are $O(n|U|)$ additions --- at most one for each subproblem.
+There are $O(n|U|)$ additions---at most one for each subproblem.
 The integers that arise can be large, but no larger than $2^n$, so can be represented in $O(n)$ bits,
 so each addition can be done in $O(n)$ time.
 Hence, the algorithm runs in time $O(n^2|U|)$.
@@ -382,14 +381,14 @@ Give pseudo-code for an iterative implementation of the resulting algorithm.
   Suppose Alice starts by taking the first pile (value 2).
 
   She'll score 2 for that, and the game that remains will be 2, 5, 3, with Bob as first player.
-  Considering just that game 2, 5, 3 --- whatever Bob does, Alice will take the 5, so Bob will end up with the 2 and the 3.  So Alice will score $5-2-3 = 0$ for this sub-game.
+  Considering just that game 2, 5, 3---whatever Bob does, Alice will take the 5, so Bob will end up with the 2 and the 3.  So Alice will score $5-2-3 = 0$ for this sub-game.
   So, if Alice starts the game $2, 2, 5, 3$ by taking the 2, her total score for the game will be $2 + 0 = 2$.
  
 \item[Option 2:]
   Suppose Alice starts by taking the last pile (value 3).
 
   She'll score 3 for that, and the game that remains will be 2, 2, 5, with Bob as first player.
-  Considering just that game $2, 2, 5$ --- Bob should take the 5, then Alice will take a 2, and Bob will take the other 2.  So Alice will score $2-5-2 = -5$ for this sub-game.
+  Considering just that game $2, 2, 5$---Bob should take the 5, then Alice will take a 2, and Bob will take the other 2.  So Alice will score $2-5-2 = -5$ for this sub-game.
   So, if Alice starts the game $2, 2, 5, 3$ by taking the 3, her total score for the game will be $3 - 5 = -2$.
 \end{description}
 

@@ -142,7 +142,7 @@ it appends the vertices in level $\ell$ to the queue
 A detailed long-form proof is in an appendix to this note.
 
 Note that the edges $\{(\pi[v], v) : 0 < d[v] <\infty\}$ form
-the so-called \emph{shortest-path tree $T$} --- rooted at $s$, in which neighbors of $s$ in $G$
+the so-called \emph{shortest-path tree $T$}---rooted at $s$, in which neighbors of $s$ in $G$
 are children of $s$, neighbors of those neighbors are grandchildren, etc.
 so that, for each $\ell\ge 0$, the nodes at depth $\ell$ in $T$ are the vertices in level $\ell$ of $G$,
 and the path from $s$ to any node $v$ in $T$ is a shortest path from $s$ to $v$.
@@ -294,9 +294,7 @@ depending on how it interacts with the DFS forest:
 \item The remaining non-tree edges (in the example,~$(c,e)$ and $(f,e)$), are \emph{cross edges}.
 \end{mylist}
   
-Cross edges can only go ``right to left''
---- from a node $u$ to a node $w$ that was visited before $u$
---- because otherwise the edge $(u,w)$ would have been traversed
+Cross edges can only go ``right to left''---from a node $u$ to a node $w$ that was visited before $u$---because otherwise the edge $(u,w)$ would have been traversed
 when $u$ was visited.
 
 What about \emph{undirected} graphs?
@@ -504,7 +502,7 @@ is as follows.  Run DFS (or BFS) to find all vertices that $s$ has a path to.
 Then run DFS (or BFS) on the graph \emph{with all edges reversed} to find all vertices that have a path to $s$.
 (These will be the vertices that $s$ has a path to in the reversed graph.)
 Then the strongly connected component containing $s$
-contains those vertices $v$ in both sets --- such that $s$ has a path to $v$, and $v$ has a path to $s$.
+contains those vertices $v$ in both sets---such that $s$ has a path to $v$, and $v$ has a path to $s$.
 Thus, one can identify the strongly connected component containing $s$ in linear time.
 
 \smallskip
@@ -886,10 +884,10 @@ To start we prove some properties of distances.
   \step We will show, for each level $\ell\ge 0$, by induction on $\ell$, that
   the following three properties hold at some time $t_{\ell}$ during the execution of the while loop:
   \begin{mylist}
-  \item[$A_\ell$ ---] The queue $Q$ contains exactly those vertices in level $\ell$.
-  \item[$B_\ell$ ---] The set of vertices $v$ for which $d[v]$ has been set
+  \item[$A_\ell$---] The queue $Q$ contains exactly those vertices in level $\ell$.
+  \item[$B_\ell$---] The set of vertices $v$ for which $d[v]$ has been set
     is exactly the union of levels $0, 1, \ldots, \ell$.
-  \item[$C_\ell$ ---] Each array entry $d[v]$ that has been set has been set correctly, to $\dist s v$.
+  \item[$C_\ell$---] Each array entry $d[v]$ that has been set has been set correctly, to $\dist s v$.
   \end{mylist}
   
   \step For the base case, level $\ell=0$ is $\{s\}$, so $A_0$, $B_0$, and $C_0$ hold just before the first iteration.

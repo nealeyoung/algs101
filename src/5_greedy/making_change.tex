@@ -12,13 +12,13 @@ Making Change with U.S. coins.
 \item[\bf output:] A minimum-length multiset $\{c_1, c_2, \ldots, c_\ell\}$ such that each item $c_d$ is in $\{1,5,10,25\}$
   and the multiset sums to $N$, that is, $\sum_{i=1}^\ell c_i = N$.
 \end{mylist}
-(A \emph{multiset} is an unordered collection of items in which --- in contrast to a set --- any given item can occur more than once.)
+(A \emph{multiset} is an unordered collection of items in which---in contrast to a set---any given item can occur more than once.)
 Intuitively, the problem is to make change for a given value $N$, using as few (U.S.) coins as possible.
 If item $c_i$ is, respectively, 1, 5, 10, or 25,
 we think of it has being a penny, nickel, dime, or quarter.
 
 \paragraph{Algorithm.}
-There is a natural greedy algorithm --- use the largest possible coin, then recurse:
+There is a natural greedy algorithm---use the largest possible coin, then recurse:
 
 \begin{myframed}
   \begin{steps}
@@ -46,8 +46,7 @@ The run time is proportional to the number of coins output, which is $O(N)$.
 
 \paragraph{Correctness.}
 
-To prove correctness, the main challenge is to show that the first greedy choice is correct
---- that is, there is always some correct solution that uses $c'$, the largest coin of value at most $N$.
+To prove correctness, the main challenge is to show that the first greedy choice is correct---that is, there is always some correct solution that uses $c'$, the largest coin of value at most $N$.
 Once we know that, we can commit to choosing coin $c'$ first,
 and then (clearly?) the problem that remains is to make change optimally for the remaining total, $N-c'$.
 
@@ -119,12 +118,12 @@ it suffices to add $c'$ to any optimal way of making change of total value $N-c'
   \step By Lemma~\ref{greedy: lemma: greedy change}, $c'$ is one of those coins.
   \step So $X^*$ contains $\ell-1$ coins that make change for $N-c'$.
   \step Since $\ell'$ is the minimum number of coins to make change for $N-c'$, it must be that $\ell-1 \ge \ell'$.
-  \step Equivalently, $\ell \ge \ell'+1$ --- i.e., making change of total value $N$ requires at least $\ell'+1$ coins.
+  \step Equivalently, $\ell \ge \ell'+1$---i.e., making change of total value $N$ requires at least $\ell'+1$ coins.
 \end{longFormProof}
 
 Finally, we show correctness.  
 \begin{lemma}  
-  For all $N\ge 0$, \textsf{rchangeUS}$(N)$ is correct ---  that is, it
+  For all $N\ge 0$, \textsf{rchangeUS}$(N)$ is correct---that is, it
   makes change totaling $N$ using the fewest possible coins.
 \end{lemma}
 \begin{longFormProof}

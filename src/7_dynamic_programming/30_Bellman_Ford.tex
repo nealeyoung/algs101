@@ -54,8 +54,7 @@ Summing over the subproblems, the total time
 is proportional to $\sum_{i=0}^{n-1} \sum_{w\in V} 1+\textsf{in-degree}(w) = \sum_{i=0}^{n-1} n+m = n(n+m)$.
 So the algorithm (iterative, or recursive and memoized)
 takes time $\Theta(n(n+m))$, where $n=|V|$ and $m=|E|$.
-We can assume without loss of generality that $m=\Omega(n)$
---- if not we can preprocess the graph to remove vertices that have no incident edges, after which $m \ge n/2$.
+We can assume without loss of generality that $m=\Omega(n)$---if not we can preprocess the graph to remove vertices that have no incident edges, after which $m \ge n/2$.
 Then this is $\Theta(nm)$.
 
 \begin{theorem}

@@ -73,17 +73,15 @@ It should run in $O(n^2)$ (linear) time.  (It helps to precompute arrays $A$ and
 First consider the brute-force algorithm: \emph{Enumerate all $n{!}$ possible perfect matchings.  For each, check if it is stable, and if so halt and return that matching.}
 %
 This algorithm takes at least $\Omega(n!\, n^2)$ time, which is super-exponential, way too slow to be practical for large $n$.
-Considering that modern CPUs have GHz clocks --- they do billions ($10^9$) of operations per second
+Considering that modern CPUs have GHz clocks---they do billions ($10^9$) of operations per second---
 % [review 2026-09-27] fix: the estimate "10^{n/30} seconds, over a year for n ~ 225" was wrong; at 10^9 ops/s, n! n^2 operations take n! n^2 / 10^9 s, which exceeds a year already at n = 17 (17! 17^2 / 10^9 ~ 1.0e8 s ~ 3.3 years; n = 16 gives ~62 days)
---- this algorithm would currently require more than on the order of $n!\,n^2/10^9$ seconds ---
-over a year already for $n\approx 17$.
+this algorithm would currently require more than on the order of $n!\,n^2/10^9$ seconds---over a year already for $n\approx 17$.
 
 Instead, Gale and Shapley proposed the following algorithm.
 It is conventionally described as an iterative process that maintains a matching.
 The matching is initially empty.
 In each iteration, the algorithm chooses any unmatched hospital.
-That hospital makes an offer to some doctor
---- the doctor that it prefers the most,
+That hospital makes an offer to some doctor---the doctor that it prefers the most,
 among doctors that it has not previously made offers to.
 The doctor (tentatively) accepts the offer and becomes matched to that hospital
 if that new match is better for the doctor the doctor's current match (or if the doctor is not yet matched).
@@ -693,8 +691,7 @@ Prove or disprove the following assertion:
 
 \emph{In any execution of the hospitals-propose \prob{Stable Matching} algorithm,
   there is some doctor that does not receive an offer before the last iteration.
-  (Note: we mean the algorithm described in the lecture notes
-  --- in each iteration, one hospital makes an offer to one doctor.)}
+  (Note: we mean the algorithm described in the lecture notes---in each iteration, one hospital makes an offer to one doctor.)}
 
 If the assertion is false, describe a counter-example:
 a particular instance, and an execution of the algorithm on that instance,
@@ -723,8 +720,7 @@ Prove or disprove the following assertion:
 \emph{
   In every execution of the hospitals-propose \prob{Stable Matching} algorithm,
   there is at most one hospital that makes offers to every doctor.
-  (Note: we mean the algorithm described in the lecture notes
---- in each iteration, one hospital makes an offer to one doctor.)}
+  (Note: we mean the algorithm described in the lecture notes---in each iteration, one hospital makes an offer to one doctor.)}
 
 If the assertion is false, describe a counter-example:
 a particular instance, and an execution of the algorithm on that instance,

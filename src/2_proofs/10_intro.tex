@@ -8,15 +8,13 @@ Suppose you want to know the prime factors of the following 186-digit number:
 {\footnotesize
 11679847981112819759721399310592745791658017001955007325132913837831330495881519756453703742878526148\textbackslash\\84146888067442512219413748768010657572575384986457405973985247465176041951676954461208131403777}. 
 Like every positive integer, this one has a unique set of prime factors.
-In principle you could find the factors by exhaustive search ---
-after all, there are only finitely many possibilities.
+In principle you could find the factors by exhaustive search---after all, there are only finitely many possibilities.
 But there are about $10^{93}$ possible factors to check,
 so that would take too long, even for a computer.
 In fact, no algorithm is known that can factor large integers
 in any reasonable amount of time
 (e.g., the lifetime of the universe).\footnote
-{No such algorithm is known
-  --- indeed, standard encryption schemes rely on this fact.
+{No such algorithm is known---indeed, standard encryption schemes rely on this fact.
   But nobody knows for sure that there isn't one.
   (We do know that, if a so-called quantum computer can be built,
   it would be able to factor efficiently.)}
@@ -51,8 +49,7 @@ But even after years of study, nobody knows for sure!\,\footnote
 Many simple algorithms are hard to reason about.
 So, when searching for an algorithm to solve a particular problem,
 we limit our search to algorithms that
-we \emph{do} know some way to reason about ---
-that is, algorithms that we can prove do work.
+we \emph{do} know some way to reason about---that is, algorithms that we can prove do work.
 For this reason, \emph{proofs drive algorithm design.}
 (More on this later.)
 % The mental process of searching for an algorithm is intertwined
@@ -122,7 +119,7 @@ It also makes communicating about the proof, including giving feedback on it, ea
 In long-form proofs, assumptions are explicitly managed by using what we call \emph{blocks}.  
 Each block introduces an assumption, which then holds for the scope of the block.
 Blocks nest like code blocks in computer programs.
-There are four block types --- one for each of the four standard proof forms mentioned above. 
+There are four block types---one for each of the four standard proof forms mentioned above. 
 Section~\ref{proofs: sec: long form} describes the long-form proof format in detail.
 
 \paragraph{Basic terms: \emph{problem}, \emph{algorithm}, \emph{proof}}

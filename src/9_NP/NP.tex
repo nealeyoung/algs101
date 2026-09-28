@@ -24,8 +24,7 @@
 
 \section{Intractable computational problems}\label{np: sec: intro}\doHeader{Intractable problems}
 % \paragraph{Computational intractability.}
-Many important computational problems are \emph{intractable} ---
-not solvable by any reasonably fast algorithm.
+Many important computational problems are \emph{intractable}---not solvable by any reasonably fast algorithm.
 Since 1950 or so, computer scientists have developed
 a fairly deep understanding of intractable problems.
 
@@ -44,8 +43,7 @@ find a different way to formally model what you need to do.
 
 We focus here on a particular kind of intractability:
 whether or not the problem has any algorithm
-whose worst-case running time is bounded by \emph{any polynomial} ---
-that is, for some constant $c>0$, on any input $x$,
+whose worst-case running time is bounded by \emph{any polynomial}---that is, for some constant $c>0$, on any input $x$,
 the algorithm takes time $O(|x|^c)$.
 The class of problems that have such algorithms is called \emph{Polynomial Time},
 and is often denoted P (or $\mathbb{P}$).
@@ -69,8 +67,7 @@ These enable us to, for example, use any algorithm for \prob{Linear Programming}
 to solve \prob{Shortest $s$-$t$ Path}, \prob{Max Flow}, and
 \prob{Bipartite Matching}.
 
-Recall that when considering reductions we focus on \emph{decision problems} ---
-computational problems with `yes'/`no' answers.
+Recall that when considering reductions we focus on \emph{decision problems}---computational problems with `yes'/`no' answers.
 For any decision problem $A$, we define the \emph{language}, $L(A)$ associated with $A$
 to be the set of inputs for which the answer is ``yes''.  For example, the language
 for the decision problem for \prob{Shortest $s$-$t$ Path}
@@ -80,8 +77,7 @@ To be formally precise,
 we have in mind here that each input is encoded in a standard way
 as a binary string. So, each language is, technically, a set of binary strings.
 But we can safely forget about this most of the time.
-It is important mainly in that it gives us a robust and general notion of input size
---- the size of an input is the number of bits in the encoding of the input.
+It is important mainly in that it gives us a robust and general notion of input size---the size of an input is the number of bits in the encoding of the input.
 
 If an algorithm for a decision problem $A$ says `yes' for a given input $x$,
 we say the algorithm \emph{accepts} $x$.  
@@ -136,9 +132,9 @@ Here are the three corresponding decision problems.
 
 For each, the input is $G=(V,E)$ and an integer $k$.
 \begin{description}
-\item[\prob{Clique} ---] does $G$ have a clique of size $k$ or more?
-\item[\prob{Independent Set} ---] does $G$ have an independent set of size $k$ or more? 
-\item[\prob{Vertex Cover} ---] does $G$ have a vertex cover of size $k$ or less?
+\item[\prob{Clique}---] does $G$ have a clique of size $k$ or more?
+\item[\prob{Independent Set}---] does $G$ have an independent set of size $k$ or more? 
+\item[\prob{Vertex Cover}---] does $G$ have a vertex cover of size $k$ or less?
 \end{description}
 
 Each of these three problems reduces in polynomial time to each of the others.
@@ -208,13 +204,12 @@ Here are two problems that seem very different from those three:
 
 \begin{description}
 
-\item[\prob{SAT}] ---
-  Given a Boolean formula $\phi$,
+\item[\prob{SAT}]---Given a Boolean formula $\phi$,
   is there an assignment of values (true or false) to the variables of $\phi$
   % [review 2026-09-27] fix: an assignment satisfies the formula, not "the assignment"; changed to formula
   that \emph{satisfies} the formula (makes it true).
 
-\item[\prob{3-CNF-SAT} ---] Given a Boolean formula $\phi$ in 3-CNF form (an ``and'' of clauses,
+\item[\prob{3-CNF-SAT}---] Given a Boolean formula $\phi$ in 3-CNF form (an ``and'' of clauses,
   each of which is an ``or'' of at most three literals, each of which is a variable or its negation),
   is the formula \emph{satisfiable} (that is, can one assign values to the variables to make the 
   formula true).  
@@ -224,8 +219,7 @@ Here are two problems that seem very different from those three:
   is satisfiable: take $x=T$, $y=T$, $z=F$.
 \end{description}
 
-We remark that \prob{SAT} is a very ``expressive'' problem --- 
-computers are built from logic gates,
+We remark that \prob{SAT} is a very ``expressive'' problem---computers are built from logic gates,
 so it is not too surprising that Boolean formulae can model computation.
 See Lemma 34.6 of the text \CLRS and surrounding discussion for more details.
 Also, \prob{SAT} reduces pretty easily to \prob{3-CNF-SAT}.
@@ -328,7 +322,7 @@ So \prob{3-CNF-SAT} is just as expressive.
   To see that it is a satisfying assignment,
   consider any clause of $\phi$.
   $I$ contains some vertex $v$ from the clause gadget,
-  where $v$ is labeled with a literal in the clause --- either a variable $x$ or its negation $\overline x$.
+  where $v$ is labeled with a literal in the clause---either a variable $x$ or its negation $\overline x$.
   Consider the case when $v$ is labeled with a variable $x$ (the other case is similar).
   There is an edge in $G$ between $v$ 
   and the vertex (call it $v'$) labeled $\overline x$ in $x$'s variable gadget.
@@ -349,23 +343,23 @@ Here's a review of the key concepts so far:
 
 \begin{description}
 
-\item[decision problem] --- A \emph{decision problem} is a computational problem such that, for every input, the answer is either ``yes'' or ``no''.
+\item[decision problem]---A \emph{decision problem} is a computational problem such that, for every input, the answer is either ``yes'' or ``no''.
   In studying computational complexity, we work mostly with decision problems, just to keep things simple.
   Most computational problems can be cast as decision problems.
   
-\item[language] --- The \emph{language} associated with a decision problem is the set of inputs for which the answer is ``yes'' (encoded in any standard binary encoding).  We often identify the decision problem with its language.
+\item[language]---The \emph{language} associated with a decision problem is the set of inputs for which the answer is ``yes'' (encoded in any standard binary encoding).  We often identify the decision problem with its language.
 
   An algorithm $A$ for a decision problem is said to \emph{accept} an input $x$ if, on input $x$, $A$ outputs ``yes''.  Otherwise $A$ \emph{rejects} $x$.
 
-\item[polynomial-time algorithm] --- An algorithm runs in \emph{polynomial time} if there is some constant $c>0$ such that the worst-case running time on any input of size $n$ is $O(n^c)$.  Note that this includes, for example algorithms that run in time $O(n\log n)$, because $O(n\log n)$ is $O(n^2)$.
+\item[polynomial-time algorithm]---An algorithm runs in \emph{polynomial time} if there is some constant $c>0$ such that the worst-case running time on any input of size $n$ is $O(n^c)$.  Note that this includes, for example algorithms that run in time $O(n\log n)$, because $O(n\log n)$ is $O(n^2)$.
 
-\item[the class P] --- Called \emph{Polynomial Time}, this is the set of decision problems that have polynomial-time algorithms.  This is one of many \emph{complexity classes} studied by computer scientists.  (A complexity class is a collection of computational problems, typically defined as containing all problems that have an algorithm that obeys a some given resource constraint.)
+\item[the class P]---Called \emph{Polynomial Time}, this is the set of decision problems that have polynomial-time algorithms.  This is one of many \emph{complexity classes} studied by computer scientists.  (A complexity class is a collection of computational problems, typically defined as containing all problems that have an algorithm that obeys a some given resource constraint.)
 
 % [review 2026-09-27] fix: the formal restatement said "x in A iff x in B" (wrong: compares x with itself, and A, B are problems, not languages); changed to x in L(A) iff f(x) in L(B), the note's notation from Section 9.2
-\item[reduction] --- A \emph{reduction} from a decision problem $A$ to a decision problem $B$ is a function $f$ mapping each input $x$ for $A$ to some input $f(x)$ for $B$, such that the answer for $x$ is ``yes'' if and only if the answer for $f(x)$ is yes.  That is, $(\forall x)~x\in L(A) \iff f(x)\in L(B)$.  When there is a reduction from $A$ to $B$,
+\item[reduction]---A \emph{reduction} from a decision problem $A$ to a decision problem $B$ is a function $f$ mapping each input $x$ for $A$ to some input $f(x)$ for $B$, such that the answer for $x$ is ``yes'' if and only if the answer for $f(x)$ is yes.  That is, $(\forall x)~x\in L(A) \iff f(x)\in L(B)$.  When there is a reduction from $A$ to $B$,
   we say \emph{$A$ reduces to $B$}.
   
-\item[polynomial-time reduction] --- A reduction $f$ is a \emph{polynomial-time} reduction if there is a polynomial-time algorithm that, given any input $x$, outputs $f(x)$ in time polynomial in $|x|$.  If there is such a reduction,
+\item[polynomial-time reduction]---A reduction $f$ is a \emph{polynomial-time} reduction if there is a polynomial-time algorithm that, given any input $x$, outputs $f(x)$ in time polynomial in $|x|$.  If there is such a reduction,
   we say \emph{$A$ reduces to $B$ in polynomial time}, which we write as $A\le_p B$.
 \end{description}
 
@@ -384,28 +378,26 @@ Here's a review of the key concepts so far:
 
 \begin{description}
   
-\item[\prob{Clique} ---]
+\item[\prob{Clique}---]
   % [review 2026-09-27] fix: the review restated Clique as "size k", but Section 9.3.1 defines it as "size k or more"; made the restatement match
   given graph $G$ and integer $k$, does $G$ have a clique of size $k$ or more?
 
-\item[\prob{Independent Set} ---]
+\item[\prob{Independent Set}---]
   Given $G$ and $k$,
   % [review 2026-09-27] fix: the review restated Independent Set as "size k", but Section 9.3.1 defines it as "size k or more"; made the restatement match
   does $G$ have an independent set of size $k$ or more?
 
-\item[\prob{Vertex Cover} ---]
+\item[\prob{Vertex Cover}---]
   Given $G$ and $k$,
   % [review 2026-09-27] fix: the review restated Vertex Cover as "size k", but Section 9.3.1 defines it as "size k or less"; made the restatement match
   does $G$ have a vertex cover of size $k$ or less?
 
-\item[\sc SAT] ---
-  Given a Boolean formula $\phi$,
+\item[\sc SAT]---Given a Boolean formula $\phi$,
   is there an assignment of values (true or false) to the variables of $\phi$
   % [review 2026-09-27] fix: an assignment satisfies the formula, not "the assignment"; changed to formula
   that \emph{satisfies} the formula (makes it true).
 
-\item[{\sc 3-CNF-SAT} a.k.a.~\sc 3-SAT] ---
-  {\sc SAT} restricted to inputs $\phi$ that are in 3-CNF form
+\item[{\sc 3-CNF-SAT} a.k.a.~\sc 3-SAT]---{\sc SAT} restricted to inputs $\phi$ that are in 3-CNF form
   (an ``and'' of clauses, where each clause is an ``or'' of at most three literals,
   where each literal is a variable or the negation of a variable).
   
@@ -424,7 +416,7 @@ Here's a review of the key concepts so far:
 % [review 2026-09-27] fix: the restatement environment does not restore the lemma counter (previously the bogus third "lemma" above advanced it to 3); restore it so the real lemmas below remain 9.4 and 9.5
 \setcounter{lemma}{3}
 
-\section{The class NP --- problems that have poly-time verifiers}\label{np: sec: NP}\doHeader{NP}
+\section{The class NP---problems that have poly-time verifiers}\label{np: sec: NP}\doHeader{NP}
 These problems all have something in common:
 they belong to a class of problems called
 ``NP'' (for ``non-deterministic polynomial time'').
@@ -461,7 +453,7 @@ For example:
 %   and that $w$ is a non-trivial factor of $x$.
 %   If so, the verifier accepts.
 
-\item[\prob{Clique}] --- Given the instance $x=(G,k)$ and witness $w$,
+\item[\prob{Clique}]---Given the instance $x=(G,k)$ and witness $w$,
   the verifier $V((G,k), w)$ checks that $w$ encodes a subset $S$ of the vertices,
   and that $S$ is a clique in $G$ of size $k$.
 
@@ -469,7 +461,7 @@ For example:
 %   the verifier $V((G,s,t), w)$ checks that $w$ encodes a path $P$ in $G$,
 %   and that $P$ is an $s$-$t$ path that visits each vertex exactly once.
 
-\item[\prob{3-CNF-SAT}] --- Given the instance $\phi$ and witness $w$,
+\item[\prob{3-CNF-SAT}]---Given the instance $\phi$ and witness $w$,
   the verifier $V(\phi, w)$ checks that $w$ encodes an assignment to the
   variables of $\phi$, and that the assignment satisfies each clause in $\phi$.
 \end{description}
@@ -501,8 +493,7 @@ So, we know for sure that either
   a polynomial-time algorithm (P${} \ne {}$NP), or
 \item every problem in NP has a polynomial-time algorithm (P${} = {}$NP).
 \end{enumerate}
-We don't know for sure which case holds ---
-whether or not P equals NP is a main open problem in computer science.
+We don't know for sure which case holds---whether or not P equals NP is a main open problem in computer science.
 \emph{After decades of study, nobody knows a polynomial-time algorithm
   for any NP-hard problem.}
 So we expect there are none.
@@ -529,7 +520,7 @@ and from \prob{3-CNF-SAT} to a problem called \prob{Hamiltonian Path}.
 Recall \prob{Subset Sum}:
 
 \begin{description}
-\item[\prob{Subset Sum}] ---  \em
+\item[\prob{Subset Sum}]---\em
   Given non-negative integers $x_1, x_2, \ldots, x_n$ and a target $T$,
   is there a subset $S$ of indices such that $\sum_{i\in S} x_i = T$?
 \end{description}
@@ -782,8 +773,7 @@ To conclude, we'll sketch one more reduction:
 from \prob{3-CNF-SAT} to  \prob{Hamiltonian Path}:
 
 \begin{description}
-\item[\prob{Hamiltonian Path}] ---
-  Given directed graph $G=(V,E)$ and $s,t\in V$,
+\item[\prob{Hamiltonian Path}]---Given directed graph $G=(V,E)$ and $s,t\in V$,
   is there an $s$-$t$ path in $G$ that visits each vertex exactly once.
 \end{description}
 

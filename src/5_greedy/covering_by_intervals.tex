@@ -119,8 +119,7 @@ Here's a careful proof:
 \paragraph{Computing the rest of the solution.}
 We know now that the latest-ending job $J_i$ that contains the first demand point
 is in some correct solution.  So we can commit to putting that job $J_i$ in our solution.
-Given that $J_i$ is in, the demand points that $J_i$ covers are taken care of
---- we can remove all those from consideration.
+Given that $J_i$ is in, the demand points that $J_i$ covers are taken care of---we can remove all those from consideration.
 The problem that remains is to find a minimum-size set of jobs to cover the remaining points.
 That is, to solve the \prob{Covering by Intervals} instance defined
 by the given jobs and the remaining demand points.
@@ -168,8 +167,7 @@ to the instance $(J, X')$ as defined in the algorithm.
 \end{longFormProof}
 
 Given Lemma~\ref{greedy: lemma: as recurse},
-the reasoning for correctness is as usual for for recursive algorithms ---
-by induction.  Here is a (short-form) proof.
+the reasoning for correctness is as usual for for recursive algorithms---by induction.  Here is a (short-form) proof.
 
 \begin{theorem}
   The recursive algorithm is correct.  That is, for every instance $(J, X)$, it gives a correct output.
@@ -237,7 +235,7 @@ First, in a linear-time preprocessing step, compute $L_t$ for all $t$.  To do th
 \end{myframed}
 
 To see that this takes linear time, note that in Line 3, throughout the entire execution, the number of times the while loop executes is at most $m$ (once for each interval).
-Now, in \textsf{icover}, the latest-ending job that contains a particular point $x_t$ can be found in constant time --- it's the job with index $L_t$.
+Now, in \textsf{icover}, the latest-ending job that contains a particular point $x_t$ can be found in constant time---it's the job with index $L_t$.
 }
 
 % % First, an easy lemma:
