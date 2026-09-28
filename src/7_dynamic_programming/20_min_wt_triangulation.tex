@@ -1,0 +1,78 @@
+
+\section{Minimum-Weight Polygon Triangulation}\label{dp: sec: MWT}\doHeader{Min-Weight Triangulation}
+
+\begin{mylist}
+\item[\bf input:]
+  A sequence $p[1..n]$ of points in the plane,
+  forming (in clockwise order) the vertices
+  $p[1], p[2], \ldots, p[n]$ of a convex polygon.
+
+\item[\bf output:]
+  The minimum weight of any \emph{triangulation} of $p$.
+  A triangulation of $p$ is a set of \emph{chords}
+  (diagonals --- straight-line segments connecting pairs of vertices)
+  that subdivides the convex polygon into triangular faces.
+  The weight of the triangulation is the sum of the lengths of the chords.
+  We include the boundary segments (with endpoints $p_i, p_{i+1}$)
+  as chords.
+\end{mylist}
+
+\paragraph{subproblems and recurrence relation.}
+Fix any input instance $p[1..n]$.
+For each pair $(i, j)$ with $1 \le i < j\le n$, and $j-i \ge 1$,
+define $T(i, j)$ to be the optimal cost for the subproblem
+$p[i..j]$ formed by the $j-i+1 \ge 2$ points $p[i], p[i+1], \ldots, p[j]$.
+The final answer is $T(1, n)$.
+The recurrence relation is
+\[
+  T(i, j) = \begin{cases}
+    d(p[i], p[j]) & \text{if } j=i+1, \\
+    \min\Big\{ T(i, k) + T(k, j) + d(p[i], p[j]) ~\big|~ k\in \{i+1, i+2, \ldots, j-1\} \Big\} & \text{if } j > i+1.
+  \end{cases}
+\]
+Above, $d(p[i], p[j])$ is the Euclidean distance between points $p[i] = (x_i, y_i)$ and $p[j] = (x_j ,y_j)$,
+that is, $d(p[i], p[j]) = \sqrt{(x_i-x_j)^2 + (y_i-y_j)^2}$.
+
+\paragraph{correctness.}
+The intuition is as follows.
+Each triangulation of $p[i..j]$ can be obtained as follows
+for some $k\in\{i+1,\ldots,j-1\}$:
+take any triangulation of $p[i..k]$,
+and any triangulation of $p[k..j]$,
+and add the chord with endpoints $p[i]$ and $p[j]$.
+(The latter chord must be in the triangulation,
+and point $p[k]$ is the third vertex on the triangle
+that has that chord as one side.
+Draw a picture and consider some examples for more intuition.
+Make sure to consider the boundary cases when $k\in\{i+1, j-1\}$.)
+
+\paragraph{time.}
+There are $\Theta(n^2)$ subproblems.
+For each, the right-hand side of the recurrence can be evaluated in time $O(n)$
+(assuming the smaller subproblems are already solved).
+So the algorithm (iterative, or recursive and memoized)
+takes time $\Theta(n^3)$.
+
+\begin{theorem}
+  There is an $O(n^3)$-time algorithm for \prob{Min-Weight Polygon Triangulation}.
+\end{theorem}
+
+\paragraph{does not reduce to Shortest Paths!}
+The standard trick of creating a graph with one vertex per subproblem $T(i,j)$
+doesn't work, because, in the right-hand side of the recurrence for $T(i,j)$,
+for each $k$, the term includes \emph{two} subproblems $T(i,k)$ and $T(k,j)$.
+
+\pythonCode{dynamic_programming/min_wt_triangulation.py}
+
+% \paragraph{External sources on \prob{Min-Weight Triangulation}}
+
+% \begin{itemize}
+
+% \item DPV Problem 6.12.
+  
+% \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

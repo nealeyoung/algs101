@@ -1,0 +1,50 @@
+\section{Proofs about algorithms (a few tips, including use of invariants)}\label{proofs: sec: algorithms}
+
+\doHeader{Proofs about algorithms}
+
+Proofs about \emph{algorithms} can be particularly challenging.
+One reason is that during the execution of an algorithm its state changes.
+Try to follow these tips when doing proofs about algorithms:
+
+\begin{enumerate}
+\item When you refer to the state of the algorithm
+  (such as the value of some variable)
+  make sure that it makes clear \emph{exactly what point in time}
+  you have in mind.  
+
+\item When you define an object in your proof (i.e., introduce a name for some quantity),
+  by convention, the named object never changes after that --- it is static.
+  Be aware of this convention and try to follow it.
+
+  It is okay to violate this convention when you are referring in the proof
+  to the name of variable in the algorithm.
+  But (i) if you do this, make sure your wording signals it clearly.
+  For example, say something like this:
+  \begin{quote}
+    1. Consider any execution of the algorithm. \\
+    2. Consider the value of the algorithm's variable $x$ just before the first iteration.\\
+    \vdots
+  \end{quote}
+  And (ii) whenever you refer to the value of $x$,
+  make sure you make clear exactly \emph{when} during the execution you mean.
+
+\item Learn to use \emph{invariants}.
+  An invariant is a property that is maintained throughout the execution of the algorithm.
+  Invariants are a basic proof technique for reasoning about iterative algorithms.
+  Exercise~\ref{proofs: prob: elizabeth hides from john} in Section~\ref{proofs: sec: exercises} gives an example.
+  We'll see more throughout these notes.
+
+\item As a rule, reasoning about processes is generally harder than reasoning about static objects.
+  So, when you can present your proof as reasoning only about static objects, do that.
+  For example, in reasoning about a static object such as a set or a spanning tree,
+  don't present the proof in a way that implicitly or explicitly introduces some new process
+  (e.g.~one that builds the object step by step).
+\end{enumerate}
+
+Exercise~\ref{proofs: prob: elizabeth hides from john} in Section~\ref{proofs: sec: exercises}
+illustrates the first three points above.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "long_form_proofs"
+%%% End:

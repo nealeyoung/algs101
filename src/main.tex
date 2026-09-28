@@ -1,0 +1,46 @@
+%! Author = neal
+%! Date = 9/26/26
+
+% The lecture notes combined into one book, one chapter (titled "Lecture Note N") per lecture note.
+%
+% Each chapter is the body of that lecture note's own document: docmute skips
+% the document's preamble, and \import makes its bare \input and
+% \includegraphics names resolve within the chapter's folder.
+% \BookMode switches the shared macros to book behavior (see macros.tex).
+
+\documentclass[11pt]{report}
+
+\newcommand{\BookMode}{}
+\input{macros/macros}
+
+\usepackage{import}
+\usepackage{docmute}
+
+\title{Lecture notes on Algorithms}
+\author{Neal E. Young}
+\date{draft of \today\\[3ex] {\small\copyrightNotice}}
+
+\begin{document}
+
+\pagenumbering{roman}
+\hypersetup{pageanchor=false}   % the title page and first contents page are both page i
+\maketitle
+\hypersetup{pageanchor=true}
+\bookContents
+\clearpage
+\pagenumbering{arabic}
+
+\import{1_preliminaries/}{preliminaries}
+\import{2_proofs/}{long_form_proofs}
+\import{3_stable_matching/}{stable_matching}
+\import{4_divide_and_conquer/}{divide_and_conquer}
+\import{5_greedy/}{greedy_algorithms}
+\import{6_graph_traversal/}{graph_traversal}
+\import{7_dynamic_programming/}{dynamic_programming}
+\import{8_flow_reductions_LP/}{flow_reductions_LP}
+\import{9_NP/}{NP}
+
+\appendix
+\input{appendices/appendices}
+
+\end{document}

@@ -1,0 +1,14 @@
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.synctex.gz
+*.pdf
+.neal-latexmk.nosync/
+_site/
+.DS_Store
+
+# Python
+__pycache__/

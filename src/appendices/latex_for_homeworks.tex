@@ -1,0 +1,286 @@
+% Using LaTeX for the homeworks: the last section of the book's Appendix B
+% (formerly in the Preliminaries lecture note).
+
+\section{Using LaTeX for homeworks}\label{latex: sec: latex}\hypertarget{latex.homeworks}{}
+
+% \paragraph{Get the homework template.}
+LaTeX is a language for making documents (e.g., these notes).
+We recommend that you prepare each homework in LaTeX, using the template provided with that homework.
+The template provides most of the LaTeX source that you'll need
+(you'll just need to replace some placeholders by your answers)
+as well as guidance and formatting requirements for your solutions.
+
+The homework assignments and their templates are available online
+(see \url{\siteURL}).
+Each template is provided in a zip file (e.g.~\texttt{homework\_1.zip}).
+The zip archive also contains the macros file
+and a README file with instructions for that homework.
+Edit and compile the LaTeX document to produce the PDF.
+
+Compile the LaTeX document as described next (Section~\ref{latex: sec: compiling latex}).
+You'll need to learn a little bit about how to write your answers in LaTeX,
+as described in Section~\ref{latex: sec: learning latex}.
+
+\subsection{Compiling LaTeX}\label{latex: sec: compiling latex}
+You have two options for compiling the LaTeX document to produce the PDF document:
+
+\begin{mylist}
+\item[\bf Option 1: Online.]
+This is the easiest way to start.
+Go to \url{https://www.overleaf.com},  % or Sharelatex (\url{https://www.sharelatex.com}).
+register an account and create a new project by uploading the \texttt{homework\_1.zip} file
+(see {\url{https://www.overleaf.com/learn/how-to/Uploading_a_project}}),
+or use the homework's ``Open in Overleaf'' link.
+Edit the document (replace the placeholders by your answers), then compile the document and download the PDF.
+
+\smallskip
+
+\item[\bf Option 2: On your computer]~\small
+
+  \begin{description}
+
+\item[Mac:]
+
+Install MacTeX (\url{https://tug.org/mactex/mactex-download.html}).
+Download the \texttt{homework\_1.zip} file and unzip it into a directory of your choosing.
+If you like, use a text editor to edit the files and the shell to compile them
+(e.g.~with command ``pdflatex homework\_1.tex'').
+Alternatively, install and use a GUI frontend such as TeXShop
+(\url{https://pages.uoregon.edu/koch/texshop/}).
+
+\item[Windows:]
+1. Install a LaTeX compiler (e.g.~MiKTeX, \url{https://miktex.org/howto/install-miktex}).
+\\2. Install the GUI called TeXnic (\url{https://www.texniccenter.org})
+\\3. Download the \texttt{homework\_1.zip} file and unzip it into a directory of your choosing.
+\\4. Start the TeXnic application.
+(The first time you start it, the configuration wizard will open.  Click on Yes, Configure TeXnicCenter for use with MiKTex, then finish the configuration. Immediately select the Output Profile dropdown in the toolbar and change to LaTeX $\rightarrow$ PDF.)
+\\5. Open the LaTeX file(s) in TeXnic and edit them per the instructions in the README file. 
+\\6. Under Build, click on Build, Current File, Build and View.  Or key in Ctrl + Shift + F5.
+\\7. The PDF will show up on the screen when the build is complete.
+\\8. Find the PDF in the folder with your tex file.  
+
+See also {\small\url{https://texniccenter.sourceforge.net/configuration.html}.}
+    
+\item[Linux:]
+
+  1. Get \texttt{install-tl-unx.tar.gz} at {\small \url{https://www.tug.org/texlive/acquire-netinstall.html}}.
+  \\2. Untar/gunzip the file to a directory of your choice.  Cd to the directory in your terminal.
+  \\3. Run the command ``\texttt{sudo~./install-tl}'' in that directory.
+  \\4. The default installation requires 6 GB.  If you have that, install it by responding ``I'' to the ``Enter Command'' prompt,
+  otherwise you can enter ``C'' to configure which packages you want.
+  You need at least the packages that the macros file uses (and those that these packages depend on).
+  % Download and install TeX Live
+  % (\url{https://www.tug.org/texlive/acquire-netinstall.html}).
+  \\5. Use an editor of your choice
+  (e.g.~Emacs,  perhaps with the emacs auctex package)
+  to edit the LaTeX source file (.tex) file,
+  then compile to PDF using e.g.~the command
+  ``pdflatex homework\_1.tex''.
+
+\item[You can find more about installing LaTeX here:]
+  \url{https://www.tug.org/texlive/}
+  
+\end{description}
+\end{mylist}
+
+\newpage
+
+\subsection{Learning how to write LaTeX}\label{latex: sec: learning latex}
+\begin{figure}
+\begin{tabular}{|c|c|}
+  \multicolumn{1}{c}{LaTeX source} & \multicolumn{1}{c}{result} \\ \hline 
+  \begin{minipage}{0.55\textwidth} \small  \smallskip
+\begin{verbatim}
+\documentclass[11pt]{article}
+
+\input{macros}   % load file named "macros.tex" 
+
+\begin{document} % start the body of the document
+
+This is the first paragraph.  % a comment
+It has two sentences.
+
+Here is some inline math: \(e^{i\pi} =1\),
+followed by some displayed math:
+\[ \sum_{i=1}^n i = n(n+1)/2 .\]
+and some math symbols:  
+\\ \( \forall, \exists, \le, \ge, <, >, = \).
+
+\end{document}
+\end{verbatim}\smallskip
+  \end{minipage}
+  &
+    \parbox{0.4\textwidth}{
+    This is the first paragraph.  
+    It has two sentences.
+
+    ~~Here is some inline math: \(e^{i\pi}-1 = 0\),
+    followed by some displayed math:
+    \[ \sum_{i=1}^n i = n(n+1)/2 .\]
+    and some math symbols:  
+    \\ \(\forall, \exists, \le, \ge, <, >, =\).
+    } \\ \hline
+\end{tabular}
+
+\caption{A minimal LaTeX document with preamble and body.
+  The homework LaTeX template will already have the preamble and most of the body,
+  with placeholders for your answers.  You just need to replace those placeholders
+  with your answers.  To do that you'll need to know how to do math notation in
+  LaTeX, and how to use the macros for pseudo-code and long-form proofs.
+}\label{latex: fig: header}
+\end{figure}
+For a quick start, download and compile the homework template document
+(see Section~\ref{latex: sec: compiling latex}) and replace the placeholders
+there with your answers.  You'll need to learn how to do math notation:
+
+\url{https://artofproblemsolving.com/wiki/index.php/LaTeX:Math}
+
+\url{https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols}
+
+\noindent  Read Section~\ref{latex: sec: latex pseudo-code} below and Section~\ref{proofs: sec: latex}
+about using the LaTeX macros to write pseudo-code and long-form proofs.
+In case you are interested, Figure~\ref{latex: fig: header} shows a minimal LaTeX document,
+and more detailed LaTeX documentation is available (see footnote).\footnote
+{\url{https://mirrors.ctan.org/info/latex-essential/ess2e.pdf}
+  (17 pages)
+  \\
+  \url{https://www.andy-roberts.net/writing/latex}
+  \\
+ \url{https://tug.ctan.org/info/lshort/english/lshort.pdf}
+ (139 pages)
+ \\
+ \url{https://www.latex-project.org/help/documentation}
+}
+
+
+
+
+% \continued  \small
+
+% \normalsize
+
+\subsection{Writing pseudo-code in LaTeX}\label{latex: sec: latex pseudo-code}\hypertarget{latex.pseudocode}{}
+
+For the homeworks, you'll need to write pseudo-code when you are defining an algorithm.
+You can do this using macros that are predefined for you in the homework template,
+as shown in Figure~\ref{latex: fig: closest pair source} (the LaTeX source for the pseudo-code in Figure~\ref{prelim: fig: closest pair}),
+and Figure~\ref{latex: fig: gale shapley source} (Figure~\ref{latex: fig: gale shapley} shows the result).
+That example includes a while loop with a nested code block.
+LaTeX numbers the lines for you, which makes it easy to refer to specific steps in the algorithm.
+You can refer to these in your explanation and analysis of the algorithm,
+and readers can refer to them in their feedback.
+
+\begin{figure}
+\begin{myframed}\small
+\begin{verbatim}
+\begin{myframed}
+\begin{steps}
+
+  \item[] \textsf{closest-pair}$(P=(p_1, p_2, \ldots, p_n))$
+    \comment{($p_i=(x_i, y_i)\in \R^2$, with $x_1 < x_2 < \cdots < x_n$)}
+
+    \step if $n \le 1$: return $\infty$
+    \step if $n = 2$: return $d(p_1, p_2)$
+
+    \step let $m = \lfloor n/2\rfloor$
+
+    \step let $L = (p_1, p_2, \ldots, p_m)$; let $R = (p_{m+1}, \ldots, p_n)$
+    \comment{(partition $P$ into left and right halves by x-coordinate)}
+
+    \step let $\delta_L  =  \textsf{closest-pair}(L)$; 
+    let $\delta_R  =  \textsf{closest-pair}(R)$
+
+    \step let $\delta  =  \min(\delta_L, \delta_R)$
+
+    \step let $M = \{p_i : |x_i - x_m| \le \delta\}$
+    \comment{(compute this in $O(n)$ time)}
+
+    \step let $\delta_M = 
+    \min\{ d(p_i, p_j) :\, p_i, p_j\in M, \, y_i \le y_j \le y_j + \delta\}$,
+    computed as described in the text
+
+    \step return $\min(\delta, \delta_M)$
+  \end{steps}
+\end{myframed}
+\end{verbatim}
+  \end{myframed}
+  \caption{The LaTeX source (using the provided macros file)
+    for the pseudo-code in Figure~\ref{prelim: fig: closest pair}.}\label{latex: fig: closest pair source}
+\end{figure}
+
+\begin{figure}
+\begin{myframed}\small
+\begin{steps}
+  \item[] {\sf Gale-Shapley}$(n, \text{preference lists})$ \comment{--- algorithm for the Stable Matching problem}
+  \step Maintain a matching, initially empty.
+  \step While there is an unmatched man who has not \emph{proposed} (as defined below) to every woman:
+  \begin{block}
+    \step Choose any such man $m$.
+    \step\label{latex: S0} Among women that man $m$ has not yet proposed to, let $w$ be the one he prefers most.
+    \step Man $m$ \emph{proposes} to woman $w$, with the following outcome:
+    \step~~~If woman $w$ is unmatched, she \emph{accepts} the proposal, and $m$ and $w$ become matched.
+    \step~~~Else, if $w$ prefers her current partner, say $m'$, to $m$, she \emph{rejects} $m$, and stays matched to $m'$.
+    \step~~~Else, $w$ accepts: she rejects $m'$, and becomes matched to $m$ instead of $m'$.
+  \end{block}
+  \step Finally, return the (possibly incomplete) matching formed by the currently matched pairs.
+\end{steps}
+\end{myframed}
+\caption{Pseudo-code for the Gale-Shapley algorithm.
+  Figure~\ref{latex: fig: gale shapley source} shows the LaTeX source.}\label{latex: fig: gale shapley}
+\end{figure}
+
+  
+\begin{figure}
+\begin{myframed}\small
+\begin{verbatim}
+\begin{myframed}
+  \begin{steps}
+
+  \item[] {\sf Gale-Shapley}$(n, \text{preference lists})$
+  \comment{--- algorithm for the Stable Matching problem}
+
+  \step Maintain a matching, initially empty.
+  \step While there is an unmatched man 
+  who has not \emph{proposed} (as defined below) to every woman:
+
+  \begin{block}
+
+    \step Choose any such man $m$.
+
+    \step\label{S0} Among women that man $m$ has not yet proposed to, 
+    let $w$ be the one he prefers most.
+
+    \step Man $m$ \emph{proposes} to woman $w$, with the following outcome:
+
+    \step~~~If woman $w$ is unmatched, 
+    she \emph{accepts} the proposal, and $m$ and $w$ become matched.
+
+    \step~~~Else, if $w$ prefers her current partner, say $m'$, to $m$, 
+    she \emph{rejects} $m$, and stays matched to $m'$.
+
+    \step~~~Else, $w$ accepts: 
+    she rejects $m'$, and becomes matched to $m$ instead of $m'$.
+
+  \end{block}
+
+  \step Finally, return the (possibly incomplete) matching
+  formed by the currently matched pairs.
+
+\end{steps}
+\end{myframed}
+\end{verbatim}
+\end{myframed}
+  \caption{The LaTeX source (using macros from the homework macros file)
+    for the pseudo-code in Figure~\ref{latex: fig: gale shapley}.
+  References to line numbers can be saved and referred to
+  using the LaTeX \texttt{\textbackslash label} and \texttt{\textbackslash ref} commands.
+  For example, after the \texttt{\textbackslash label\{S0\}} in the second step of the inner block,
+  the command ``\texttt{\textbackslash ref\{S0\}}'' will result in~``\ref{latex: S0}''.}\label{latex: fig: gale shapley source}
+\end{figure}
+
+\subsection{Writing proofs in LaTeX (see \LN{proofs})}\label{latex: sec: latex proofs}
+\LN{proofs} describes long-form proofs and how to write them in LaTeX using the macros.
+
+
+% \continued
+\newpage

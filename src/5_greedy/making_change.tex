@@ -1,0 +1,173 @@
+\section{Making Change}\label{greedy: sec: making change}\doHeader{Making Change}
+
+Here's an example where, after the first greedy choice, the remaining problem
+is just a smaller instance of the original problem.
+So, the algorithm can simply recurse to solve that problem.
+The example is simple, but nicely illustrates this particular schema for greedy algorithms.
+
+\paragraph{Problem Definition.}
+Making Change with U.S. coins.
+\begin{mylist}
+\item[\bf input:] an integer $N\ge 0$ (the desired total)
+\item[\bf output:] A minimum-length multiset $\{c_1, c_2, \ldots, c_\ell\}$ such that each item $c_d$ is in $\{1,5,10,25\}$
+  and the multiset sums to $N$, that is, $\sum_{i=1}^\ell c_i = N$.
+\end{mylist}
+(A \emph{multiset} is an unordered collection of items in which --- in contrast to a set --- any given item can occur more than once.)
+Intuitively, the problem is to make change for a given value $N$, using as few (U.S.) coins as possible.
+If item $c_i$ is, respectively, 1, 5, 10, or 25,
+we think of it has being a penny, nickel, dime, or quarter.
+
+\paragraph{Algorithm.}
+There is a natural greedy algorithm --- use the largest possible coin, then recurse:
+
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{rchangeUS}$(N)$:}]
+    \step if $N = 0$: return $\emptyset$.  \comment{\ldots base case --- return the empty multiset}
+    \step let $c' = \max\big\{c \in \{1, 5, 10, 25\} : c \le N\big\}$
+    % [review 2026-09-27] fix: recursive call was named changeUS but the procedure is rchangeUS
+    \step let $\{c_1, c_2, \ldots, c_{\ell'}\} = \textsf{rchangeUS}(N-c')$\comment{\ldots recursively make change for $N-c'$}
+    \step return multiset $\{c', c_1, c_2, \ldots, c_{\ell'}\}$ \comment{\ldots return $\ell'+1$ coins of total value $N$}
+  \end{steps}
+\end{myframed}
+
+Unwinding the tail recursion gives the following equivalent iterative implementation:
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{ichangeUS}$(N)$:}]
+    \step while $N > 0$: 
+    \step~~~let $c' = \max\big\{c \in \{1, 5, 10, 25\} : c \le N\big\}$
+    \step~~~output $c'$
+    \step~~~set $N = N-c'$
+  \end{steps}
+\end{myframed}
+
+The run time is proportional to the number of coins output, which is $O(N)$.  
+
+\paragraph{Correctness.}
+
+To prove correctness, the main challenge is to show that the first greedy choice is correct
+--- that is, there is always some correct solution that uses $c'$, the largest coin of value at most $N$.
+Once we know that, we can commit to choosing coin $c'$ first,
+and then (clearly?) the problem that remains is to make change optimally for the remaining total, $N-c'$.
+
+We start with a useful observation:
+\begin{observation}\label{greedy: obs: change}  For any $N$, every optimal way of making change has
+  at most four pennies, at most one nickel,
+  and at most two coins that are nickels or dimes.
+\end{observation}
+Each claim in the observation follows by an exchange argument.
+(If there were more than four pennies,
+the way of making change would not be optimal because five pennies could be exchanged for one nickel.
+If there more than one nickel, two nickels could be exchanged for one dime.
+And then, if there were more than two coins that are nickels or dimes,
+there would have to be either three dimes (replaceable by a quarter and a nickel)
+or two dimes and a nickel (replaceable by a quarter).)
+
+Using the observation, we show that the first choice of the algorithm is correct:
+
+\begin{lemma}\label{greedy: lemma: greedy change} 
+  Fix any $N\ge 1$ and let $c' = \max\big\{c \in \{1, 5, 10, 25\} : c \le N\big\}$.
+  Let $X^*$ be any optimal way of making change totaling $N$.
+  Then $X^*$ contains a coin of value $c'$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any such $N$, $c'$, and $X^*$.
+  \step\label{greedy: step: coin at most}
+   All available values that are larger than $c'$ exceed $N$, so no coin of value greater than $c'$ is in $X^*$.
+  \step To finish, we show that there is a coin of value at least $c'$ in $X^*$.
+  \begin{block}
+    \step \underline{Case 1.} Suppose $c'=1$. That is, $N\le 4$.
+   \step $X^*$ has total value $N\ge 1$, so $X^*$ must have a coin of value at least 1.
+  \end{block}
+  \begin{block}
+    \step \underline{Case 2.} Suppose $c'=5$.  That is, $5 \le N \le 9$.
+   \step By Observation~\ref{greedy: obs: change},  the total value of the pennies in $X^*$ is at most 4.
+    \step But $N\ge 5$, so there is at least one other kind of coin in $X^*$, necessarily of value at least 5.
+  \end{block}
+  \begin{block}
+    \step \underline{Case 3.} Suppose $c'=10$.  That is, $10 \le N \le 24$.
+    \step By Observation~\ref{greedy: obs: change}, the total value of the pennies and nickels in $X^*$ is at most $4+5=9$.
+    \step But $N\ge 10$, so there is at least one other kind of coin in $X^*$, necessarily of value at least 10.
+  \end{block}
+  \begin{block}
+    \step \underline{Case 4.} Otherwise $c'=25$.  That is, $N\ge 25$.
+    \step By Observation~\ref{greedy: obs: change} the total value of the pennies, nickels, and dimes in $X^*$ is at most $4+20=24$.
+    \step But $N\ge 25$, so there is at least one other kind of coin in $X^*$, necessarily of value 25.
+  \end{block}
+  \step By the case analysis, there must be a coin of value at least $c'$ in $X^*$.
+  \step By this and Step~\ref{greedy: step: coin at most}, there must be a coin of value $c'$ in $X^*$.
+\end{longFormProof}
+
+By the lemma, we know that the first step made by the greedy algorithm is correct for any $N$.
+That is, the value $c'$ that it chooses in $\{1, 5, 10, 25\}$ is guaranteed to be in any optimal solution with total $N$,
+so it can commit to adding $c'$ to its solution.
+Next we prove carefully that to make change of value $N$ optimally
+it suffices to add $c'$ to any optimal way of making change of total value $N-c'$:
+
+\begin{lemma}\label{greedy: lemma: recursive change}
+  Fix any $N\ge 1$ and let $c' = \max\big\{c \in \{1, 5, 10, 25\} : c \le N\big\}$.
+  Let $\{c_1, c_2, \ldots, c_{\ell'}\}$ be any optimal way to make change of value $N-c'$.
+  Then $\{c', c_1, c_2, \ldots, c_{\ell'}\}$ is an optimal way to make change of value $N$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any such $N$, $c'$, and $c_1, c_2, \ldots, c_{\ell'}$.
+  \step The $\ell'+1$ coins in $c', c_1, c_2, \ldots, c_{\ell'}$ do total $N$,
+  because the coins in $c_1, c_2,\ldots, c_{\ell'}$ total $N-c'$.
+  \step To finish, we show that to make change for $N$, at least $\ell'+1$ coins are required.
+  \step Let $X^*=\{c^*_1, c^*_2, \ldots, c^*_{\ell}\}$ be an optimal way of making change for $N$.
+  \step By Lemma~\ref{greedy: lemma: greedy change}, $c'$ is one of those coins.
+  \step So $X^*$ contains $\ell-1$ coins that make change for $N-c'$.
+  \step Since $\ell'$ is the minimum number of coins to make change for $N-c'$, it must be that $\ell-1 \ge \ell'$.
+  \step Equivalently, $\ell \ge \ell'+1$ --- i.e., making change of total value $N$ requires at least $\ell'+1$ coins.
+\end{longFormProof}
+
+Finally, we show correctness.  
+\begin{lemma}  
+  For all $N\ge 0$, \textsf{rchangeUS}$(N)$ is correct ---  that is, it
+  makes change totaling $N$ using the fewest possible coins.
+\end{lemma}
+\begin{longFormProof}
+  \step The proof is by induction on $N$.
+  \step[greedy: change base case]
+  For base case $N=0$, \textsf{rchangeUS}(0) uses no coins, which is clearly the minimum possible.
+  \begin{block}[greedy: change induction]
+    \step Consider any $N\ge 1$, and assume that, for all $N'<N$, \textsf{rchangeUS}$(N')$ is correct.
+    \step Consider the execution of \textsf{rchangeUS}$(N)$.  As in Lines 2 and 3 of the algorithm,
+    \step define $c' = \max\{c\in\{1,5,10,25\} : c \le N\}$ and $\{c_1, c_2, \ldots, c_{\ell'}\}= \textsf{rchangeUS}(N-c')$.
+    \step By the inductive assumption, $\{c_1, c_2, \ldots, c_{\ell'}\}$ is an optimal way to make change totaling $N-c'$.
+    \step So, by Lemma~\ref{greedy: lemma: recursive change}, $\{c',c_1,\ldots, c_{\ell'}\}$ is an optimal way to make change totaling $N$.
+    \step But $\{c',c_1,\ldots, c_{\ell'}\}$ is also the output of $\textsf{rchangeUS}(N)$.
+    \step So $\textsf{rchangeUS}(N)$ outputs an optimal way to make change totaling $N$.
+  \end{block}
+  \step By Block~\ref{greedy: change induction}, for all $N\ge 1$,
+  \textsf{rchangeUS}$(N)$ is correct if \textsf{rchangeUS}$(N')$ is correct for all $N'< N$.
+  \step By Step~\ref{greedy: change base case}, \textsf{rchangeUS}(0) is correct.
+  \step By the preceding two steps and induction, for all $N\ge 0$, \textsf{rchangeUS}$(N)$ is correct.
+\end{longFormProof}
+
+The theorem below summarizes what we've figured out.
+\begin{theorem}
+  There is an $O(N)$-time algorithm for \prob{Making Change with U.S. Coins}.
+\end{theorem}
+
+\subsection{Exercises}
+
+\exercise \emph{(non-greedy denominations)}
+The proof above relies heavily on the particular denominations $\{1,5,10,25\}$.
+For each $d\in\{6,7,8,9,11\}$, do the following.
+Consider using instead the set of denominations $\{1, 5, d\}$.
+Figure out whether,
+for all integers $N$, the greedy algorithm (with available denominations $\{1, 5, d\}$)
+always makes change for $N$ using a minimum possible number of coins.
+For each value of $d$, explain clearly why your answer is correct.
+
+\paragraph{External exercise}
+\begin{itemize}
+\item  \JE Chapter 4, Exercise 14
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

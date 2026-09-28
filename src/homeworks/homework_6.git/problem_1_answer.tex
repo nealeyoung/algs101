@@ -1,0 +1,147 @@
+\paragraph{Problem 1 answer}\GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item[(a)]  Here's a comma-separated list of the nodes in the topological order as computed by the algorithm:
+
+  \begin{blue}
+    \[
+      \REPLACEME
+    \]
+  \end{blue}
+
+\item[(b)]
+
+  \begin{blue}
+  \(
+    \begin{array}{r@{:~~}l}
+      \text{node} & \text{parent} \\ \hline
+
+      a & \REPLACEME \\
+
+      b & \REPLACEME \\
+
+      c & \REPLACEME \\
+
+      d & \REPLACEME \\
+
+      e & \REPLACEME \\
+
+      f & \REPLACEME \\
+
+      g & \REPLACEME \\
+
+      h & \REPLACEME \\
+
+      i & \REPLACEME \\
+
+      j & \REPLACEME
+    \end{array}
+  \)
+\end{blue}
+  
+\item[(c)]  Here are comma-separated lists of the forward, back, and cross edges. \smallskip
+
+  \begin{tabular}{rl}
+
+    Forward edges:
+    & \BLUE{\(
+      \REPLACEME
+      \)}
+
+    \\
+
+    Back  edges:
+    & \BLUE{\(
+      \REPLACEME
+      \)}
+
+    \\
+
+    Cross edges:
+    & \BLUE{\(
+      \REPLACEME 
+      \)}
+  \end{tabular}
+  
+\end{enumerate}
+
+\newpage
+
+\paragraph{Problem 1(d) answer (OPTIONAL!)}\GradescopeComment{This should be on page 4 (top) of your PDF.}
+
+\begin{blue}
+  
+% HERE ARE TWO WAYS TO DRAW A ROOTED TREE IN LaTeX.
+% UNCOMMENT ONE OF THEM AND EDIT IT TO MAKE YOUR ANSWER.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% METHOD 1
+
+% \begin{center}
+%   \begin{tikzpicture}[
+%     every node/.style={rounded rectangle, draw},
+%     every path/.style={->}
+%     ]
+%     \node (a) [label={180:11}, label={0:16}] {a}; 
+%     \node (b) [below =of a, label={180:14}, label={0:15}] {b}; 
+%     \node (c) [below =of b, label={180:3}, label={0:6}] {c}; 
+
+%     \node (d) [left =of a, xshift=-20pt, label={180:1}, label={0:10}] {d}; 
+%     \node (e) [below =of d, label={180:2}, label={0:9}] {e}; 
+%     \node (f) [below =of e, xshift=-10pt, label={180:7}, label={0:8}] {f}; 
+%     \node (g) [below =of f, xshift=10pt, label={180:4}, label={0:5}] {g}; 
+
+%     \node (h) [right =of b, xshift=20pt, label={180:12}, label={0:13}] {h}; 
+%     \node (i) [above =of h, label={180:19}, label={0:20}] {i}; 
+
+%     \node (j) [right =of i, xshift=20pt, label={180:17}, label={0:18}] {j}; 
+
+%     \draw (a) -- (b); 
+%     \draw (b) -- (c); 
+%     \draw (d) -- (e); 
+%     \draw (e) -- (f); 
+%     \draw (f) -- (g); 
+%     \draw (e) -- (c); 
+%     \draw (c) -- (g); 
+%     \draw (a) -- (h); 
+%     \draw (i) -- (h); 
+%     \draw (b) -- (h); 
+%   \end{tikzpicture}
+% \end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   METHOD 2
+  
+%  % DRAW IT ON PAPER, SCAN IT TO A PDF, THEN INCLUDE THE PDF IN YOUR DOCUMENT AS FOLLOWS:
+
+%   \includegraphics[height=3in,width=6in]{hwk_demo_scan}
+  
+%   % SEE https://texblog.org/2012/02/23/crop-figures-with-includegraphics/ IF YOU WANT TO CROP THE INCLUDED IMAGE.
+  
+\end{blue}
+
+\vfill \vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 4 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_6"
+%%% End:

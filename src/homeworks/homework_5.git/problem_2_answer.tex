@@ -1,0 +1,132 @@
+\paragraph{Problem 2 answer}\GradescopeComment{This should be on page 6 of your PDF.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item  Nodes in level 0: $a$
+
+  Nodes in level 1: \BLUE{$
+    \REPLACEME
+    $}
+
+  Nodes in level 2: \BLUE{$
+    \REPLACEME
+    $}
+
+  Nodes in level 3: \BLUE{$
+    \REPLACEME
+    $}
+
+  Nodes in level 4: \BLUE{$
+    \REPLACEME
+    $}
+
+\item
+
+  Parent of $b$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $c$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $d$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $e$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $f$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $g$: \BLUE{$
+    \REPLACEME
+    $}
+
+  Parent of $h$: \BLUE{$
+    \REPLACEME
+    $}
+\end{enumerate}
+
+\newpage
+
+\paragraph{Problem 2(c) answer (OPTIONAL!)}\footnote
+{\color{blue}
+  SEE FURTHER INSTRUCTIONS IN THE COMMENTS IN PROBLEM\_2\_ANSWER.TEX!}
+\GradescopeComment{This should be on page 7 (top) of your PDF.}
+
+\begin{blue}
+  
+% HERE ARE TWO WAYS TO DRAW A ROOTED TREE IN LaTeX.
+% UNCOMMENT ONE OF THEM AND EDIT IT TO MAKE YOUR ANSWER.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% METHOD 1
+
+%   \begin{tikzpicture}[  mystyle/.style ={circle, draw, minimum width = 0.6 cm}  ]
+
+%     % draw and name the nodes 
+
+%     \node[mystyle, label={0:a}] (R) {r};   % draw a node named R with label r
+
+%     \node[mystyle, label={0:b}] (S) [below =of R, xshift=-50pt] {s};
+%     % this line draws a node named S with center label "s" and side label "b"
+%     % "0" is the rotation of the side label around the node
+%     % "b" is the side label
+%     % "S" is the name that can be used below to reference this node 
+%     % "R" is the previously placed node that this node is placed below
+%     % "-50pt" controls the horizontal placement of this node
+%     % "s" is the center label (displayed within this node)
+    
+%     \node[mystyle, label={0:c}] (T) [below =of R, xshift= 0pt] {t};
+%     \node[mystyle, label={0:d}] (U) [below =of R, xshift=50pt] {u};
+%     \node[mystyle, label={0:e}] (V) [below =of S, xshift=-25pt] {v};
+%     \node[mystyle, label={270:f}] (X) [below =of S, xshift=25pt] {x};
+
+%     % draw the edges
+%     \path
+%     (R) edge (S)
+%     (R) edge (T) 
+%     (R) edge (U)
+%     (S) edge (V) 
+%     (S) edge (X); 
+%   \end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   METHOD 2
+  
+%  % DRAW IT ON PAPER, SCAN IT TO A PDF, THEN INCLUDE THE PDF IN YOUR DOCUMENT AS FOLLOWS:
+
+%   \includegraphics[height=3in,width=6in]{hwk_5_demo_scan}
+  
+%   % SEE https://texblog.org/2012/02/23/crop-figures-with-includegraphics/ IF YOU WANT TO CROP THE INCLUDED IMAGE.
+  
+\end{blue}
+
+\vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 7 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % replace with "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % replace with "none" if none
+  \end{itemize}
+\end{blue}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_5"
+%%% End:

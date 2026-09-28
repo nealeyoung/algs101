@@ -1,0 +1,151 @@
+
+\vfill
+
+\begin{answerBox}{2in}          % please don't edit this, doing so will throw off the page layout
+
+  \paragraph{Problem 3 part (i)(a) answer}\GradescopeComment{This should be on page 6 (bottom) of your PDF.}
+
+  \bigskip 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 3(a) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+  Here is a comma-separated list of all the critical edges:
+  \BLUE{
+    \[
+      \REPLACEME
+    \]}
+
+\end{answerBox}
+
+\newpage
+
+\paragraph{Problem 3 part (i)(b) answer}\GradescopeComment{This should be on page 7 (top) of your PDF.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 3(b) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{lemma}\label{lemma: problem 3 i}
+  Let $(u, w)$ be any edge in any $s$-$t$ flow network $G$ with positive capacities.
+  Then $(u, w)$ is critical if and only if $(u, w)$ crosses some minimum-capacity $s$-$t$ cut $(S, T)$
+  (that is, $u\in S$ and $w\in T$).
+\end{lemma}
+
+\begin{longFormProof}
+
+  \step Consider any edge $(u, w)$ in any $s$-$t$ flow network $G$ with positive capacities.
+
+  \step Let $c_{\min}$ be the minimum capacity of any $s$-$t$ cut in $G$. 
+
+  \step By Theorem 8.2 (Max-Flow Min-Cut),  the maximum $s$-$t$ flow value in $G$ is $c_{\min}$. 
+
+  \step Let $c_{uw}$ be the minimum capacity of any $s$-$t$ cut in $G$ that $(u,w)$ crosses.  Clearly $c_{\min} \le c_{uw}$.
+  
+  \smallskip \lineacross 
+
+  \step First we prove that, if $(u,w)$ doesn't cross any min-capacity cut, then $(u, w)$ is not critical.
+  
+  \begin{block}\label{A1}
+
+    \step
+    Suppose that $(u, w)$ doesn't cross any min-capacity $s$-$t$ cut, that is, $c_{\min} < c_{uw}$.
+    \comment{(block: if-then)}
+
+    \step Fix $\eps = \min(\capac(u, w), c_{uw} - c_{\min})$.  Note $\eps> 0$.
+
+    \step Let $G_\eps$ be the flow network obtained by reducing the capacity of $(u, w)$ by $\min(\eps, \capac(u,w))$.
+
+    \begin{block}\label{A11}
+      
+      \step Consider an arbitrary $s$-$t$ cut $(S, T)$.
+      \comment{(block: $\forall$)}
+
+      \step Let $\capac(S, T)$ and $\capac_\eps(S, T)$ denote the capacities of $(S, T)$ in $G$ and $G_\eps$, respectively. 
+
+      \begin{blue}
+        
+        \step \REPLACEME
+
+        \step $\vdots$          % you might need more than two steps here. but do keep the entire proof on one page
+        
+      \end{blue}
+    
+      \step So $\capac_\eps(S, T)$ is at least $c_{\min}$.
+      
+    \end{block}
+
+    \step By Block~\ref{A11}, the capacity of every $s$-$t$ cut in $G_\eps$ is at least $c_{\min}$.
+
+    \step So, by Thm.~8.2 (Max-Flow Min-Cut),  the max flow value in $G_\eps$ is at least $c_{\min}$.
+
+    \step So the max flow value in $G_\eps$ is at least the max flow value in $G$.
+    
+    \step So $(u, w)$ is not critical.
+    
+  \end{block}
+  
+  \step\label{A2}
+  By Block~\ref{A1}, if $(u, w)$ doesn't cross any minimum-capacity cut, then $(u, w)$ is not critical.
+
+  \smallskip \lineacross 
+
+  \step Next we prove that, if  $(u, w)$ crosses some minimum-capacity $s$-$t$ cut, then $(u, w)$ is critical. 
+
+  \begin{block}\label{A3}
+    
+    \step Suppose that $(u, w)$ crosses some such cut $(S, T)$ (with $\capac(S, T)= c_{\min}$).
+    \comment{(block: if-then)}
+    
+    \begin{block}\label{A31}
+
+      \step Consider an arbitrary $\eps>0$.
+      \comment{(block: $\forall$)}
+
+      \step Let $G_\eps$ be obtained from $G$ by reducing the capacity of $(u, w)$  by $\min(\eps, \capac(u,w))>0$.
+
+      \step Let $\capac(S, T)$ and $\capac_\eps(S, T)$ denote the capacities of $(S, T)$ in $G$ and $G_\eps$, respectively. 
+
+      \begin{blue}
+
+        \step \REPLACEME
+
+        \step $\vdots$          % you might need more than two steps here. but do keep the entire proof on one page
+
+      \end{blue}
+      
+      \step So the max $s$-$t$ flow value in $G_\eps$ is strictly less than the max $s$-$t$ flow value in $G$.
+
+    \end{block}
+
+    \step By Block~\ref{A31}, for all $\eps>0$,  reducing $(u, w)$'s capacity by $\min(\eps, \capac(u, w))$
+    reduces the max flow.
+
+    \step So $(u, w)$ is critical.
+    
+  \end{block}
+  
+  \step\label{A4}
+  By Block~\ref{A3}, if $(u, w)$ crosses some minimum-capacity cut, then $(u, w)$ is critical.
+  
+  \smallskip \lineacross 
+
+  \step By Steps~\ref{A2} and~\ref{A4}, $(u, w)$ is critical if and only if $(u, w)$ crosses some minimum-capacity cut. 
+
+\end{longFormProof}
+
+%% THE COLLABORATORS AND CITATIONS STATEMENT IS IN problem_3_collaborators_citations.tex
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_10"
+%%% End:

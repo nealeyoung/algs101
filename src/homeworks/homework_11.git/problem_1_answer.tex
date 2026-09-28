@@ -1,0 +1,322 @@
+
+
+\newpage
+
+\paragraph{Problem 1 answer}\GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(a) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{3.8in}   % please don't edit this line, doing so will throw off the page layout 
+
+  \paragraph{(a)}  
+
+  % Define your reduction $r$
+  % by defining, for every possible instance $I=(p, q, a, b)$ of  \prob{Family Seating},
+  % what output $(G, s, t, k) = r(I)$ the reduction $r$ gives.
+  % Your definition must state precisely how $G$, $s$, $t$, and $k$ are defined for the given $(p, q, a, b)$.
+
+  Fix an instance $I=(p, q, a=(a_1,a_2,\ldots,a_p), b=(b_1,b_2,\ldots,b_q))$ of  \prob{Family Seating}.  
+  The output of the reduction $r$ on input $I$ is $r(I) = (G=(V, E), s, t, k)$ where
+  digraph $G=(V,E)$ with edge capacities, source $s$, sink $t$, and value $k$ are defined as follows.
+
+  \bigskip 
+
+  \begin{blue}
+
+    % Explain as precisely as you can in words.
+    % Use formal notation only when necessary for precision.
+
+    \REPLACEME
+
+  \end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(b) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{1.8in}   % please don't edit this line, doing so will throw off the page layout 
+
+  \paragraph{(b)}  
+
+  % Show that your reduction is a \emph{polynomial-time} reduction,
+  % by explaining carefully how, given $I$, one can compute the output $r(I)$ in time polynomial in the input size ($p+q$).
+
+  \begin{blue}
+
+    \REPLACEME
+
+  \end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(c) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{3in}   % please don't edit this line, doing so will throw off the page layout 
+
+  \paragraph{(c)}
+
+  % Consider the example input $I$ with $p=2$, $q=3$, $a=(2,2)$, $b=(1,2,2)$.
+  % Given this specific $I$, calculate the output $(G, s, t, k) = r(I)$.
+  % Draw the resulting flow network.  What is $k$? 
+
+  For the input $I$ with $p=2$, $q=3$, $a=(2,2)$, $b=(1,2,2)$, the output $r(I)$ of the reduction is as follows.
+  The value of $k$ is
+  \BLUE{
+    \REPLACEME
+    .}
+
+  Here's a drawing of the flow network $G$:
+
+  \bigskip
+  
+  \begin{center}
+
+    \begin{blue}
+
+      \REPLACEME
+      
+      % % Here's an example illustrating one way to render your graph in LaTeX
+
+      % \begin{tikzpicture}[
+      %   vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+      %   label/.style={pos=0.3, fill=white, inner sep=2pt}, 
+      %   every path/.style={->}
+      %   ]
+
+      %     %%   NODES 
+      
+      %   \node[vertex] (s) {s}; 
+      %   \node[vertex] (u1) [right =of s, yshift=20pt] {$u_1$}; 
+      %   \node[vertex] (w1) [right =of u1] {$w_1$}; 
+      %   \node[vertex] (t) [right =of w1, yshift=-20pt] {$t$}; 
+
+      %     %%   EDGES AND CAPACITIES
+
+      %   \path (s) edge node [label] {1} (u1); 
+      %   \path (u1) edge node [label] {2}  (w1); 
+      %   \path (w1) edge node [label] {3}  (t); 
+
+      % \end{tikzpicture}
+
+      % Or you can delete the block above, and instead draw the forest by hand,
+      % scan it to a PDF, then include the PDF in your LaTeX document
+      % using these commands:
+
+      % \includegraphics[height=2.5in,width=6in]{YOUR_FILE_NAME_HERE}   % FILE NAME WITHOUT THE PDF EXTENSION
+
+      % See https://texblog.org/2012/02/23/crop-figures-with-includegraphics
+      % if you want to crop the included image.
+
+    \end{blue}
+  \end{center}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(d) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\newpage
+
+\paragraph{Problem 1 answer, continued}\GradescopeComment{This should be on page 4 (top) of your PDF.}
+
+\begin{answerBox}{3in}   % please don't edit this line, doing so will throw off the page layout 
+  
+  \paragraph{(d)}
+
+  % Show the ``if'' direction.
+  % Given an arbitrary \prob{Family Seating} instance $I$,
+  % let $G=(V,E)$, $s, t$, and $k$ be the output of your reduction $r$ given $I$.
+  % Describe carefully how, given any $s$-$t$ flow $f$ in $G$ of value at least $k$,
+  % one can obtain a valid seating arrangement for $I$.
+  % (Assume that, if all edge capacities in $G$ are integers, then on each edge $(u,w)\in E$ the flow $f(u,w)$ is an integer.)
+
+  Fix an arbitrary \prob{Family Seating} instance $I=(p, q, a=(a_1, \ldots, a_p), b=(b_1,\ldots, b_q))$.
+  Let $G=(V,E)$, $s, t$, and $k$ be the output $r(I)$ of the reduction $r$ given $I$.
+  Assume that $G$ has an integer $s$-$t$ flow of value at least $k$.
+  Let $f$ be such a flow.
+  From $f$, a valid seating arrangement $X$ for $I$ can be obtained as follows:
+
+  \bigskip 
+
+  For each family $i\in\{1,\ldots,p\}$ and table $j\in\{1,\ldots,q\}$,
+  make the number of members of family $i$ sitting at table $j$ be
+  \BLUE{
+    \REPLACEME
+  .}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(e) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{5in}   % please don't edit this line, doing so will throw off the page layout 
+
+  \paragraph{(e)}
+
+  % 
+  % For the example input $I$ from Part B, the answer is \textsf{yes},
+  % so the flow network that you drew in Part B should have a flow of value at least $k$ (for that $k$).
+  % What is a flow in that flow network of value at least $k$?
+  % What is a corresponding seating arrangement for the example input $I$?
+  % 
+  For the flow network in Part (c), a flow of value at least $k$ is as follows:
+
+  The value of $k$ is
+  \BLUE{
+    \(
+    \REPLACEME
+    \).
+  }
+
+  Here is a drawing of a flow of value $k$ in that network:
+  \medskip
+
+  \begin{center}
+    \begin{blue}
+
+      \REPLACEME
+
+      % % Here's an example illustrating one way to render your graph in LaTeX
+
+      % \begin{tikzpicture}[
+      %   vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+      %   label/.style={pos=0.3, fill=white, inner sep=2pt}, 
+      %   every path/.style={->}
+      %   ]
+
+      %     %%   NODES 
+      
+      %   \node[vertex] (s) {s}; 
+      %   \node[vertex] (u1) [right =of s, yshift=20pt] {$u_1$}; 
+      %   \node[vertex] (w1) [right =of u1] {$w_1$}; 
+      %   \node[vertex] (t) [right =of w1, yshift=-20pt] {$t$}; 
+
+      %     %%   EDGES AND FLOWS
+
+      %   \path (s) edge node [label] {1} (u1); 
+      %   \path (u1) edge node [label] {2}  (w1); 
+      %   \path (w1) edge node [label] {3}  (t); 
+
+      % \end{tikzpicture}
+
+      % Or you can delete the block above, and instead draw the forest by hand,
+      % scan it to a PDF, then include the PDF in your LaTeX document
+      % using these commands:
+
+      % \includegraphics[height=2.5in,width=6in]{YOUR_FILE_NAME_HERE}   % FILE NAME WITHOUT THE PDF EXTENSION
+
+      % See https://texblog.org/2012/02/23/crop-figures-with-includegraphics
+      % if you want to crop the included image.
+
+    \end{blue}
+  \end{center}
+
+  % What is a corresponding seating arrangement for the example input $I$?
+
+  \medskip
+
+  \BLUE{A corresponding seating arrangement is as follows:}
+
+  \begin{blue}
+
+    \REPLACEME
+
+  \end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(f) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\newpage
+
+\paragraph{Problem 1 answer, continued}\GradescopeComment{This should be on page 5 (top) of your PDF.}
+
+\paragraph{(f)} 
+
+% Now show the ``only if'' direction.
+% Given an arbitrary \prob{Family Seating} instance $I$,
+% let $G=(V,E)$, $s, t$, and $k$ be the output of $r$ given $I$.
+% Describe carefully how, given any valid seating arrangement for $I$,
+% one can obtain an $s$-$t$ flow $f$ in $G$ of value at least $k$.
+
+Fix an arbitrary \prob{Family Seating} instance $I=(p, q, a=(a_1, \ldots, a_p), b=(b_1,\ldots, b_q))$.
+Let $G=(V,E)$, $s, t$, and $k$ be the output $r(I)$ of the reduction $r$ given $I$.
+Assume that $I$ has a valid seating arrangement.
+Let $X$ be such an arrangement.
+From $X$, an $s$-$t$ flow $f$ of value at least $k$ in $G$ can be obtained as follows.
+
+\begin{blue}
+
+  \REPLACEME
+
+\end{blue}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1 COLLABORATORS AND CITATIONS 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\vfill
+
+\begin{answerBox}{2in}          % please don't edit this line, doing so will throw off the page layout
+  
+  \paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment
+  {This should be on page 5 (bottom) of your PDF.}
+
+  I collaborated on this problem with the following people:
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none
+    \end{itemize}
+  \end{blue}
+
+  My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none
+    \end{itemize}
+  \end{blue}
+
+\end{answerBox}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_11"
+%%% End:

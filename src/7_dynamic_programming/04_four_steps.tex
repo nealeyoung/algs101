@@ -1,0 +1,93 @@
+
+\section{Four steps for presenting a dynamic-programming algorithm}\label{dp: sec: four steps}\doHeader{Four steps for presenting DP algorithms}
+
+In the rest of these notes,
+we use the following four steps to present each dynamic-programming algorithm:
+
+\begin{description}
+\item[1. Define the subproblems.]
+  Define the subproblems to be solved for a given instance,
+  and state how the final answer is computed from these subproblems.
+  For example, to present the dynamic-programming algorithm for \prob{Making Change},
+  the first step would be as follows:
+
+  \medskip 
+
+  \emph{1.   Given the instance $(D, T)$ of \prob{Making Change},
+    define the following subproblems.
+    For each $t\in \{0,1,\ldots,T\}$,
+    define $M(t)$ to be the minimum number of coins needed to make change
+    (using denominations in $D$) of total value $t$.
+    The solution to the problem is $M(T)$.}
+
+  \medskip 
+
+  This tells the reader exactly what subproblems the algorithm will solve,
+  and also how (once they are solved) the algorithm will compute the output for the given instance.
+
+\item[2. State the recurrence relation.]  The recurrence relation is a divide-and-conquer equation
+  that can be used to compute the value for each subproblem
+  from the values of some smaller subproblems.
+  The left-hand side of the equation is the value of the subproblem.
+  The right-hand side is an expression
+  built from the values of smaller subproblems.
+  For \prob{Making Change}, the recurrence relation is in Lemma~\ref{dp: lemma: change}:
+
+ \medskip 
+  
+    \emph{2. 
+      \(
+      M(t) = \begin{cases}
+        0 & \text{ if } t=0 \\
+        \min\{ 1 + M(t-d_i) : d_i \in D,\, d_i \le t\} & \text{ otherwise}.
+      \end{cases}
+      \)}
+
+  \medskip 
+
+  The recurrence relation does not \emph{define} $M(t)$!
+  Rather, it is an identity that holds for $M(t)$ as $M$ is defined in the first step.
+  (To prove correctness of the algorithm, we'll have to prove that the recurrence relation holds.)
+  
+  The first and second step together determine the algorithm:
+  the algorithm iterate (or recurses) over the set of subproblems
+  to be solved.  It solves each subproblem using the recurrence relation,
+  evaluating the right-hand side to determine the value of the left-hand side.
+
+  For readers who are familiar with dynamic programming,
+  the first two steps are enough to implicitly define the algorithm,
+  so it is usually unnecessary to give any further definition.
+  
+\item[3. Prove correctness.]
+  The third step is to prove that (or explain why) the recurrence relation holds. 
+  As long as it holds,
+  correctness of the algorithm (iterative, or recursive and memoized)
+  will follow by induction.
+  
+\item[4. Bound the run time.] Analyze the runtime of the algorithm.
+  This is the sum, over all of the subproblems,
+  of the time to evaluate
+  the right-hand side of the recurrence relation
+  (assuming the smaller subproblems are already solved).
+  For \prob{Making Change}, this would be enough:
+  
+  \medskip
+
+  \emph{
+    4. There are $T+1$ subproblems (one for each $t\in\{0,1,\ldots,T\}$;
+    subproblem $t$ is to compute $M(t)$).
+    For each, the time to evaluate the right-hand side of the recurrence for $M(t)$ is $O(k)$
+    (the number of denominations).
+    So the total time for the algorithm is $O(T k)$.
+  }
+\end{description}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

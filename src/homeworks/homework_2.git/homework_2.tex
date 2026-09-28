@@ -1,0 +1,293 @@
+\documentclass[11pt]{article}
+
+\usepackage{xparse,environ}
+\usepackage{adjustbox}
+
+% \newcommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+% Local override, kept so this homework's PDF matches its original exactly:
+% the shared macros (src/macros/macros.tex) now define \inputAnswer differently (which also calls \refreshHeader).
+\renewcommand{\inputAnswer}[1]{\input{\answerDirectory/#1}}
+
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{2}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+{\small
+\problem \emph{(Section 1.4)}
+Reorder this sequence so each function is big-O of the following function:
+\newcommand{\sep}{~~~~}
+
+\[
+  n^2
+  \sep
+  6^{\log_2 n}
+  \sep 
+  n!
+  \sep 
+  11^n
+  \sep 
+  \log_2 (n!)  
+  \sep 
+  2^{3n}
+  \sep 
+  10 n^{3/2}
+  \sep 
+  100 n
+  \sep 
+  3^{\log_4 n}
+  \sep 
+  \log_2^4 n
+\]
+No justification is required.  Give the reordered sequence below.  For grading, order the functions vertically, one on each line.
+}
+
+\setlength{\ITEMHT}{0.45in}
+\injectEnumerateBlue 
+
+\inputAnswer{problem_1_answer}
+
+\restoreEnumerateBlue
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
+
+\newpage 
+{\small
+\problem \emph{(Section 4.1)}
+Use the so-called naive upper and lower bounds, and the rule for geometric sums,
+to determine the big-$\Theta$ value of each of the following sums.
+You don't have to show your work,
+but you can if you want feedback on it
+(and it may help you get partial credit if your answer is wrong). 
+
+\begin{enumerate}[label=(\alph*)]
+
+\item $\displaystyle\sum_{i=1}^{\log_2 n} i(\log_3 i)^2$
+
+\item $\displaystyle\sum_{i=1}^{n} i^2/3^i$
+
+\item $\displaystyle\sum_{i=1}^{2^n} (\log_2 i)^2$
+  
+\item $\displaystyle\sum_{i=1}^n 1.2^i/i$
+
+\end{enumerate}
+}
+
+\setlength{\ITEMHT}{0.95in}
+{
+\injectEnumerate 
+
+\inputAnswer{problem_2_answer}
+}
+% \restoreEnumerate 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
+
+\newpage
+
+
+\newcommand{\ALG}[4]{
+  \vbox{                        % keep on one page
+    \begin{steps}
+    \item[] def \textsf{Print{#1}s}$(n)$:  \comment{Assume $n$ is a power of $#4$.}
+      \step for $i = 1$ to $#2$: print(``{#1}'') \comment{\ldots print $#2$ #1's}
+      \step if $n > 1$:
+      \step~~~for $j=1$ to $#3$: \textsf{Print{#1}s}$(\floor{n/#4})$
+      \comment{\ldots make $#3$ recursive calls, each with input $\floor{n/#4}$}
+    \end{steps}
+  }
+}
+
+\newpage
+
+\problem\label{problem: recursion}\emph{(Recursion-tree method)}
+Repeat Exercise 4.2 for each of the algorithms below.
+Give your answers in the same format as the solution in Lecture Note 4 for that exercise.
+To make it easier, ignore floors in your calculations.
+That is, for (a) and (c) assume $n$ is a power of 3.
+For (b) assume $n$ is a power of 4. 
+
+\begin{enumerate}[label=(\alph*)]
+\item \ALG{A}{3n}{4}{3}
+  
+\item \ALG{B}{n^2}{16}{4}
+
+\item \ALG{C}{5n}{2}{3}
+
+\end{enumerate}
+
+\continued 
+
+\setlength{\ITEMHT}{1.3in}
+{
+\injectEnumerate 
+
+\inputAnswer{problem_3a_answer}
+
+\continued 
+
+\inputAnswer{problem_3b_answer}
+
+\continued 
+
+\inputAnswer{problem_3c_answer}
+}
+% \restoreEnumerate
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 4  %%%%%%%%%%%%%%%%%
+
+\newpage
+
+{\small
+\problem\label{problem: mergesort}\emph{(recursion trees)}
+Consider a variant of \textsf{mergesort} that, given an array of size $N$,
+recurses as usual unless the subproblem to be solved is of size $\sqrt N$ or less,
+in which case it solves the subproblem without recursing, instead using insertion sort
+(a quadratic-time algorithm) on the subproblem.
+Use a recursion-tree analysis to determine
+the asymptotic worst-case running time of this algorithm on arrays of size $N$.
+Show your work as described for Problem~\ref{problem: recursion}.
+
+You may assume $N$ is an even power of two.  That is $N=2^{2k}$ for some integer $k$,
+so $\sqrt N = 2^k$.
+}
+
+\setlength{\ITEMHT}{1.15in}
+{
+\injectEnumerate 
+
+\inputAnswer{problem_4_answer}
+}
+% \restoreEnumerate
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 5 %%%%%%%%%%%%%%%%%
+
+\newpage
+
+{\small
+
+\problem\emph{(Exercise 3.13)}\label{problem: busy hospitals}
+\textbf{NOTE: Do this problem or Problem~\ref{problem: lonely doctor}, but not both.}
+
+Prove or disprove the following theorem:
+
+\begin{theorem}
+  In every execution of the hospitals-propose \prob{Stable Matching} algorithm,
+  there is at most one hospital that makes offers to every doctor.
+\end{theorem}
+
+(Note: we mean the algorithm described in the lecture notes
+  --- in each iteration, one hospital makes an offer to one doctor.)
+If the theorem is false, describe a counter-example:
+a particular instance, and an execution of the algorithm on that instance,
+% [review 2026-09-27] fix: "make offers to every hospital" -> "every doctor" (hospitals make offers to doctors; matches LN3 Exercise 3.13)
+in which at least two hospitals make offers to every doctor.
+If the theorem is true, give a long-form proof.
+In the proof, you may reuse without proof any observations, lemmas, or theorems from the lecture notes,
+but cite the observation, lemma, or theorem by number when you do, to let the reader know.
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\inputAnswer{problem_5_answer}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 6 %%%%%%%%%%%%%%%%%
+
+\newpage
+{\small
+\problem\emph{(Exercise 3.11)}\label{problem: lonely doctor}
+\textbf{NOTE: Do this problem or Problem~\ref{problem: busy hospitals}, but not both.}
+
+Prove or disprove the following theorem:
+
+\begin{theorem}
+  In any execution of the hospitals-propose \prob{Stable Matching} algorithm
+  there is at least one doctor that receives no offer before the final iteration.
+\end{theorem}
+
+Note: we mean the algorithm described in the lecture notes
+  --- in each iteration, one hospital makes an offer to one doctor.)
+If the theorem is false, describe a counter-example:
+a particular instance, and an execution of the algorithm on that instance,
+in which every doctor receives an offer before the final iteration.
+If the theorem is true, give a long-form proof.
+In the proof, you may reuse without proof any observations, lemmas, or theorems from the lecture notes,
+but cite the observation, lemma, or theorem by number when you do, to let the reader know.
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\inputAnswer{problem_6_answer}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

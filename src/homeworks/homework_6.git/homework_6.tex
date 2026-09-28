@@ -1,0 +1,403 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{6}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\problem \emph{(Exercise 6.1)}
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style={rounded rectangle, draw},
+    every path/.style={->}
+    ]
+    \node (us) [label={180:11}, label={0:16}] {a}; 
+    \node (pants) [below =of us, label={180:14}, label={0:15}] {b}; 
+    \node (belt) [below =of pants, label={180:3}, label={0:6}] {c}; 
+
+    \node (ushirt) [left =of us, yshift=20pt, label={180:1}, label={0:10}] {d}; 
+    \node (shirt) [below =of ushirt, label={180:2}, label={0:9}] {e}; 
+    \node (tie) [below =of shirt, xshift=-10pt, label={180:7}, label={0:8}] {f}; 
+    \node (jacket) [below =of tie, xshift=10pt, label={180:4}, label={0:5}] {g}; 
+
+    \node (shoes) [right =of pants, yshift=-20pt, label={180:12}, label={0:13}] {h}; 
+    \node (socks) [above =of shoes, label={180:19}, label={0:20}] {i}; 
+
+    \node (watch) [right =of socks, yshift=20pt, label={180:17}, label={0:18}] {j}; 
+
+    \draw (us) -- (pants); 
+    \draw (pants) -- (belt); 
+    \draw (ushirt) -- (shirt); 
+    \draw (shirt) -- (tie); 
+    \draw (tie) -- (jacket); 
+    \draw (shirt) -- (belt); 
+    \draw (belt) -- (jacket); 
+    \draw (us) -- (shoes); 
+    \draw (socks) -- (shoes); 
+    \draw (pants) -- (shoes); 
+  \end{tikzpicture}
+\end{center}
+
+The drawing above shows a directed acyclic graph (DAG) $G=(V,E)$,
+on which the depth-first-search-based topological-sort algorithm
+from Section 6.3.5
+has been run.
+Each node is labeled with  its discovery time and its finish time during the DFS.
+Note that the drawing above is \emph{not} the layout from the DFS forest,
+and in this run ties were \emph{not} always broken in alphabetical order.
+
+\begin{enumerate}[label=(\alph*)]
+\item List the nodes in the topological order output by the algorithm (given this DFS outcome).
+      
+\item Reconstruct the DFS forest.  State the parent of each node in the forest.
+  Write ``none'' for each root.
+      
+\item Which edges are forward edges?  Back edges?  Cross edges? 
+
+\item Optionally, draw the DFS forest.
+  If you do this, and your answers for Parts (b) and (c)
+  are substantially incorrect, you may get partial credit here.
+
+  Remember to draw the nodes so that the roots are ordered left-to-right by discovery time,
+  and likewise for the children of each node.
+\end{enumerate}
+
+In the Python code for the notes (\url{\codeFolder}),
+the file \pycode{graph_traversal/depth_first_search.py}
+has Python code for DFS and the DFS-based topological-sort algorithm.
+
+\refreshHeader 
+\continued
+
+\setlength{\ITEMHT}{2.5in}
+{\injectEnumerate
+  \inputAnswer{problem_1_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
+
+\newpage
+\problem \emph{(Exercise 5.11)}
+Manually simulate Prim's algorithm (from the lecture notes) on the graph $G$ below, starting from source $s$.
+For each of the eight iterations of the algorithm,
+list the edge that the algorithm chooses in that iteration.
+
+\begin{center}
+  \begin{tikzpicture}[
+    vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw},
+    every path/.style={}
+    ]
+    \node[vertex] (s) {s}; 
+    \node[vertex] (a) [right =of s, xshift=-15pt, yshift=30pt] {a}; 
+    \node[vertex] (b) [right =of a] {b}; 
+    \node[vertex] (c) [right =of b] {c}; 
+    \node[vertex] (d) [right =of s, xshift=-15pt, yshift=-30pt] {d}; 
+    \node[vertex] (f) [right =of d] {f}; 
+    \node[vertex] (g) [right =of f] {g}; 
+    \node[vertex] (x) [right =of s, xshift=7pt] {x}; 
+    \node[vertex] (y) [right =of x, xshift=45pt] {y}; 
+
+    \path (s) edge node [midway, auto] {4} (a); 
+    \path (s) edge node [pos=0.3, below] { 9}  (d);
+    \path (a) edge node [midway, left] { 11}  (d);
+    \path (a) edge node [midway, auto] { 8}  (b);
+    \path (b) edge node [midway, auto] { 7}  (c);
+    \path (d) edge node [midway, below] { 1}  (f);
+    \path (f) edge node [midway, below] { 2}  (g);
+    \path (d) edge node [pos=0.8, below] { 7}  (x);
+    \path (x) edge node [pos=0.7, left] { 2}  (b);
+    \path (b) edge node [midway, left] { 4}  (g);
+    \path (x) edge node [pos=0.6, left] { 6}  (f);
+    \path (c) edge node [pos=0.3, left] { 14}  (g);
+    \path (g) edge node [pos=0.7, below] { 10}  (y);
+    \path (c) edge node [pos=0.7, above] { 9}  (y);
+  \end{tikzpicture}
+\end{center}
+
+In the Python code for the notes (\url{\codeFolder}),
+the file \pycode{greedy_algorithms/min_spanning_tree.py}
+has Python code for Prim's algorithm.
+
+\refreshHeader 
+\inputAnswer{problem_2_answer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
+
+\newpage
+\problem \emph{(Exercise 5.12)}
+Consider the following conjecture and attempted proof.
+
+\begin{conjecture}
+  Let $G$ be any connected edge-weighted graph $G$ with at least two vertices.
+  Let $v$ be any vertex,
+  and, among edges leaving $v$,
+  let $(v, w^*)$ be one of minimum weight.
+  Suppose every other edge incident to $v$ has strictly larger weight.
+  Then $(v,w^*)$ is in \emph{every} minimum spanning tree of $G$.
+\end{conjecture}
+\begin{longFormProof}
+  \step Consider any such graph $G$, vertex $v$, and edge $(v,w^*)$,
+  \begin{block}[T]
+    \step Consider any spanning tree $T$ of $G$ that does not contain $(v,w^*)$.
+    \step Since $T$ is connected and contains all vertices, $T$ contains some edge incident to $v$.
+    \step Let $(v, w')$ be such an edge.  Note that $w' \ne w^*$ as $(v, w^*)$ is not in $T$.
+    \step Let $T' = \{(v, w^*)\} \cup T \setminus \{(v, w')\}$ be obtained from $T$ by removing $(v, w')$ and adding $(v, w^*)$.
+    \step Then $\weight{v, w^*}$ is strictly less than $\weight{v, w'}$.  That is, $\weight{v, w^*} < \weight{v, w'}$.  
+    \step So $\weight{T'} = \weight{T} + \weight{v, w^*} - \weight{v, w'} < \weight T$.
+    \step And by Observation 5.8 (Section 5.9.1), $T'$ is a spanning tree.
+    \step By the previous two steps, the weight of spanning tree $T'$ is strictly less than the weight of $T$. 
+    \step So $T$ is not a minimum spanning tree.
+  \end{block}
+  \step By Block~\ref{T}, every spanning tree of $G$ that doesn't contain $(v, w^*)$ isn't a minimum spanning tree. 
+  \step So every minimum spanning tree of $G$ contains $(v, w^*)$.
+\end{longFormProof}
+
+\begin{enumerate}[label=(\alph*)]
+\item Is the reasoning in the proof correct?  
+
+\item
+  If not, what is the first step that makes an assertion that is not necessarily true,
+  given the assumptions?
+
+\item
+  What exactly is the mistake in the justification given in that step?
+\end{enumerate}
+
+\refreshHeader 
+\continued
+
+\setlength{\ITEMHT}{1.5in}
+{\injectEnumerate
+\inputAnswer{problem_3_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 4  %%%%%%%%%%%%%%%%%
+
+\newpage
+\problem \emph{(Exercise 5.8)}
+\begin{center}
+  \begin{tikzpicture}[
+    vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw},
+    every path/.style={->}
+    ]
+    \node[vertex] (s) {s}; 
+    \node[vertex] (a) [right =of s, yshift=30pt] {a}; 
+    \node[vertex] (b) [right =of a] {b}; 
+    \node[vertex] (c) [right =of s, yshift=-30pt] {c}; 
+    \node[vertex] (x) [right =of c] {x}; 
+
+    \path (s) edge [bend left=0] node [pos=0.3, above] {10} (a); 
+    \path (s) edge [bend left=0] node [pos=0.3, below] {5} (c); 
+    \path (a) edge [bend left=0] node [pos=0.5, above] {1} (b); 
+    \path (c) edge [bend left=0] node [pos=0.8, left] {9} (b); 
+    \path (c) edge [bend left=0] node [pos=0.5, below] {2} (x); 
+    \path (x) edge [bend left=-8] node [pos=0.1, above] {7} (s); 
+    \path (a) edge [bend left=15] node [pos=0.3, right] {2} (c); 
+    \path (c) edge [bend left=15] node [pos=0.7, left] {3} (a); 
+    \path (b) edge [bend left=20] node [pos=0.5, right] {4} (x); 
+    \path (x) edge [bend left=0] node [pos=0.5, left] {6} (b); 
+  \end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item Simulate Dijkstra's algorithm (Section 5.8)
+  on the directed graph $G$ above with source $s$.
+  In each iteration of the algorithm,
+  for what vertex $v$ does the algorithm set $d[v]$
+  and what does it set $d[v]$ to?
+
+\item
+  
+  Let $G'$ be the graph obtained from $G$ (shown above) by reducing the weight of edge $(a, c)$ to -10.
+  What is the array $d$ of distances returned by Dijkstra's algorithm given input $G'$ with source $s$?
+  Show $d[s]$, $d[a]$, $d[b]$, $d[c]$, and $d[x]$.
+
+  % [review 2026-09-27] fix: the negative edge creates a negative cycle, so the issue is that distances may be undefined, not just that Dijkstra may get them wrong
+  This graph has a negative edge weight, so some distances may be undefined.
+
+\end{enumerate}
+
+In the Python code for the notes (\url{\codeFolder}),
+the file \pycode{greedy_algorithms/Dijkstra.py}
+has Python code for Dijkstra's algorithm.
+
+\refreshHeader
+
+\setlength{\ITEMHT}{1.7in}
+{\injectEnumerate
+\inputAnswer{problem_4_answer}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 5  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\noindent\adjustbox{valign=t}{\parbox{4.6in}{
+\problem \emph{(Exercise 6.5)}
+You have been hired to clean up the streets of Boston using your street sweeper.  In order to do the job for the lowest cost, you want to devise a way to sweep each street once in each direction.  That is, for each street, you go up the street once and down the street once to sweep each side of the road. All roads are two way.
+To find a good route, you formally define the following \prob{Street Sweeper} problem:
+}}\adjustbox{valign=t}{
+\begin{tikzpicture}[node distance = 0.6 cm and 1.75cm,on grid,
+thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
+\node[state] (a) {a};
+\node[state] (b) [yshift = 30pt, right =of a] {b};
+\node[state] (c) [yshift = -30pt, right =of b] {c};
+\node[state] (d) [below =of a, yshift=-14pt] {d};
+\node[state] (e) [yshift = 20pt, right =of d] {e};
+\node[state] (f) [yshift = -20pt, right =of e] {f};
+\node[state] (g) [below =of e, xshift=-27pt,yshift=-25pt] {g};
+\node[state] (h) [right =of g] {h};
+\path (a) edge [bend left = 0] (b) 
+		edge [bend left = 0] (c) 
+		edge (d);
+\path (b) edge [bend left = 0] (f);
+\path (c) edge [bend left = 0] (e);
+% [review 2026-09-27] fix: removed the invisible TikZ self-loop "(d) edge (d)" (not an edge of the graph)
+\path (d) edge [bend right = 30] (c) 
+		edge [bend left = 0] (e);
+\path (e) edge [bend left = 0] (h);
+\path (g) edge [bend left = 0] (h);
+\end{tikzpicture}
+}
+
+\begin{mylist}
+\item[\bf input:] a connected, undirected graph $G = (V,E)$
+\item[\bf output:] a (not necessarily simple) cycle $C$ that traverses each edge $(u, w)$ once in each direction\footnote{
+    Formally, the cycle $C$ is specified as a sequence of \emph{directed}
+    edges $(v_1, v_2), (v_2, v_3), \ldots, (v_{\ell-1}, v_\ell), (v_\ell, v_1)$.
+    Each edge must start with the vertex that the edge before ends with,
+    except the \emph{first} edge must start with the vertex that the last edge ends with.
+    Here, $C$ should contain each edge $(u,w)\in E$ exactly twice: once as $(u,w)$ and once as $(w, u)$.
+  }    
+\end{mylist}
+For this problem you are to
+define a correct algorithm for \prob{Street Sweeper}
+by adding just a few lines to the code for depth-first search given
+in the template in the next page for Part (c) below.
+
+\begin{enumerate}[label=(\alph*)]
+\item First, give a correct output for the graph above (from Homework 5 Problem 2).
+  Please start your cycle at node $a$.  Give your cycle as a comma-separated
+  list of directed edges as described in the footnote below.
+  (It may help to first do a DFS, starting at $a$, and draw the DFS tree.)
+
+  Please validate your cycle using the checker that comes with this template:\\
+  run \texttt{python3 check\_cycle.py "(a, b), (b, f), ..."}.
+
+\item 
+  Explain clearly in just a few English sentences exactly how
+  you modify DFS to obtain your algorithm.
+  First state the high-level idea, then give more details.
+  \emph{Hint: in a DFS of an undirected graph, each edge occurs
+  exactly once as a tree edge or once as a forward edge.}
+
+\item Define your algorithm in pseudocode, using the pseudo-code 
+  in the answer template as a starting point.
+  Your algorithm can just \emph{print} the edges in the cycle in the right order,
+  it doesn't need to collect and return them.
+
+% \item Do one of the following:
+
+% \begin{enumerate}[label=(\roman*)]
+% \item
+%   Prove your algorithm correct (i.e., gives the correct output for every input).
+%   You may cite (without reproving them) facts about DFS that we've observed in class or lecture notes.
+%   We recommend that you use the long-form proof format, as it will help you catch
+%   gaps and errors, and make it easier to grade.
+
+\item Give the best bound you can on the worst-case running time of your algorithm in terms of $n=|V|$ and $m=|E|$.
+  Explain carefully why the bound you give holds for all inputs.
+  You may use (without reproving them) any facts about DFS that we've observed in the lecture notes.
+  For full credit, your algorithm should run in time linear in the graph size, $\Theta(|V|+|E|)$.
+  
+\item
+  Implement your algorithm and submit it to the Hacker-Rank Contest for Homework 6 at
+  \url{https://www.hackerrank.com/nealeyoung-algs101-street-sweeper}.
+  If your algorithm passes all the tests for that challenge, you will get full credit for this part.
+  State the username that you used for your Hacker-Rank submission.
+  \ifGradescope We will use the last Hacker-Rank submission that you submitted there before your Gradescope submission.\fi
+
+  Note that
+  the academic-integrity policy applies to code you submit.
+  You must write all of the code you submit on your own.
+  Don't share code, or write code based on a document shared with any collaborator.
+  You may adapt code provided in this homework or with the notes.
+
+  \emph{Note: use Hacker-Rank to validate your algorithm before submitting\ifGradescope{} to gradescope\fi.}
+
+
+\end{enumerate}
+
+In the Python code for the notes (\url{\codeFolder}),
+the file \pycode{graph_traversal/depth_first_search.py}
+has Python code for depth-first search.
+
+\refreshHeader 
+\newpage
+
+\setlength{\ITEMHT}{0.4in}
+{\injectEnumerate
+\inputAnswer{problem_5_answer}
+}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

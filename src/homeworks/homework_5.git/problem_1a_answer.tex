@@ -1,0 +1,57 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{Problem 1(a) answer} \GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+\begin{lemma}
+  Let $I$ be any non-empty instance of \prob{Puncturing Intervals}.
+  Let $e_1$ be the end-time of the earliest-ending job $J_1$.
+  Then $I$ has a correct solution that contains $e_1$.
+\end{lemma}
+
+% Give a long-form proof of the lemma above.
+% As much as possible, your proof should mimic the structure of the proof of Lemma 5.4 for \prob{Activity Selection},
+% in Lecture Note 5.  Here is that proof to use as a template.
+% Please modify it (preserving the overall structure) to make a correct proof for the lemma above.
+
+\begin{blue}
+
+  \begin{longFormProof}
+    \step Consider any $I$ and $J_1$ as described in the lemma, and let $S^*$ be any correct solution for $I$.  
+
+    \begin{block}
+      \step \underline{Case 1.}  Suppose that $J_1$ is in $S^*$.
+      \step Then $I$ has a correct solution that contains $J_1$ (namely, $S^*$).
+    \end{block}
+    
+    \begin{block}
+
+      \step \underline{Case 2.}  In the remaining case, $J_1$ is not in $S^*$.
+
+      \step Let $J_1^*$ be the first (earliest ending) job in $S^*$.  Note $J_1^* \ne J_1$.
+
+      \step We'll show that exchanging $J_1$ for $J_1^*$ in $S^*$ gives a correct solution (containing $J_1$).
+
+      \step Let $S' = \{J_1\}\cup S^* \setminus \{J^*_1\}$ be obtained from $S^*$ by replacing $J^*_1$ by $J_1$.
+
+      \step Job $J_1$ ends no later than $J^*_1$ ends, and $J^*_1$ ends before any other job in $S^*$ starts.
+      
+      \step So $J_1$ ends before any job (other than $J^*_1$) in $S^*$ starts.
+
+      \step So $S'$ is also pairwise disjoint.  And $S'$ has the same size as $S^*$.
+
+      \step So $S'$ is also a correct solution. So $I$ has a correct solution (namely $S'$) that contains $J_1$.
+
+    \end{block}
+
+    \step So $I$ has a correct solution that contains $J_1$.
+
+  \end{longFormProof}
+
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_5"
+%%% End:

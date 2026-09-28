@@ -1,0 +1,176 @@
+\section{How to write long-form proofs in LaTeX}\label{proofs: sec: latex}\hypertarget{proofs.latex}{}
+
+\doHeader{Long-form proofs in LaTeX}
+
+Instructions for getting started with LaTeX are in \bookLink{latex.homeworks}{Appendix B of the book}.
+This section assumes you've read them.
+This one is about how to use LaTeX (and the macros in the homework templates) to write long-form proofs.
+
+% As usual, your LaTeX document should start with the standard header,
+% which includes the macros file for the course, similar to what's shown in Figure~\ref{proofs: fig: header}.
+% You can find macros file on Blackboard.
+% It provides some LaTeX macros and environments for writing long-form proofs.
+% We describe these next.
+
+% \begin{figure}
+% \begin{framed}\small
+% % \vspace*{-10pt}
+% \begin{verbatim}
+% \documentclass[11pt]{article}
+
+% \input{macros}
+
+% \begin{document}
+
+% ...
+
+% \end{document}
+% \end{verbatim}
+% \vspace*{-10pt}
+% \end{framed}
+% \caption{The header and closing statement of a LaTeX document.
+%   Beware that the macro file may be named something other than ``\texttt{macros.tex}'',
+%   in which case you'll have to change the argument to the \texttt{\textbackslash input} statement accordingly.
+%   For the homework, the LaTeX templates will already have this part,
+%   so if you are using them you don't have to worry about this part.
+% }\label{proofs: fig: header}
+% \end{figure}
+
+Within the body of the document, you can state a theorem or lemma using the \texttt{theorem} or
+\texttt{lemma} environments. % , as shown in Figure~\ref{proofs: fig: theorem}.
+LaTeX will automatically number the theorem or lemma for you.
+% \begin{figure}
+% \begin{framed}\small
+% % \vspace*{-10pt}
+% \begin{verbatim}
+% \begin{theorem}\label{thm: primes}
+%   There are infinitely many primes.
+% \end{theorem}
+% \end{verbatim}
+% \vspace*{-10pt}
+% \end{framed}
+% \caption{Use the \texttt{theorem} environment to state a theorem.
+%   LaTeX will automatically number the theorem.
+%   You can record the theorem number using the \texttt{\textbackslash label} command,
+%   then use the number later via the \texttt{\textbackslash ref} command.
+% }\label{proofs: fig: theorem}
+% \end{figure}
+Follow your theorem or lemma statement by a long-form proof, using the \texttt{longFormProof} environment.
+With that, start each step with a \texttt{\textbackslash step} command. % as shown in Figure~\ref{proofs: fig: longFormProof}.
+% %
+% \begin{figure}
+% \begin{framed}\small
+% % \vspace*{-10pt}
+% \begin{verbatim}
+% \begin{longFormProof}
+%   \step Suppose for contradiction that there are finitely many primes.
+%   \step Let $p_1, p_2, \ldots, p_n$ be a list of all the primes (larger than 1).
+%   \step ...
+% \end{longFormProof}
+% \end{verbatim}
+% \vspace*{-10pt}
+% \end{framed}
+% \caption{Use the \texttt{longFormProof} environment and the \texttt{\textbackslash step} command
+%   to make a long-form proof.}\label{proofs: fig: longFormProof}
+% \end{figure}
+%
+To introduce an inner block, use the \texttt{block} environment. % as shown in Figure~\ref{proofs: fig: blocks}.
+Figure~\ref{proofs: fig: blocks} illustrates these environments and the \texttt{\textbackslash step} command.
+%
+\begin{figure}
+\begin{framed}\small
+% \vspace*{-10pt}
+\begin{verbatim}
+\begin{theorem}\label{thm: bad cases}
+  For every real number, its square is positive. 
+  That is, $\forall x\in\R,~x^2 > 0$.
+\end{theorem}
+
+\begin{longFormProof}
+  \step Let $x\in \R$ be an arbitrary real number.
+
+  \begin{block}
+    \step \underline{Case 1.} Suppose $x$ is positive ($x > 0$).
+    \step Then $x^2$ is a product of two positive numbers, so $x^2$ is positive.
+  \end{block}
+
+  \begin{block}
+    \step \underline{Case 2.} Suppose $x$ is negative ($x < 0$).
+    \step Then $x^2$ is a product of two negative numbers, so $x^2$ is positive.
+  \end{block}
+
+  \step In either Case 1 or 2, $x^2$ is positive, so $x^2$ is positive.
+\end{longFormProof}
+\end{verbatim}
+\vspace*{-10pt}
+\end{framed}
+\caption{How to use the \texttt{theorem}, \texttt{longFormProof}, and \texttt{block} environments,
+  and the \texttt{\textbackslash step} command.
+  See Exercise~\ref{proofs: exercise: cases} for the result.}\label{proofs: fig: blocks}
+\end{figure}
+%
+
+Optionally, you can use a \texttt{\textbackslash label} command to 
+record the theorem or lemma number, using a name of your choice.
+Then you can recall the number by using the \texttt{\textbackslash ref} command.
+Specifically, \texttt{\textbackslash ref\{thm:~bad cases\}} will reproduce the number
+(assuming you use the same name as you gave to \texttt{\textbackslash label}).
+You can use \texttt{\textbackslash label} and \texttt{\textbackslash ref}
+to label and refer to any type of numbered object in your document,
+such as a proof step or block.
+When the numbers change, LaTeX automatically updates the references.
+(It may take two iterations of running LaTeX for the references to fully update.)
+
+To introduce a lemma inside a long form proof,
+use the \texttt{lemma} environment to state the lemma,
+then use the \texttt{longFormSubProof} environment for the proof of the lemma.
+An example is shown in Figure~\ref{proofs: fig: lemma}.
+
+\begin{figure}
+\begin{framed}\small
+\begin{verbatim}
+\begin{theorem}
+  Any finite, connected graph $G$ that has Property $A$ also has Property $B$.
+\end{theorem}
+
+\begin{longFormProof}[First long-form proof.]
+  \step Let $G$ be an arbitrary finite, connected graph having Property $A$.
+
+  \step Before we give the proof, we prove the following utility lemma:
+
+  \begin{lemma}\label{lemma: high low}
+    Let $v$ be any vertex in $G$ that has a neighbor $x$ with larger weight
+    ($w(x) > w(v)$). Then $v$ has a neighbor $y$ with a smaller weight ($w(y) < w(v)$).
+  \end{lemma}
+
+  \begin{longFormSubProof}[Proof of lemma.]
+
+    \step ...
+
+  \end{longFormSubProof}
+
+  \begin{block} \label{A}
+    \step Now assume for contradiction that $G$ does not have Property $B$.
+    
+    \step ...
+
+    \step So, by Lemma~\ref{lemma: high low} ...
+
+    \step This is a contradiction (as $G$ is finite).  
+  \end{block}
+
+  \step By Block~\ref{A}, $G$ must have Property $B$.
+
+\end{longFormProof}
+\end{verbatim}
+\vspace*{-10pt}
+\end{framed}
+\caption{Making a lemma with the \texttt{lemma} and \texttt{longFormSubProof} environments.
+  See the solution to Problem~\ref{proofs: prob: with lemma} in Section~\ref{proofs: sec: exercises} for the output.
+}\label{proofs: fig: lemma}
+\end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "long_form_proofs"
+%%% End:

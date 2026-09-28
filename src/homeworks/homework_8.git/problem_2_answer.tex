@@ -1,0 +1,149 @@
+\paragraph{Problem 2 answer}\GradescopeComment{This should be on page 7 (top) of your PDF.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item[(a)]
+  % What is the smallest $i$ for which, on the example input, $v[i,\star]$
+  % as computed does not equal $|V(i, \star)|$?
+
+  The smallest $i$ for which $v[i, \star]$ does not equal $|V(i, \star)|$ is
+  \BLUE{\[
+      i = \REPLACEME
+    \]}
+
+\item[(b)]
+  % What is the set $V(i,\star)$ for that $i$?
+
+  The set $V(i,\star)$ for that $i$ is
+  \BLUE{\[
+      V(i, \star) = \{
+      \REPLACEME
+      \}
+    \]}
+
+\end{enumerate}
+
+\continued
+
+\begin{enumerate}
+
+\item[(c)] 
+  % Give a corrected recurrence relation, making as few changes as possible.
+
+  The correct recurrence relation is   \GradescopeComment{This should be in page 8 (top) of your PDF.}
+  \BLUE{
+    \[
+      |V(i, u)| =
+      \begin{cases}
+        \REPLACEME
+      \end{cases}
+    \]
+  }
+
+  % For reference, here is the LaTeX source for the incorrect recurrence relation:
+  % |V(i, u)| =
+  % \begin{cases}
+  %   1 & \text{if } i = 0, \\
+  %   |V(i-1, u)| & \text{if } i>0 \text{ and } x[i] = u, \\
+  %   |V(i-1, u)| + |V(i-1, \star)|& \text{if } i > 0 \text{ and } x[i] \ne u.
+  % \end{cases}
+  % \]
+
+
+\item[(d)]
+  % Simulate the corrected algorithm on the example.
+  % Show the resulting array $v$, and the output.
+
+  Here is the array $v$ as computed by the correct algorithm:
+
+  \begin{blue}
+    \[
+    \begin{array}{c|c@{~}c@{~}c@{~}c@{~}}
+      i & x[i] & v[i,a] & v[i,b] & v[i, \star] \\ \hline
+      0    &      & \REPLACEME & \REPLACEME & \REPLACEME  \\
+      1    &  a  & \REPLACEME & \REPLACEME & \REPLACEME \\
+      2    &  b  & \REPLACEME & \REPLACEME & \REPLACEME \\
+      3    &  b  & \REPLACEME & \REPLACEME & \REPLACEME \\
+      4    &  a  & \REPLACEME & \REPLACEME & \REPLACEME
+    \end{array}
+  \]
+\end{blue}
+
+
+  % For reference, here is the incorrect array from the problem statement:
+  %
+  % \begin{array}[t]{c|c@{~}c@{~}c@{~}c@{~}}
+  %   i & x[i] & v[i,a] & v[i,b] & v[i, \star] \\ \hline
+  %   0    &      & 1 & 1 & 1  \\
+  %   1    &  a  & 1 & 2 & 2 \\
+  %   2    &  b  & 3 & 2 & 4 \\
+  %   3    &  b  & 7 & 2 & 8 \\
+  %   4    &  a  & 7 & 10 & 16
+  % \end{array}
+  
+\end{enumerate}
+
+\begin{itemize}
+\item[(e)]
+  % Give corrected pseudo-code for the algorithm, making as few changes as possible.
+
+  Here is pseudo-code for the correct algorithm:
+  \begin{myframed}
+    \begin{steps}
+    \ITEM[]
+      def \countV$(U, X=(x[1], x[2], \ldots, x[n]))$:
+      \comment{(assume $U$ contains some element~$\star \not\in X$)}
+      \begin{blue}
+        
+        \step \REPLACEME        % edit these steps to give your pseudo-code.  see below for reference.
+
+        \step return \REPLACEME
+      \end{blue}
+    \end{steps}
+  \end{myframed}
+\end{itemize}
+% For reference, here is the LaTeX source for the pseudo-code for the incorrect algorithm:
+  %
+  % \begin{myframed}
+  %   \begin{steps}
+  %   \item[]
+  %     def \countV$(U, X=(x[1], x[2], \ldots, x[n]))$:
+  %     \comment{(assume $U$ contains some element~$\star \not\in X$)}
+  %     \step for $i=0,1,2,\ldots, n$:
+  %     \step~~~for $u\in U$:
+  %     \step~~~~~~\(
+  %     v[i, u] =
+  %     \begin{cases}
+  %       1 & \text{if } i=0, \\
+  %       v[i-1, u] & \text{if } i > 0 \text{ and } x[i] = u, \\
+  %       v[i-1, u] + v[i-1, \star]& \text{if } i > 0 \text{ and } x[i] \ne u.
+  %     \end{cases}
+  %     \)
+  %     \step return $v[n, \star]$
+  %   \end{steps}
+  % \end{myframed}
+
+\vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 8 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_7"
+%%% End:

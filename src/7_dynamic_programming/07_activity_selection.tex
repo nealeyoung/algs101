@@ -1,0 +1,234 @@
+
+
+\section{Weighted Activity Selection}\label{dp: sec: activity selection}\doHeader{Activity Selection}
+
+\subsection*{Warm-up --- counting pairwise-disjoint subsets}
+
+\begin{mylist}
+\item[\bf input:]
+  A collection $C=\{[s_1, e_1], [s_2, e_2], \ldots, [s_n, e_n]\}$ of intervals.
+
+  For convenience we assume $e_1 \le e_2 \le \cdots \le e_n$.  (If not, sort them.)
+
+\item[\bf output:]
+  The number of subsets $C'\subseteq C$ of $C$ that are pairwise disjoint.
+
+  (These include the subsets of size one or zero.)
+\end{mylist}
+
+Here is an example input, $C$, consisting of seven intervals.  (The interval heights are irrelevant.)
+
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]\footnotesize
+    \draw (5,0) -- ++(-2,0) node[anchor=south] {1} -- ++(-2,0); 
+    \draw (7,1) -- ++(-2,0) node[anchor=south] {2} -- ++(-2,0); 
+    \draw (8,0) -- ++(-1,0) node[anchor=south] {3} -- ++(-1,0); 
+    \draw (10,3) -- ++(-2.5,0) node[anchor=south] {4} -- ++(-2.5,0); 
+    \draw (12,2) -- ++(-2.75,0) node[anchor=south] {5} -- ++(-2.75,0); 
+    \draw (13,0) -- ++(-2,0) node[anchor=south] {6} -- ++(-2,0); 
+    \draw (14,1) -- ++(-1.5,0) node[anchor=south] {7} -- ++(-1.5,0); 
+  \end{tikzpicture}
+\end{center}
+
+Following \prob{Activity Selection},
+call each interval in $C$ a \emph{job}, and interpret each job $[s_i, e_i]$ as
+an activity that lasts from start time $s_i$ to end time $e_i$.  A pairwise-disjoint subset of $C$
+is then just a collection of jobs can be done without doing more than one job at any time.
+
+Our first goal is to come up with some recursive or inductive understanding
+of the collection of pairwise-disjoint subsets.  To start, partition the pairwise-disjoint subsets into two types:
+\begin{mylist}
+\item[(A)] Pairwise-disjoint subsets of $C$ that don't contain the last job $[s_n, e_n]$. 
+\item[(B)] Pairwise-disjoint subsets of $C$ that do contain the last job $[s_n, e_n]$. 
+\end{mylist}
+
+The subsets of type (A) are just the pairwise-disjoint
+subsets of the first $n-1$ jobs,
+that is, of the collection $C_A=\{[s_1, e_1], [s_2, e_2], \ldots, [s_{n-1}, e_{n-1}]\}$.
+
+
+What about the subsets of type (B)?
+Any subset of type (B) contains the job $[s_n, e_n]$,
+so can't contain any job that overlaps with job $[s_n, e_n]$,
+that is, can't contain any job $[s_i, e_i]$ with $i \ge i'$,
+where $i' = \min\{ i: e_i \ge s_n\}$
+is the index of the first job that overlaps job $[s_n, e_n]$.
+
+In the example, $n=7$ and $i'=5$.
+The jobs overlapping the last job $[s_n, e_n]$ are shown in blue:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.5]\footnotesize
+   \draw (5,0) -- ++(-2,0) node[anchor=south] {1} -- ++(-2,0); 
+   \draw (7,1) -- ++(-2,0) node[anchor=south] {2} -- ++(-2,0); 
+   \draw (8,0) -- ++(-1,0) node[anchor=south] {3} -- ++(-1,0); 
+   \draw (10,3) -- ++(-2.5,0) node[anchor=south] {4} -- ++(-2.5,0); 
+   \draw[color=blue,dashed] (12,2) -- ++(-2.75,0) node[anchor=south] {$i'=5$} -- ++(-2.75,0); 
+   \draw[color=blue,dashed] (13,0) -- ++(-2,0) node[anchor=south] {6} -- ++(-2,0); 
+   \draw[color=blue] (14,1) -- ++(-1.5,0) node[anchor=south] {$n=7$} -- ++(-1.5,0); 
+\end{tikzpicture}
+\end{center}
+
+So, the subsets of type (B) consist of $[s_n, e_n]$,
+together with any pairwise-disjoint subset of the first $i'-1$ jobs,
+that is, of the collection $C_B=\{[s_1, e_1], [s_2, e_2], \ldots, [s_{i'-1}, e_{i'-1}]\}$.
+The collection $C_B$ can be empty.
+(In the example, $C_B$ contains the first four jobs.)
+
+This approach gives the following dynamic-programming algorithm.
+
+\paragraph{subproblems and recurrence.}
+For $j\in\{0,1,2,\ldots, n\}$,
+define $N(j)$ to be the number of pairwise-disjoint subsets of 
+$\{[s_1, e_1], [s_2, e_2], \ldots, [s_j, e_j]\}$.
+The output will be $N(n)$.
+The recurrence relation is
+\[
+  N(j) = \begin{cases}
+    1 & \text{ if } j=0 \\
+    N(j-1) + N(i'-1), \text{ where }  i' = \min\{ i : e_i \ge s_j \}
+    & \text{ if } j>0.
+  \end{cases} 
+\]
+
+\paragraph{correctness.}
+The recurrence relation follows from the preceding discussion.
+We don't give a careful proof here.
+
+\paragraph{run time.}
+% [review 2026-09-27] fix: N(j) is defined for j in {0,...,n}, so there are n+1 subproblems, not n
+There are $n+1$ subproblems.  The time to solve each depends on how we compute $i'$.
+Here is the iterative version of the algorithm:
+
+\begin{myframed}
+  \begin{steps}
+  \item[]
+    \textsf{countSchedules}$(C=\{[s_1, e_1], [s_2, e_2], \ldots, [s_n, e_n]\})$:
+    \comment{--- iterative version}
+    \step for $j=0,1,\ldots, n$:
+    \step~~~~set \(M[j]  = \begin{cases}
+      1 & \text{ if } j=0 \\
+      M[j-1] + M[i'-1], \text{ where }  i' = \min\{ i : e_i \ge s_j \}
+      & \text{ if } j>0
+    \end{cases}
+    \).
+    \step return $M[n]$
+  \end{steps}
+\end{myframed}
+
+If we assume constant-time arithmetic (which is not realistic here!)
+the algorithm can be implemented to run in $\Theta(n\log n)$ time.
+The main obstacle is computing $i'$ in each iteration.
+% [review 2026-09-27] fix: i' = min{i : e_i >= s_j} is found by binary search over the end times (already sorted), not over jobs sorted by start times
+Since the jobs are sorted by end times,
+$i'$ can be computed in each iteration in $O(\log n)$ time using binary search.
+Then the $n$ iterations take total time $\Theta(n\log n)$, as does the sort.
+
+But the value of $M[i]$ can be as large as $2^i$,
+so in the worst case requires $n$ bits to store.
+Then each addition takes $\Theta(n)$ time,
+so each of the $n$ iterations takes $\Theta(n)$ time,
+for a total time of $\Theta(n^2)$.
+Here is what we have figured out:
+\begin{theorem}
+  Given a collection $C$ of $n$ intervals,
+  the number of pairwise-disjoint subsets of $C$
+  can be computed in $O(n^2)$ time.
+\end{theorem}
+
+\subsection*{Weighted Activity Selection}
+
+\begin{mylist}
+\item[\bf input:]
+  A collection $C=\{[s_1, e_1], [s_2, e_2], \ldots, [s_n, e_n]\}$ of intervals (called \emph{jobs}),
+  and, for each job $[s_i, e_i]$, an associated value $v_i \ge 0$.
+  Again assume $e_1 \le e_2 \le \cdots \le e_n$.
+
+\item[\bf output:]
+  The maximum, over all pairwise-disjoint subsets $C'$ of $C$,
+  of the total value of intervals in $C'$, that is $\sum_{[s_i, e_i]\in C'} v_i$.
+\end{mylist}
+
+\paragraph{subproblems and recurrence relation.} 
+Fix an instance.
+For $j\in\{0,1,\ldots,n\}$,
+define $V(j)$ to be the maximum value of any pairwise-disjoint subset from
+the first $j$ intervals
+$\{[s_1, e_1], [s_2, e_2], \ldots, [s_j, e_j]\}$.
+The final answer is $V(n)$.
+The recurrence relation is
+\[
+  V(j) = \begin{cases}
+    0 & \text{ if } j=0 \\
+    \max\big( V(j-1), V(i'-1) + v_j\big), \text{ where }  i' = \min\{ i : e_i \ge s_j \},
+    & \text{ if } j>0.
+  \end{cases} 
+\]
+
+\paragraph{correctness.}
+As before, we divide the pairwise-disjoint subsets of $\{[s_1, e_1], [s_2, e_2], \ldots, [s_j, e_j]\}$ into two types:
+\begin{mylist}
+\item[(A)] The pairwise-disjoint subsets that don't include the last job $[s_j, e_j]$. 
+\item[(B)] The pairwise-disjoint subsets that do include the last job $[s_j, e_j]$. 
+\end{mylist}
+Each pairwise-disjoint subset is of type (A) or type (B),
+so $V(j)$
+is the maximum value of any subset of type (A),
+or the maximum value of any subset of type (B),
+whichever is larger.
+
+As before, the subsets of type (A) are just the pairwise-disjoint
+subsets from the first $j-1$ jobs,
+so the maximum value of any subset of type (A) is $V(j-1)$.
+
+And, also as before,
+each subset of type (B) consists of $[s_j, e_j]$,
+together with any pairwise-disjoint subset from
+the first $i'-1$ jobs, where $i'$
+is the index of the first job that overlaps job $j$.
+That is, where $i' = \min\{ i: e_i \ge s_j\}$.
+It follows that the maximum value of any subset of type (B) is $V(i'-1) + v_j$.
+This gives the recurrence relation.
+
+Correctness of the algorithm (iterative, or recursive and memoized)
+% [review 2026-09-27] fix: "the lemma" referred to no stated lemma; correctness follows from the recurrence relation derived above
+follows from the recurrence relation by induction on $j$
+(that the algorithm does in fact set $W[j]$ to $V(j)$ as previously defined).
+
+\paragraph{run time.}
+Here is the iterative algorithm.
+
+\begin{myframed}
+  \begin{steps}
+  \item[]
+    \textsf{maxSchedule}$(C=\{[s_1, e_1], [s_2, e_2], \ldots, [s_n, e_n]\}, v)$:
+    \comment{--- iterative version}
+    \step for $j=0,1,2,\ldots, n$:
+    \step~~~set~\(W[j] = \begin{cases}
+      0 & \text{ if } j=0 \\
+      \max( W[j-1], W[i'-1] + v_j), \text{ where }  i' = \min\{ i : e_i \ge s_j \}
+      & \text{ if } j>0.
+    \end{cases}\)
+    \step return $W[n]$
+  \end{steps}
+\end{myframed}
+
+In each iteration, the index $i'$ can be found using binary search
+on the jobs (which are ordered by end times) in $O(\log n)$ time.
+Then the $n$ iterations take total time $\Theta(n\log n)$.
+This proves the following theorem:
+\begin{theorem}
+  % [review 2026-09-27] fix: theorem named the problem "Weighted Interval Scheduling"; the section's problem is "Weighted Activity Selection"
+  There is an $O(n\log n)$-time algorithm for \prob{Weighted Activity Selection}.
+\end{theorem}
+
+\paragraph{reduction to Longest Path.}
+Consider the DAG that has a vertex for each subproblem $V(j)$,
+with edges for each dependency (of weight zero or $v_j$) in the recurrence relation.
+The problem is equivalent to finding a max-weight path in this graph from the vertex for $V(0)$
+to the vertex $V(n)$.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

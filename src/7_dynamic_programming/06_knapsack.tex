@@ -1,0 +1,318 @@
+
+\section{Knapsack (with long-form proof)}\label{dp: sec: knapsack}\doHeader{Knapsack}
+
+\begin{mylist}
+\item[\bf input:]
+  A triple $I=(v, w, L)$ where $v=(v_1,v_2,\ldots, v_n)$
+  is a sequence of non-negative \emph{values}, 
+  $w=(w_1,w_2,\ldots, w_n)$
+  is a sequence of positive integer \emph{weights},
+  and $L$ is a non-negative integer \emph{weight limit}.
+  We call each integer $i\in \{1,2,\ldots,n\}$ an \emph{item}
+  of value $v_i$ and weight $w_i$.
+  
+\item[\bf output:]
+  The maximum value of any subset $S\subseteq \{1,2,\ldots,n\}$ 
+  having weight at most $L$.
+  (The value of a subset $S$ is $\sum_{i\in S} v_i$.
+  The weight of $S$ is $\sum_{i\in S} w_i$.)
+  In other words, output
+  \[\textstyle \max\Big\{ \sum_{i\in S} v_i ~\big|\, S\subseteq \{1,2,\ldots, n\},\, \sum_{i\in S} w_i \le L\Big\}.\]
+\end{mylist}
+
+
+\noindent
+Here is the algorithm.  Fix any input instance $I=(v,w,L)$.
+
+\paragraph{subproblems and recurrence.}
+For each $i\in\{0, 1,2,\ldots,n\}$ and $\ell\in\{0,1,2,\ldots,L\}$,
+define $V(i, \ell)$
+to be the maximum value achievable
+using only items $\{1,2,\ldots,i\}$ and total weight at most $\ell$.
+The given instance $I$ has solution $V(n, L)$.
+The recurrence relation is
+\[V(i,\ell) = \begin{cases}
+    0 & \text{if } i=0, \\
+    \max(  V(i-1, \ell), V(i-1, \ell-w_i) + v_i) &  \text{if } i > 0 \text{ and } w_i \le \ell, \\
+    V(i-1, \ell) & \text{if } i > 0 \text{ and } w_i > \ell.
+  \end{cases}
+\]
+\paragraph{correctness.}
+The intuition is as follows.
+If $i=0$, then the only subset is the empty set, of value zero.
+For $i>0$, consider the subsets for $V(i, \ell)$ ---
+that is, subsets of $\{1,\ldots,i\}$ having total weight at most $\ell$.
+Partition these into two types:
+those that don't include $i$, and those that do.
+Those that don't include $i$ are just the subsets for $V(i-1, \ell)$,
+so the maximum value of any subset of this type is $V(i-1, \ell)$.
+Those that do include $i$ (which exist only if $w_i \le \ell$)
+are of the form $S\cup \{i\}$
+where $S$ is any subset for $V(i-1, \ell-w_i)$
+(having total weight at most $\ell-w_i$).
+The maximum value of any such subset $S\cup\{i\}$ is $V(i-1, \ell-w_i) + v_i$.
+A long-form proof of correctness is on the next page.
+
+\paragraph{time.}
+There are $O(n L)$ subproblems.
+For each, the right-hand side of the recurrence can be evaluated in constant time.
+So the total time to compute $V(n,L)$ is $O(n L)$.
+
+\begin{theorem}
+  There is an $O(nL)$-time algorithm for Knapsack
+\end{theorem}
+
+\paragraph{reduction to \prob{Longest Path in a DAG}.}
+Alternatively, we can reduce the problem to an instance of \prob{Longest Path in a DAG}.
+The graph has a vertex $v(i,\ell)$ for each subproblem.
+If $i> 0$ then $v(i,\ell)$ has an incoming edge from $v(i-1, \ell)$ of weight zero,
+and (if $\ell\ge w_i$) an incoming edge from $v(i-1, \ell-w_i)$ of weight $v_i$.
+If $i=0$ and $\ell>0$, then give $v(i, \ell)$ an incoming edge of weight zero from $v(0,0)$.
+Then the longest path from $v(0,0)$ to $v(i,\ell)$ corresponds to a maximum-value subset of
+$\{1,2,\ldots, i\}$ of total weight at most $\ell$.
+
+% \paragraph{External sources on \prob{Knapsack}}
+
+% \begin{itemize}
+% % \item CLRS Chapter 15. 
+
+% \item CLRS Exercise 16.2--2 (Ch.~16). DPV Chapter 6.  KT Chapter 6.
+
+% % \item Erickson's Lecture 5
+% %
+% %     \url{https://jeffe.cs.illinois.edu/teaching/algorithms/notes/05-dynprog.pdf}
+  
+% % \item MIT lecture videos 
+
+% \item MIT lecture video
+  
+% \newcommand{\URL}[1]{\par-- \parbox[t]{0.8\textwidth}{\url{#1}} \medskip\par}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-19-dynamic-programming-i-fibonacci-shortest-paths/}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-20-dynamic-programming-ii-text-justification-blackjack}
+
+    % \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}
+
+%   \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-22-dp-iv-guitar-fingering-tetris-super-mario-bros}
+  
+% \item \prob{Seam Carving}:
+%   \url{https://en.wikipedia.org/wiki/Seam_carving},
+%   CLRS Problem 15-8.
+
+% \end{itemize}
+
+\continued
+
+\subsection*{Long-form proof of correctness for Knapsack}
+
+% Fix a \prob{Knapsack} instance $(v, w, L)$.
+% Recall that, for each $i\in\{0, 1,2,\ldots,n\}$ and $\ell\in\{0,1,2,\ldots,L\}$,
+% $V(i, \ell)$ is defined to be be the maximum value achievable
+% using only items $\{1,2,\ldots,i\}$ and total weight at most $\ell$.
+% Here is the recurrence and a long-form proof of correctness.
+
+% \begin{lemma}
+% \[V(i,\ell) = \begin{cases}
+%     0 & \text{if } i=0, \\
+%     \max(  V(i-1, \ell), V(i-1, \ell-w_i) + v_i) &  \text{if } i > 0 \text{ and } w_i \le \ell, \\
+%     V(i-1, \ell) & \text{if } i > 0 \text{ and } w_i > \ell.
+%   \end{cases}
+% \]
+% \end{lemma}
+
+Here is a long-form proof of correctness for the recurrence relation.
+For brevity in the proof, for any $S\subseteq \{1,\ldots,n\}$,
+define $v(S) = \sum_{j\in S} v_j$ to be the total value of items in $S$.
+Likewise, define $w(S) = \sum_{j\in S} w_j$ to be  the total weight of items in $S$.
+So, using this notation,
+$V(i, \ell) = \max\big\{ v(S) : S\subseteq \{1,2,\ldots,i\},\,w(S) \le \ell\big\}$.
+
+\begin{longFormProof}%[First long-form proof.]
+  \step Consider any $i\in\{0,\ldots,n\}$ and $\ell\in\{0,1,\ldots,L\}$.
+  \step Recall that $V(i, \ell) = \max\big\{ v(S) : S\subseteq \{1,2,\ldots,i\},\,w(S) \le \ell\}\big\}$.
+
+  \smallskip 
+  \begin{block}
+    \step \underline{Case 1.} In the case $i=0$, the set $S$ must be empty, 
+     so $V(i, \ell)=0$, so the recurrence holds.
+  \end{block}
+
+  % \smallskip 
+  % \begin{block}
+  %   \step \underline{Case 2.} In the case that $\ell=0$,
+  %   because $w_j>0$ for all $j$, the only $S$ with $w(S)\le\ell$ is $S=\emptyset$.
+  %   \step So $V(i, \ell)=0$, and the recurrence holds.
+  % \end{block}
+
+  \smallskip 
+  \begin{block}
+    \step \underline{Case 2.}  Next consider the case when $i>0$ and $w_i \le \ell$.
+    \step Consider the subsets $S\subseteq \{1,2,\ldots,i\}$ such that $w(S) \le \ell$.
+    \step Partition these into two types: (A) those that don't include $i$, and (B) those that do.
+    \step\label{dp: step: A or B} $V(i, \ell)$ is the maximum value of any subset of either type.
+
+    \smallskip 
+    
+    \step The type-A subsets are just the subsets of $\{1,\ldots,i-1\}$ with $w(S) \le \ell$.
+    \step\label{dp: step: A}
+    So (by definition of $V(i-1,\ell)$) the maximum value of any type-A subset is $V(i-1, \ell)$.
+    \step The type-B subsets are those of the form $S'\cup \{i\}$
+    where $S'\subseteq \{1,\ldots, i-1\}$ has $w(S') \le \ell - w_i$.
+    \step The maximum value of such a set $S'\cup\{i\}$ is achieved when $S'$ itself has maximum total value.
+
+    \smallskip 
+
+    \step\label{dp: step: B} So, the maximum value of any type-B subset $S'\cup\{i\}$ is $V(i-1, \ell-w_i) + v_i$.
+    \\(Here we implicitly use that $w_i \le \ell$, so that $V(i-1, \ell-w_i)$ is well-defined.)
+
+    \smallskip 
+
+    \step By Steps~\ref{dp: step: A or B},~\ref{dp: step: A} and~\ref{dp: step: B},
+    $V(i, \ell) = \max\big(V(i-1, \ell), V(i-1, \ell-w_i) + v_i\big)$.
+    \step So the recurrence holds in this case.
+  \end{block}
+
+  \smallskip 
+  \begin{block}
+    \step \underline{Case 3.}  Finally consider the remaining case, when $i>0$ and $w_i > \ell$.
+    \step Each $w_j$ is non-negative, so no subset of $\{1,\ldots,i\}$ that contains $i$ has total weight at most $\ell$.
+    \step So the subsets $S\subseteq \{1,\ldots,i\}$ with $w(S)\le\ell$
+    are just the $S\subseteq\{1,\ldots,i-1\}$ with $w(S)\le\ell$.
+    \step So $V(i, \ell) = V(i-1,\ell)$, and the recurrence holds in this case.
+  \end{block}
+
+  \smallskip
+  \step By the case analysis (Cases 1--3) above, the recurrence holds.
+\end{longFormProof}
+
+\pythonCode{dynamic_programming/knapsack.py}
+
+% The next page gives a second, more detailed long-form proof,
+% using a different approach.
+% Parts that differ from the proof above are shown in \BLUE{blue}.
+
+% \newpage
+
+% \begin{longFormProof}[Second long-form proof.]
+%   \step Consider any $i\in\{0,\ldots,n\}$ and $\ell\in\{0,1,\ldots,L\}$.
+%   \step Recall that $V(i, \ell) = \max\big\{ v(S) : S\subseteq \{1,2,\ldots,i\},\,w(S) \le \ell\}\big\}$.
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 1.} In the case $i=0$, the set $S$ must be empty, 
+%      so $V(i, \ell)=0$, so the recurrence holds.
+%   \end{block}
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 2.} In the case that $\ell=0$,
+%     because $w_j>0$ for all $j$, the only $S$ with $w(S)\le\ell$ is $S=\emptyset$.
+%     \step So $V(i, \ell)=0$, and the recurrence holds.
+%   \end{block}
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 3.}  Next consider the case when $i$ and $\ell$ are positive and $w_i \le \ell$.
+
+%     \begin{blue}
+      
+%       \smallskip 
+
+%       \step First we show \(V(i, \ell) \ge \max\big(V(i-1, \ell),  V(i-1, \ell-w_i) + v_i\big)\).
+
+%       \step Let $S_1$ be a subset of $\{1,\ldots,i-1\}$ with $w(S_1) \le \ell$ and $v(S_1) = V(i-1, \ell)$.
+%       \\ (Such an $S_1$ must exist by the definition of $V(i-1,\ell)$.)
+
+%       \step Then $S_1$ is also a subset of $\{1,\ldots,i\}$ with $w(S) \le \ell$.
+
+%       \step Since $V(i, \ell)$ is the maximum value of any such subset, it follows that $V(i,\ell) \ge v(S_1)$.
+
+%       \step\label{dp: step: C}
+%       Since $v(S_1) = V(i-1,\ell)$, it follows that $V(i, \ell) \ge V(i-1,\ell)$.
+
+%       \smallskip
+
+%       \step Let $S_2$ be a subset of $\{1, \ldots, i-1\}$ with $w(S_2) \le \ell-w_i$ and $v(S_2) = V(i-1, \ell-w_i)$.
+%       \\ (Such an $S_2$ must exist by the definition of $V(i-1, \ell- w_i)$.)
+
+%       \step Then $w(S_2\cup\{i\}) = w(S_2) + w_i \le (\ell-w_i) + w_i = \ell$.
+
+%       \step So $S_2\cup\{i\}$ is a subset of $\{1,\ldots, i\}$  with $w(S_2\cup\{i\}) \le \ell$.
+
+%       \step Since $V(i, \ell)$ is the maximum value of any such subset, it follows that $V(i, \ell) \ge v(S_2\cup\{i\})$.
+
+%       \step So $V(i, \ell) \ge v(S_2\cup\{i\}) = v(S_2) + v_i = V(i-1, \ell-w_i) + v_i$.
+
+%       \step\label{dp: step: D}
+%       By this and Step~\ref{dp: step: C}, it follows that $V(i, \ell) \ge \max\big(V(i-1, \ell), V(i-1, \ell-w_i) + v_i\big)$.
+
+%       \medskip
+
+%       \step Next we show that \(V(i, \ell) \le  \max\big(V(i-1, \ell),  V(i-1, \ell-w_i) + v_i\big)\).
+
+%       \step Let $S$ be a subset of $\{1,\ldots,i\}$ with $w(S) \le \ell$ and $v(S) = V(i, \ell)$.
+%       \\ (Such an $S$ must exist by the definition of $V(i, \ell)$.)
+
+%       \smallskip
+      
+%       \begin{block}
+%         \step \underline{Case 3.1.} First consider the case that $i$ is not in $S$ (that is, $i\not\in S$).
+
+%         \step Then $S$ is a subset of $\{1,\ldots,i-1\}$ with $w(S)\le \ell$.
+
+%         \step Since $V(i-1,\ell)$ is the maximum value of any such subset, $v(S) \le V(i-1,\ell)$.
+
+%         \step Since $v(S) = V(i, \ell)$, it follows that $V(i, \ell) \le V(i-1,\ell)$ (in this case). 
+
+%         \step It follows that $V(i, \ell) \le \max\big(V(i-1,\ell), V(i-1,\ell-w_i) + v_i\big)$. 
+
+%       \end{block}
+
+%       \smallskip
+      
+%       \begin{block}
+%         \step \underline{Case 3.2.} In the remaining case $i$ is in $S$ (that is, $i\in S$).
+
+%         \step Let $S'=S\setminus\{i\}$ (this is the set obtained by removing $i$ from $S$).
+
+%         \step Then $S' \subseteq \{1,\ldots,i-1\}$ and $w(S') = w(S)-w_i \le \ell-w_i$.
+
+%         \step $V(i-1,\ell-w_i)$ is the maximum value of any such subset, so $v(S') \le V(i-1,\ell-w_i)$.
+
+%         \step Since $v(S') = v(S)-v_i = V(i, \ell)-v_i$, it follows that $V(i, \ell)-v_i \le V(i-1,\ell-w_i)$.
+
+%         \step Rearranging terms gives $V(i, \ell)  \le V(i-1, \ell-w_i) + v_i$ (in this case).
+
+%         \step It follows that $V(i, \ell) \le \max\big(V(i-1,\ell), V(i-1,\ell-w_i) + v_i\big)$. 
+
+%       \end{block}
+
+%       \smallskip
+      
+%       \step By the above case analysis, $V(i, \ell) \le \max\big(V(i-1, \ell), V(i-1, \ell-w_i) + v_i\big)$.
+
+%       \step By this and Step~\ref{dp: step: D}, it follows that $V(i, \ell)  =  \max\big(V(i-1, \ell), V(i-1, \ell-w_i) + v_i\big)$.
+%     \end{blue}
+    
+%   \end{block}
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 4.}  Finally consider the remaining case, when $i$ and $\ell$ are positive and $w_i > \ell$.
+%     \step Each $w_j$ is positive, so no subset of $\{1,\ldots,i\}$ both contains $i$ and has total weight at most $\ell$.
+%     \step So the subsets $S\subseteq \{1,\ldots,i\}$ with $w(S)\le\ell$
+%     are just the $S\subseteq\{1,\ldots,i-1\}$ with $w(S)\le\ell$.
+%     \step So $V(i, \ell) = V(i-1,\ell)$, and the recurrence holds in this case.
+%   \end{block}
+
+%   \smallskip
+%   \step By the case analysis (Cases 1--4) above, the recurrence holds.
+% \end{longFormProof}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

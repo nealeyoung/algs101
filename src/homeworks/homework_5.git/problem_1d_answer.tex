@@ -1,0 +1,77 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{Problem 1(d) answer} \GradescopeComment{This should be on page 5 (middle) of your PDF.}
+
+\begin{theorem}
+  For any instance $I=\{J_1, J_2, \ldots, J_n\}$ of \prob{Puncturing Intervals},
+  \textsf{rpuncture}${(I)}$ returns a correct solution for $I$.
+\end{theorem}
+
+% Prove the theorem above for your rpuncture algorithm from Part (c).
+% As much as possible, your proof should mimic the structure
+% of the proof of Theorem 5.2 (for rselect) in Lecture Note 5.
+
+\begin{blue}
+  
+  \begin{longFormProof}
+
+    \step The proof is by induction on $n$.
+
+    \step\label{step: base case}
+    For the base case $n=0$, \textsf{rselect} returns the empty set, so is correct in this case.
+
+    \smallskip 
+
+    \begin{block}\label{block: inductive step}
+
+      \step\label{step: inductive assumption}
+      Consider executing $\textsf{rselect}(I)$ for any $I$ with $n\ge 1$.
+      Assume \textsf{rselect} is correct on smaller instances.
+
+      % [review 2026-09-27] fix: J_1, D, and R are computed in Lines 2, 3, and 4 of the pseudo-code (was "Lines 2 and 3")
+      \step Let $J_1$, $D$, and $R=\textsf{rselect}(D)$ be as computed by Lines 2--4 of the algorithm.
+
+      \step Note that $|D|<|I|$,
+      so by the assumption in Step~\ref{step: inductive assumption} $R$ is a correct solution for $D$.
+
+      \step So, by Lemma 2, the solution $\{J_1\} \cup R$ returned by $\textsf{rselect}(I)$ is correct for $I$.
+
+    \end{block}
+
+    \smallskip 
+
+    \step By Block~\ref{block: inductive step},
+    for any instance $I$ with $n\ge 1$,
+    if \textsf{rselect} is correct on smaller instances,
+    then $\textsf{rselect} (I)$ is correct.
+
+    \step By this, Step~\ref{step: base case}, and induction, \textsf{rselect} is correct for all instances.
+  \end{longFormProof}
+
+\end{blue}
+
+\vfill
+
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 5 (bottom) of your PDF.}
+
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % replace with "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % replace with "none" if none
+  \end{itemize}
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_5"
+%%% End:

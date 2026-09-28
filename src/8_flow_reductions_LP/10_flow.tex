@@ -1,0 +1,766 @@
+
+\section{Maximum Flow}\label{flow: sec: max flow}\doHeader{Max Flow}
+
+The problem is defined as follows.
+
+\begin{mylist}
+\item[\bf input:]
+  a \emph{flow network} $(G=(V,E), \textsf{cap}, s, t)$, consisting of
+
+  digraph $G=(V,E)$; edge capacities $\textsf{cap}:E\rightarrow \Rp$;
+  \emph{source} $s\in V$ and \emph{sink} $t\in V$
+
+\item[\bf output:]
+  a \emph{maximum $s$-$t$ flow} $f$ in $G$ (defined below)
+\end{mylist}
+
+Fix any input $(G=(V,E), \textsf{cap}, s, t)$.
+What is an $s$-$t$ flow?
+Imagine that there is a water source at $s$.
+Water must be sent from $s$, through the edges and vertices of the graph, to sink $t$.
+Each edge $(u,w)\in E$ can carry at most $\capOf {u,w}$ units of water per second from $u$ to $w$.
+For each vertex $v$ other than $s$ or $t$,
+all water entering $v$ must leave $v$.
+The goal is to maximize the rate at which water is sent.
+
+
+Formally, an $s$-$t$ flow $f$ in $G$
+is a function $f:E\rightarrow \Rp$,
+assigning a flow value $f(u,w) \ge 0$ to each edge $(u,w)\in E$,
+subject to the following constraints.
+For each edge $(u,w)\in E$, the flow $f(u,w)$ on the edge
+must be at most the capacity $\capOf {u,w}$.
+(These are called the \emph{capacity} constraints.)
+For each vertex $v\in V\setminus\{s,t\}$ other than the source or sink,
+the flow on the edges into $v$
+must be equal to the flow on the edges leaving $v$.
+(These are called the \emph{conservation} constraints.)
+
+Any function $f:E\rightarrow \Rp$ meeting these constraints is called a \emph{flow} (for the given flow network).
+The \emph{value} (or \emph{size}) of the flow, denoted $|f|$,
+is the net flow out of the source.
+(As we shall see, this necessarily equals the net flow into the sink.)
+The goal is to find a flow $f$ of maximum value.
+
+Here is a restatement of the problem.
+Let $\into v = \{ u\in V : (u,v)\in E\}$ denote the in-neighbors of $v$.
+Let $\out v = \{ w\in V: (v,w)\in E\}$ denote the out-neighbors.
+Using this notation, the problem is as follows:
+\[
+\begin{LP}{~~\text{maximize~~} |f|
+    ~= \sum_{w \in \out s} f(s, w) \,-\, \sum_{u \in \into s} f(u, s)
+    \text{~~~subject to:}}
+  \big(\forall (u,w)\in E\big) && 0 ~\le~ f(u, w) & ~\le~ \capOf {u,w}
+  && \comment{--- capacity constraints} \\[10pt]
+  \big(\forall v\in V\setminus\{s,t\}\big)
+  && \sum_{w\in \out v} f(v, w)
+                                   & ~= \sum_{u\in \into v} f(u, v)
+  && \comment{--- conservation constraints}
+\end{LP}
+\]
+
+\tikzset{
+    dot/.style 2 args={fill, circle, inner sep=0pt, label={#1:\scriptsize #2}},
+    vertex/.style={circle, draw, inner sep=0pt, minimum size=17pt},
+    edge/.style={->,> = latex'}
+}
+
+\newcommand{\CAP}[1]{{\small $#1$}}
+\newcommand{\FLOW}[2]{$\mathbf{#1}/$\small${#2}$}
+
+Here is one example of a flow network, a flow in it, and a maximum flow in it:
+\medskip
+
+\noindent
+\centerline{
+\begin{tabular}{|c|c|c|}\hline%&&\\
+  a flow network &  a flow of value 11  & a maximum flow \\[4pt]
+\begin{tikzpicture}[scale=1]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (2,2) {a} ;
+  \node[vertex] (b) at (2,0) {b} ;
+  \node[vertex] (t) at (4,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\CAP 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\CAP 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\CAP 2}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\CAP 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\CAP 8}; 
+\end{tikzpicture}
+  &
+\begin{tikzpicture}[scale=1]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (2,2) {a} ;
+  \node[vertex] (b) at (2,0) {b} ;
+  \node[vertex] (t) at (4,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 6 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 1 2}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 5 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 6 8}; 
+\end{tikzpicture}
+    &
+\begin{tikzpicture}[scale=1]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (2,2) {a} ;
+  \node[vertex] (b) at (2,0) {b} ;
+  \node[vertex] (t) at (4,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 8 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 2 2}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 6 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 7 8}; 
+\end{tikzpicture}
+      \\\hline 
+\end{tabular}
+}
+
+\newpage
+
+\subsection{The Minimum $s$-$t$ Cut problem}
+
+\begin{mylist}
+\item[\bf input:]
+  a flow network $(G=(V,E), \textsf{cap}, s, t)$
+
+\item[\bf output:]
+  an $s$-$t$ \emph{cut} of minimum \emph{capacity} (terms defined below)
+\end{mylist}
+
+An \emph{cut} % of the flow network
+is a partition of the vertex set $V$ into two parts\footnote
+{So $S\subseteq V$ and $T=V\setminus S$.} $(S,T)$.
+Given any such cut, define $E(S,T)$ to be the set of edges crossing the cut from $S$ to $T$.
+That is, $E(S,T) = \{(u,w) \in E : u\in S, w \in T\} = E\cap (S\times T)$.
+Define the \emph{capacity} of the cut, $\capOf {S, T}$,
+to be the total capacity of those edges.
+For any flow $f$,
+define the \emph{flow from $S$ to $T$}, $f(S, T)$,
+to be the total flow on those edges.  That is
+\[
+  \capOf {S, T} = \sum_{(u,w) \in E(S, T)} \capOf {u,w}, \text{~~~and~~~}
+  f(S, T) = \sum_{(u,w) \in E(S, T)} f(u,w).
+\]
+% For example,~$\capOf{\{s\}} = 9 + 5 = 14$,
+% $~\capOf{\{b\}} = 8$,
+% and $\capOf{\{s,b\}} = 9 + 8 = 17$. 
+In the previous example,
+\begin{mylist}
+\item $\capOf{\{s\}, \{a,b,t\}} = 9 + 5 = 14$,
+% $\capOf{\{s,a\}} = 6 + 2 + 5 = 13$. 
+\item $\capOf{\{s, b\}, \{a,t\}} = 17$, and
+\item $\capOf{\{s,a,b\}, \{t\}} = 6 + 8 = 14$. 
+\end{mylist}
+
+An \emph{$s$-$t$ cut} is a cut $(S, T)$ with the additional property that $s\in S$ and $t\in T$.
+Next we'll show that the capacity of \emph{any} $s$-$t$ cut
+is an upper bound on the value of \emph{any} $s$-$t$ flow.
+To prove it we use the following useful property of flows:
+
+\begin{lemma}\label{flow: across cut}
+  Let $f$ and $(S, T)$ be any flow and $s$-$t$ cut.
+  Then \(|f| = f(S, T) - f(T, S)\).
+
+  That is, the value of the flow equals
+  the flow from $S$ to $T$ minus the flow from $T$ to $S$.
+\end{lemma}
+In the previous example, for the cut $S=\{s,b\}$, the flow $f$ in the third panel
+has $f(\{s,b\}, \{a,t\}) - f(\{a,t\}, \{s,b\}) = (8+7) - 2 = 13 = |f|$.
+
+Summing the conservation constraints
+over all vertices $v\in S\setminus\{s\}$ gives the equation in the lemma.
+You can find the detailed proof at the end of this note.
+The bound we mentioned follows:
+\begin{lemma}\label{flow: weak}
+  Let $f$ and $(S,T)$ be any flow and $s$-$t$ cut.
+  Then $|f| \le \capOf {S, T}$.
+
+  That is, the value of any $s$-$t$ flow is at most the capacity of any $s$-$t$ cut.
+\end{lemma}
+\begin{proof}
+  Lemma~\ref{flow: across cut} implies
+  $|f| = f(S,T) - f(T,S) \le f(S, T) \le \capOf {S, T}$.
+
+% [review 2026-09-27] fix: the first inequality uses f(T,S) >= 0, not f(S,T) >= 0
+  (The two inequalities hold because $f(T, S) \ge 0$,
+  and $f$ satisfies the capacity constraints.)
+\end{proof}
+
+In the previous example,
+the $s$-$t$ cut $S=\{s,a\}$ has capacity 13.
+So, by the lemma, every $s$-$t$ flow has value at most 13.
+The flow in the third panel achieves value 13,
+so must be a maximum flow.
+
+\subsection{A greedy Max-Flow algorithm that doesn't work}
+Consider the following greedy algorithm for \prob{Maximum Flow}:
+
+\begin{myframed}
+\begin{steps}
+  \item[] {\sf greedy-flow}$(G=(V,E), \textsf{cap}, s, t)$
+
+    \step initialize $f[u, w] = 0$ for all $(u,w)\in E$
+
+    \step for any path $p$ in $G$,
+    define $\delta(p) = \min\{ \capOf {u,w} - f[u,w] : (u,w) \in p\}$
+    \comment{($p$'s residual capacity)}
+
+    \step while there exists an $s$-$t$ path $p$
+    with positive residual capacity $\delta(p)>0$:
+
+    \begin{block}
+      \step let $p$ be any such path
+
+      \step for each edge $(u,w)\in p$: increase $f[u,w]$ by $\delta(p)$
+      \comment{(augment the flow along path $p$)}
+    \end{block}
+
+    \step return $f$
+  \end{steps}
+\end{myframed}
+
+In Step 3, the path $p$ with positive residual capacity is called an \emph{augmenting} path.
+Computing one is easy. First delete the \emph{saturated} edges
+--- those with $f[u,w] = \capOf{u,w}$.
+Then the possible augmenting paths (the $s$-$t$ paths with positive residual capacity)
+are the $s$-$t$ paths in the resulting graph.
+Such a path can be found (if it exists) in linear time
+using depth-first or breadth-first search.
+
+The greedy algorithm maintains the invariant that \emph{$f$ is a flow}
+(that is, $f$ satisfies the capacity and conservation constraints).
+The invariant holds initially because each edge has flow zero.
+In each iteration, in Step 4.2, increasing the flow by $\delta(p)$
+along the $s$-$t$ path $p$ maintains the invariant,
+because it maintains the capacity constraints and the conservation constraints.
+(Verify!)
+So, if the algorithm terminates, it returns a flow.
+Unfortunately, the algorithm doesn't work ---
+it can get stuck before it finds a maximum flow,
+as shown in Figure~\ref{flow: fig: greedy}.
+
+\begin{figure}
+\centering
+\begin{tabular}{|c|c|c|c|}\hline%&&\\
+  iteration 1  &  iteration 2  & iteration 3 & iteration 4 \\[4pt]
+\begin{tikzpicture}[xscale=1.5]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge, ultra thick] (s) -- (a) node[midway,above] {\FLOW 0 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+  \draw[edge, ultra thick] (a) -- (b) node[midway,left] {\FLOW 0 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 0 6}; 
+  \draw[edge, ultra thick] (b) -- (t) node[midway,below] {\FLOW 0 7}; 
+\end{tikzpicture}
+  &
+\begin{tikzpicture}[xscale=1.5]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge, ultra thick] (s) -- (a) node[midway,above] {\FLOW 5 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge, ultra thick] (a) -- (t) node[midway,above] {\FLOW 0 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 5 7}; 
+\end{tikzpicture}
+    &
+\begin{tikzpicture}[xscale=1.5]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  % [review 2026-09-27] fix: saturated edges are drawn dashed; (s,a) is saturated here too
+  \draw[edge, dashed] (s) -- (a) node[midway,above] {\FLOW 9 9}; 
+  \draw[edge, ultra thick] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+  \draw[edge, dashed] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 4 6}; 
+  \draw[edge, ultra thick] (b) -- (t) node[midway,below] {\FLOW 5 7}; 
+\end{tikzpicture}
+    &
+\begin{tikzpicture}[xscale=1.5]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge, dashed] (s) -- (a) node[midway,above] {\FLOW 9 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 2 5}; 
+  \draw[edge, dashed] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 4 6}; 
+  % [review 2026-09-27] fix: saturated edges are drawn dashed; (b,t) is saturated here, which is why the algorithm is stuck
+  \draw[edge, dashed] (b) -- (t) node[midway,below] {\FLOW 7 7}; 
+\end{tikzpicture}
+      \\\hline 
+\end{tabular}
+\caption{An example in which the greedy algorithm gets stuck.}\label{flow: fig: greedy}
+\end{figure}
+
+\subsection{The Ford-Fulkerson algorithm}
+In the remainder of this note, we assume that in $G$ no pair $u,w\in V$ of vertices
+has edges in both directions ($|\{(u,w),(w,u)\} \cap E| \le 1$).
+This assumption is just to simplify the notation.
+It is easy to reduce the general case to this one by ``splitting'' edges as necessary.
+
+Intuitively, in the example, the greedy algorithm failed because it pushed too much flow along edge $(a,b)$.
+To fix it, we introduce a mechanism for allowing the algorithm to ``cancel'' previously sent flow.
+Namely, 
+for every edge $(u,w)\in E$,
+if the current flow $f$ sends positive flow $f(u,w) > 0$ on the edge,
+we add an artificial \emph{back edge} $(w,u)$, giving it capacity $f(u,w)$.
+We also remove all saturated edges.
+The resulting graph is the \emph{residual graph} $G_f=(V, E_f)$ for $f$,
+where \[E_f = \{(u,w)\in E: f(u,w) < \capOf {u,w} \}
+  ~\cup~ \{(u,w) : (w,u) \in E,\, f(w,u) > 0 \}.\]
+The edge capacities in $G_f$, called \emph{residual capacities} are
+\begin{align*}
+  \rescap {u,w} &=
+                  \begin{cases}
+                    \capOf {u,w} - f(u,w) & \text{ if } (u,w)\in E \text{ and } f(u,w) < \capOf{u,w} \\
+                    f(w,u) & \text{ if } (w,u)\in E \text{ and } f(w,u) > 0.
+                  \end{cases}
+\end{align*}
+
+\newpage
+
+We modify the greedy algorithm to maintain the residual graph $G_f$,
+and, in each iteration,
+to use any $s$-$t$ path in $G_f$ as the augmenting path.
+(Note that all residual capacities are positive.)
+This gives the Ford-Fulkerson algorithm, shown in Figure~\ref{flow: fig: ffalg}.
+
+\begin{figure}
+\begin{myframed}
+\begin{steps}
+  \item[] {\sf Ford-Fulkerson}$(G=(V,E), \textsf{cap}, s, t)$
+
+    \step initialize $f[u, w] = 0$ for all $(u,w)\in E$
+
+    \step for any $s$-$t$ path $p$ in $G_f$,
+    define $\delta(p) = \min\{ \rescap {u,w} : (u,w) \in p\}$
+    \comment{($p$'s \emph{residual capacity})}
+
+    \step while there is an $s$-$t$ path in $G_f$:
+
+    \begin{block}
+      \step let $p$ be any such path; let $\Delta=\delta(p)$ \comment{(note $\delta(p) > 0$ by def'n of $G_f$)}
+
+      \step for each edge $(u,w)\in p$:
+      \comment{(augment flow along augmenting path $p$ by $\Delta$ units)}
+      \step~~~~if $(u,w)\in E$: increase $f[u,w]$ by $\Delta$
+      \step~~~~else: decrease $f[w, u]$ by $\Delta$
+      \comment{(cancel $\Delta$ units of flow on the reverse edge $(w,u)$)}
+    \end{block}
+
+    \step return $f$
+  \end{steps}
+\end{myframed}
+\caption{The Ford-Fulkerson augmenting-paths algorithm for \prob{Maximum Flow}.}\label{flow: fig: ffalg}
+\end{figure}
+
+\begin{observation}
+  The Ford-Fulkerson algorithm
+  maintains the invariant that \emph{$f$ is a flow in $G$.}
+\end{observation}
+The algorithm maintains the invariant because, in each iteration,
+augmenting flow along the path $p$ 
+preserves the conservation and capacity constraints.
+(To see that this still holds when flow is ``canceled'' on an edge, try some examples.)
+Figure~\ref{flow: fig: example} shows the execution of the modified algorithm
+on the example from Figure~\ref{flow: fig: greedy}.
+
+\smallskip
+
+\newcommand{\XSCALE}{1.49}
+\newcommand{\YSCALE}{0.95}
+
+\begin{figure}
+% \noindent
+\begin{tabular}{|c||c||c||c|}\hline%&&\\
+  % iteration 1  &
+                   start of iteration 2  & iteration 3 & iteration 4
+                                                & iteration 5 (done)
+  \\[4pt]
+% \begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+%   \node[vertex] (s) at (0,1) {s} ;
+%   \node[vertex] (a) at (1,2) {a} ;
+%   \node[vertex] (b) at (1,0) {b} ;
+%   \node[vertex] (t) at (2,1) {t} ;
+%   \draw[edge] (s) -- (a) node[midway,above] {\FLOW 0 9}; 
+%   \draw[edge] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+%   \draw[edge] (a) -- (b) node[midway,left] {\FLOW 0 5}; 
+%   \draw[edge] (a) -- (t) node[midway,above] {\FLOW 0 6}; 
+%   \draw[edge] (b) -- (t) node[midway,below] {\FLOW 0 7}; 
+% \end{tikzpicture}
+%   &  % 2 top
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ; 
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 5 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 0 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 5 7}; 
+\end{tikzpicture}
+    & % 3 top
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 9 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 0 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 4 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 5 7}; 
+\end{tikzpicture}
+    & % 4 top
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 9 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 2 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 5 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 4 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 7 7}; 
+\end{tikzpicture}
+    & % 5 top
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 9 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 4 5}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 3 5}; 
+  \draw[edge] (a) -- (t) node[midway,above] {\FLOW 6 6}; 
+  \draw[edge] (b) -- (t) node[midway,below] {\FLOW 7 7}; 
+\end{tikzpicture}
+      \\\hline   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% bottom
+% \begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+%   \node[vertex] (s) at (0,1) {s} ;
+%   \node[vertex] (a) at (1,2) {a} ;
+%   \node[vertex] (b) at (1,0) {b} ;
+%   \node[vertex] (t) at (2,1) {t} ;
+%   \draw[edge, ultra thick] (s) -- (a) node[midway,above] {\CAP 9}; 
+%   \draw[edge] (s) -- (b) node[midway,below] {\CAP 5}; 
+%   \draw[edge, ultra thick] (a) -- (b) node[midway,left] {\CAP 5}; 
+%   \draw[edge] (a) -- (t) node[midway,above] {\CAP 6}; 
+%   \draw[edge, ultra thick] (b) -- (t) node[midway,below] {\CAP 7}; 
+% \end{tikzpicture}
+%   &  % 2 bottom
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node at (-0.1,2.1) {$G_f$} ; 
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge, ultra thick] (s) to [bend left=15] node[midway,above] {\CAP 4} (a); 
+  \draw[edge] (a) to [bend left=15] node[midway,below] {\CAP 5} (s); 
+  \draw[edge] (s) -- (b) node[midway,below] {\CAP 5}; 
+  \draw[edge] (b) to [bend right=10] node[midway,left] {\CAP 5} (a); 
+  \draw[edge, ultra thick] (a) -- (t) node[midway,above] {\CAP 6}; 
+  \draw[edge] (b) to [bend right=10] node[midway,below] {\CAP 2}  (t); 
+  \draw[edge] (t) to [bend right=10] node[midway,above] {\CAP 5}  (b); 
+\end{tikzpicture}
+    & % 3 bottom
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (a) to [bend left=10] node[midway,above] {\CAP 9} (s); 
+  \draw[edge, ultra thick] (s) -- (b) node[midway,below] {\CAP 5}; 
+  \draw[edge] (b) to [bend right=10] node[midway,left] {\CAP 5} (a); 
+  \draw[edge] (a) to [bend right=-10] node[midway,above] {\CAP 2} (t); 
+  \draw[edge] (t) to [bend right=-10] node[midway,below] {\CAP 4} (a); 
+  \draw[edge, ultra thick] (b) to [bend right=10] node[midway,below] {\CAP 2}  (t); 
+  \draw[edge] (t) to [bend right=10] node[midway,above] {\CAP 5}  (b); 
+\end{tikzpicture}
+    & % 4 bottom
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (a) to [bend left=10] node[midway,above] {\CAP 9} (s); 
+  \draw[edge, ultra thick] (s) to [bend right=10] node[midway,below] {\CAP 3} (b); 
+  \draw[edge] (b) to [bend right=10] node[midway,above] {\CAP 2} (s); 
+  \draw[edge, ultra thick] (b) to [bend right=10] node[midway,left] {\CAP 5} (a); 
+  \draw[edge, ultra thick] (a) to [bend right=-10] node[midway,above] {\CAP 2} (t); 
+  \draw[edge] (t) to [bend right=-10] node[midway,below] {\CAP 4} (a); 
+  \draw[edge] (t) to [bend right=10] node[midway,below] {\CAP 7}  (b); 
+\end{tikzpicture} 
+    & % 5 bottom
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \begin{scope}
+    \clip (-0.30,-0.34) rectangle (2,2.34);
+    \draw [rounded corners=13mm, thick, dashed, fill=gray!10,
+    opacity=0.8, outer sep=0pt, inner sep=0pt]
+    (-0.7,1)--(1.37,2.8)--(1.37,-0.8)--cycle; 
+  \end{scope}
+  \node[vertex, ultra thick] (s) at (0,1) {s} ;
+  \node[vertex, ultra thick] (a) at (1,2) {a} ;
+  \node[vertex, ultra thick] (b) at (1,0) {b} ;
+  \node[vertex] (t) at (2,1) {t} ;
+  \draw[edge] (a) to [bend left=10] node[midway,above] {\CAP 9} (s); 
+  \draw[edge] (s) to [bend right=10] node[midway,below] {\CAP 1} (b); 
+  \draw[edge] (b) to [bend right=10] node[midway,above] {\CAP 4} (s); 
+  \draw[edge] (b) to [bend right=5] node[midway,right] {\CAP 3} (a); 
+  \draw[edge] (a) to [bend right=5] node[midway,left] {\CAP 2} (b); 
+  \draw[edge] (t) to [bend right=-10] node[midway,below] {\CAP 6} (a); 
+  \draw[edge] (t) to [bend right=10] node[midway=0.3,below] {\CAP 7}  (b); 
+\end{tikzpicture} 
+  \\ \hline 
+\end{tabular}
+\caption{Example execution of the Ford-Fulkerson algorithm.
+  The first row shows the flow $f$ in the graph $G$ at the start of each iteration (2--5).
+  The second row shows the residual graph $G_f$ and the augmenting path $p$ in that iteration.
+  After Iteration 5 there is no $s$-$t$ path in the residual graph $G_f$
+  (as there are no edges leaving the $s$-$t$ cut with $S=\{s, a, b\}$), so the algorithm terminates.
+ }\label{flow: fig: example}
+\end{figure}
+
+\begin{figure}
+\renewcommand{\XSCALE}{1.42}
+% \renewcommand{\YSCALE}{1.2}
+\centering
+\begin{tabular}{|c||c||c|} \hline
+  flow network $G$ & final flow $f$ in $G$ & final residual graph $G_f$, and cut \\
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ; 
+  \node[vertex] (c) at (2,2) {c} ; 
+  \node[vertex] (d) at (2,0) {d} ; 
+  \node[vertex] (t) at (3,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] { 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] { 1}; 
+  \draw[edge] (a) -- (b) node[midway,left] { 5}; 
+  \draw[edge] (a) -- (c) node[midway,above] { 2}; 
+  \draw[edge] (b) -- (d) node[midway,below] { 3}; 
+  \draw[edge] (d) -- (c) node[midway,right] { 2}; 
+  \draw[edge] (c) -- (b) node[midway, right] { 1}; 
+  \draw[edge] (c) -- (t) node[midway,above] { 6}; 
+  \draw[edge] (d) -- (t) node[midway,below] { 1}; 
+\end{tikzpicture}
+&
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \node[vertex] (s) at (0,1) {s} ;
+  \node[vertex] (a) at (1,2) {a} ;
+  \node[vertex] (b) at (1,0) {b} ; 
+  \node[vertex] (c) at (2,2) {c} ; 
+  \node[vertex] (d) at (2,0) {d} ; 
+  \node[vertex] (t) at (3,1) {t} ;
+  \draw[edge] (s) -- (a) node[midway,above] {\FLOW 4 9}; 
+  \draw[edge] (s) -- (b) node[midway,below] {\FLOW 1 1}; 
+  \draw[edge] (a) -- (b) node[midway,left] {\FLOW 2 5}; 
+  \draw[edge] (a) -- (c) node[midway,above] {\FLOW 2 2}; 
+  \draw[edge] (b) -- (d) node[midway,below] {\FLOW 3 3}; 
+  \draw[edge] (d) -- (c) node[midway,right] {\FLOW 2 2}; 
+  \draw[edge] (c) -- (b) node[midway] {\FLOW 0 1}; 
+  \draw[edge] (c) -- (t) node[midway,above] {\FLOW 4 6}; 
+  \draw[edge] (d) -- (t) node[midway,below] {\FLOW 1 1}; 
+\end{tikzpicture}
+&
+\begin{tikzpicture}[yscale=\YSCALE, xscale=\XSCALE]
+  \begin{scope}
+    \clip (-0.30,-0.34) rectangle (2,2.34);
+    \draw [rounded corners=12mm, thick, dashed, fill=gray!10,
+    opacity=0.8, outer sep=0pt, inner sep=0pt]
+    (-0.7,1)--(1.4,3)--(1.4,-1)--cycle; 
+  \end{scope}
+  \node[vertex, ultra thick] (s) at (0,1) {s} ;
+  \node[vertex, ultra thick] (a) at (1,2) {a} ;
+  \node[vertex, ultra thick] (b) at (1,0) {b} ; 
+  \node[vertex] (c) at (2,2) {c} ; 
+  \node[vertex] (d) at (2,0) {d} ; 
+  \node[vertex] (t) at (3,1) {t} ;
+  \draw[edge] (s) to [bend left=10] node[midway,above] { 5} (a); 
+  \draw[edge] (a) to [bend left=10] node[midway,below] { 4} (s); 
+  \draw[edge] (b) to node[midway,below] { 1} (s); 
+  \draw[edge] (a) to [bend left=5] node[midway,right] { 3} (b); 
+  \draw[edge] (b) to [bend left=5] node[midway,left] { 2} (a); 
+  \draw[edge] (c) to node[midway,below] { 2} (a); 
+  \draw[edge] (d) to node[midway,below] { 3} (b); 
+  \draw[edge] (c) to node[midway,right] { 2} (d); 
+  \draw[edge] (c) -- (b) node[midway, right] {1}; 
+  \draw[edge] (c) to [bend left=10] node[midway,above] { 2} (t); 
+  \draw[edge] (t) to [bend left=10] node[midway,below] { 4} (c); 
+  \draw[edge] (t) -- (d) node[midway,below] {1}; 
+\end{tikzpicture} 
+  \\ \hline 
+\end{tabular}
+\caption{An example to illustrate the proof of Theorem~\ref{flow: thm: FF}.}\label{flow: fig: FF}
+\end{figure}
+
+
+\begin{theorem}[Ford \& Fulkerson]\label{flow: thm: FF}
+   If the algorithm terminates, it returns a maximum $s$-$t$ flow $f$.
+\end{theorem}
+\begin{proof}
+  Assume the algorithm terminates.  Let $f$ be the flow it returns.
+  Let $S$ contain the set of vertices reachable from the source $s$
+  in the final residual graph $G_f$.
+  Let $T=V\setminus S$.
+  The sink $t$ is not in $S$, because at termination
+  there is no $s$-$t$ path in the residual graph.
+  So $(S,T)$ is an $s$-$t$ cut.
+  (In Figure~\ref{flow: fig: FF}, $S=\{s, a, b\}$.)
+  
+  We use the following observation, which 
+  follows from the definition of $S$:
+  \emph{in $G_f$ there is no edge $(u,w)$ from $S$ to $T$
+    (that is, with $u\in S$ and $w\in T$).}
+  (Otherwise, since $u$ is reachable from $s$ in $G_f$,
+  $w$ would also be reachable from $s$, so would be in $S$.)
+  
+  Consider any edge $(u,w)\in E$ from $S$ to $T$ in the original graph $G$.
+  By the observation above,
+  this edge is not present in the residual graph $G_f$.
+  This implies that edge $(u,w)$ must be saturated: $f[u,w] = \capOf {u,w}$.
+  Summing over all edges from $S$ to $T$ in $E$, we get $f(S, T) = \capOf {S, T}$.
+  (In Figure~\ref{flow: fig: FF}, these edges are $(a, c)$ and $(b, d)$.) 
+  
+  Consider any edge $(u,w)\in E$ from $T$ to $S$ in the original graph $G$.
+  The reverse edge $(w, u)$ (which goes from $S$ to $T$) is not present in the residual graph
+  (by the same observation).
+  By definition of $G_f$, this implies that edge $(u,w)$ has no flow: $f(u,w) = 0$.
+  Summing over all edges from $T$ to $S$ in $E$, we get $f(T, S) = 0$.
+  (In Figure~\ref{flow: fig: FF}, there is one such edge, $(c, b)$.) 
+
+  By Lemma~\ref{flow: across cut} and the previous two paragraphs,
+  $|f| = f(S,T) - f(T,S) = f(S, T) = \capOf {S, T}$.
+  That is, the value of $f$ equals the capacity of the cut.
+  By Lemma~\ref{flow: weak},
+  no flow has value more than $\capOf {S, T}$.
+  So $f$ is a maximum flow.
+\end{proof}
+
+\pythonCode{max_flow.py}
+
+\subsection{Consequences: The Max-Flow/Min-Cut Theorem; Integer Flows}
+We conclude with two important consequences.
+\begin{theorem}[max-flow/min-cut]
+  In any flow network, the maximum~$s$-$t$ flow
+  value equals the minimum~capacity of any $s$-$t$ cut.
+\end{theorem}
+\begin{proof}
+  Let $v^*$ denote the maximum value of any $s$-$t$ flow.
+  (It is well defined, as the set of flows is closed under limit.)
+  Let $f$ be a flow of value $v^*$.
+  Let $S$ contain the vertices reachable from $s$ in $G_f$.
+  % [review 2026-09-27] fix: the proof needs t not in S, which follows from f being a maximum flow (this sentence was missing)
+  Then $t\notin S$: otherwise an $s$-$t$ path in $G_f$ would be an augmenting path,
+  and augmenting $f$ along it would give a flow of value more than $v^*$.
+  Following the reasoning in the proof of Theorem~\ref{flow: thm: FF},
+  $(S,T)$ is an $s$-$t$ cut with capacity equal to $|f|$.
+  By Lemma~\ref{flow: weak}, every cut has capacity at least $|f| = v^*$.
+  So  $\capOf {S,T} = v^*$ is the minimum possible $s$-$t$ cut capacity.
+\end{proof}
+
+
+For many applications, the edge capacities are integers,
+and we want an \emph{integer-valued} flow,
+where the flow $f(u,w)$ on each edge $(u,w)$ is an integer.
+\begin{theorem}
+  If the edge capacities are integers, the algorithm 
+   returns an integer-valued flow.
+\end{theorem}
+\begin{proof}
+  Assume the edge capacities are integers.
+  The algorithm maintains the invariant that $f$ is integer-valued,
+  because if $f$ is integer valued and each capacity is an integer,
+  then each capacity in the residual graph is a positive integer,
+  so $\delta(p)$ is a positive integer in each iteration.
+  And the algorithm terminates,
+  because in each iteration the value of the flow increases by at least 1,
+  but the value never exceeds the capacity of any $s$-$t$ cut.
+\end{proof}
+
+Note that this algorithm may take exponentially long.
+Indeed, there are flow networks (with irrational edge capacities)
+in which the algorithm might not even terminate
+(depending on how augmenting paths are chosen)!
+But there are variants of the algorithm
+that are guaranteed to run in polynomial time.
+% [review 2026-09-27] fix: "Dinitz's algorithm" usually names the blocking-flow algorithm; Dinitz discovered the shortest-augmenting-path rule independently
+For example, the Edmonds-Karp algorithm (discovered independently by Dinitz)
+specializes the Ford-Fulkerson algorithm by choosing the augmenting path in each iteration
+to have a minimum number of edges.  (Such a path can be found using breadth-first search.)
+With this choice, one can prove there are at most $O(|V|\cdot|E|)$ iterations,
+so the running time is $O(|V|\cdot|E|^2)$.
+
+\pythonCode{max_flow.py}
+
+% TODO: fold in the Edmonds-Karp analysis (the lemma that residual distances
+% never decrease, and the O(|V||E|)-iterations theorem with its proof) from
+% max_flow_Edmonds_Karp.tex, a 2018 CS 5800 note, as a subsection here;
+% convert it to the current macros, labels, and \LN references, then delete it.
+
+\subsection{Proof of Lemma~\ref{flow: across cut}}
+
+Fix any flow network $(G=(V,E), \textsf{cap}, s, t)$.
+
+\setcounter{lemma}{0}
+\begin{restatement}
+\begin{lemma}
+  Let $f$ and $(S, T)$ be any flow and $s$-$t$ cut.
+  Then \(|f| = f(S, T) - f(T, S)\).
+
+  That is, the value of the flow equals
+  the flow from $S$ to $T$ minus the flow from $T$ to $S$.
+\end{lemma}
+\end{restatement}
+\stepcounter{lemma}
+
+\begin{proof} % [Proof of Lemma~\ref{flow: across cut}]
+  Fix any such flow $f$ and cost $(S, T)$.
+  For ease of notation,
+  if, for a pair of vertices $u, w\in V$
+  there is no edge $(u, w)\in E$,
+  define $f(u, w) = 0$.
+  Following this convention,
+  for every vertex $v$ other than $s$ or $t$
+  the conservation constraint for $v$ is
+  \(
+    \sum_{w\in V} f(v, w)
+    ~= \sum_{u\in V} f(u, v).
+  \)
+  Then
+  \begin{align*}
+    |f| & {} = \sum_{w\in V} f(s, w) - \sum_{u\in V} f(u, s) &
+    & \comment{(by definition of $|f|$)}
+    \\
+        & {} = \sum_{v\in S}  \sum_{w\in V} f(v, w)  - \sum_{v\in S}  \sum_{u\in V} f(u, v) &
+    & \comment{(adding all conservation constraints for $v\in S\setminus \{s\}$)}
+    \\
+        & {} = \sum_{v\in S} \sum_{w\in V\setminus S} f(v, w) - \sum_{v\in S} \sum_{u\in V\setminus S} f(u, v) &
+    & \comment{(canceling the common terms for edges from $S$ to $S$)}
+    \\
+        & {} = \sum_{v\in S} \sum_{w\in T} f(v, w)  - \sum_{v\in S} \sum_{u\in T} f(u, v) &
+    & \comment{(because $T=V\setminus S$)}
+    \\
+        & {} = f(S, T) - f(T, S) &
+    & \comment{(by definition of $f(S, T)$ and $f(T, S)$).}
+  \end{align*}
+\end{proof}
+
+\subsection{External sources on \prob{Max Flow}}
+
+\begin{itemize}
+\item \DPV~Chapter 7.2.  \CLRS Chapter 26. \KT Chapter 7.  \JE Chapter 10.  MIT lecture video:
+  
+
+\URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-design-and-analysis-of-algorithms-spring-2015/lecture-videos/lecture-13-incremental-improvement-max-flow-min-cut/}
+
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "flow_reductions_LP"
+%%% End:

@@ -1,0 +1,548 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+% Local override, kept so this homework's PDF matches its original exactly:
+% the shared macros (src/macros/macros.tex) now define \REPLACEME differently (without the leading space, plus \xspace).
+% Defined before \input{macros} with \providecommand so a gradescope wrapper's version still wins.
+\providecommand{\REPLACEME}{ \textcolor{red}{\ensuremath{\star \cdots \star}}}
+
+\input{macros}
+
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{8}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\gradescopeInit
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\problem\emph{(Lecture Note 7)}
+You are a freelancer who has to choose which jobs to take on each of $n$ days.  
+On each day $i\in\{1,2,\ldots,n\}$ you have three options
+--- take a \emph{light} job, take a \emph{heavy} job, or take no job.
+Your pay for the day $i$ is $\ell_i$ if you take a light job, $h_i$ if you take a heavy job, and nothing if you take no job.
+There is one additional constraint: for each day $i\in\{2, 3, \ldots, n\}$,
+you can take a heavy job on day $i$ only if you took no job in day $i-1$.
+(You can take a heavy job on day 1.)
+
+\smallskip
+
+Fix an input $(\ell=(\ell_1,\ldots,\ell_n), h=(h_1,\ldots,h_n))$.
+
+For each $j\in\{0,1,2,\ldots,n\}$, 
+a \emph{schedule} for days $\{1, 2, \ldots, j\}$
+selects, for each of those $j$ days, one of the three job options (light, heavy, none).
+The schedule is \emph{feasible} if, for every day $i\in\{2, 3, \ldots, j\}$,
+if the schedule selects the heavy job for day $i$,
+then it selects no job for day $i-1$.
+The \emph{earnings} of the schedule is the sum of its earnings for each day $i\in\{1,2, \ldots, j\}$,
+where the earnings for day $i$ is $\ell_i$ if the schedule selects a light job that day,
+$h_i$ if the schedule selects a heavy job, and nothing if it selects no job.
+(You may assume $\ell_i$ and $h_i$ are non-negative, but \emph{not} that $\ell_i \le h_i$.)
+Two schedules are \emph{distinct} if they are not identical
+(i.e., for at least one day, their selections differ).
+
+For $j\in\{0,1,2,\ldots,n\}$, 
+define $N(j)$ to be the number of distinct feasible schedules for days $\{1,\ldots, j\}$.
+Define $M(j)$ to be the maximum, over all feasible schedule for days $\{1,\dots,j\}$,
+of the total earnings of the schedule.
+
+
+\begin{enumerate}[label=(\alph*)]
+\item
+
+Give a recurrence relation for $N(j)$ in terms of $N(0), N(1), \ldots, N(j-1)$.
+
+\item
+  
+Explain precisely in at most four lines why your recurrence relation is correct. 
+
+\item
+
+Give a recurrence relation for $M(j)$ in terms of $M(0), M(1), \ldots, M(j-1)$, $\ell$, and $h$.
+
+\item
+  
+Explain precisely in at most four lines why your recurrence relation is correct. 
+ 
+\item
+
+  What is the asymptotic worst-case running time of the resulting (iterative, or recursive and memoized) algorithm for computing $M(n)$, given $(\ell, h)$?
+
+\item
+  
+  Explain precisely in at most three lines why the bound you give is correct. 
+
+\item
+
+Give pseudo-code for the resulting iterative dynamic-programming algorithm, for computing $M(n)$, given $(\ell, h)$.
+Follow the guidelines in Lecture Note 1 and the examples in Lecture Note 7.
+
+For readability, use mathematical expressions (such as a sums, maximums, etc.)
+that any competent programmer could implement in an obvious way,
+without giving the details of how to compute those expressions.
+
+\end{enumerate}
+
+You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs101-schedule-and-valid-subsets}
+(the ``Maximum-value schedule'' challenge).
+(This is just for testing. Hacker-Rank submissions won't be graded.)
+
+\continued
+
+\setlength{\ITEMHT}{1.9in}
+{\injectEnumerate
+  \inputAnswer{problem_1_answer}
+}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
+
+\problem\emph{(Lecture Note 7)}
+Consider the following problem:
+
+\begin{mylist}
+\item[\bf input:] A universe $U$ (a set) and sequence $X = (x[1], x[2], \ldots, x[n]$), where each $x[i]$ is in $U$.
+\item[\bf output:] The number of \emph{valid} subsets $S$ of $\{1,2,\ldots,n\}$,
+  where $S$ is valid if the corresponding subsequence of $X$
+  has no adjacent equal elements.  
+  For example, if $U=\{a,b\}$ and $X=a,b,b,a$, then 11 of the 16 possible subsets are valid:
+\end{mylist}
+\centerline{
+\begin{tabular}{rcll}
+  subset  & subsequence & valid?  \\ \hline
+ $\{1,2,3,4\}$ & $a, b, b, a$ & no \\
+ $\{2,3,4\}$ & $-, b, b, a$ & no\\
+ $\{1,3,4\}$ & $a, -, b, a$ & yes\\
+ $\{1,2,4\}$ & $a, b, -, a$ & yes\\
+ $\{3,4\}$ & $-, -, b, a$ & yes\\
+ $\{2,4\}$ & $-, b, -, a$ & yes\\
+ $\{1,4\}$ & $a, -, -, a$ & no\\
+ $\{4\}$ & $-, -, -, a$ & yes\\ \hline
+\end{tabular}~~~~{}
+\begin{tabular}{rcll}
+  subset  & subsequence & valid?  \\ \hline
+ $\{1,2,3\}$ & $a, b, b,-$ & no \\
+ $\{2,3\}$ & $-, b, b, -$ & no\\
+ $\{1,3\}$ & $a, -, b, -$ & yes\\
+ $\{3\}$ & $-, -, b, -$ & yes\\
+ $\{1,2\}$ & $a, b, -, -$ & yes\\
+ $\{2\}$ & $-, b, -, -$ & yes\\
+ $\{1\}$ & $a, -, -, -$ & yes\\
+ $\{\}$ & $-, -, -, -$ & yes \\\hline
+\end{tabular}
+}
+\medskip\noindent
+(If all elements of $X$ are the same, there are $n+1$ valid subsets.
+If all are distinct, there are $2^n$.)
+
+\paragraph{A dynamic-programming algorithm (with one small bug that you must find).}
+Fix an input $X=x[1], \ldots, x[n]$.
+Assume for notational convenience that $U$ contains some element that is not in $X$.
+(This is without loss of generality; otherwise, just add an artificial element to $U$.)
+Let $\star$ denote this element.
+
+\paragraph{The subproblems to be solved.} 
+For each $i\in\{0,1,\ldots,n\}$ and $u\in U$,
+define $V(i, u)$ to be the collection of valid subsets of $\{1,2,\ldots,i\}$
+such that the corresponding subsequence of $X$ ends with an element \emph{other than} $u$.
+The desired output, for input $X$, is $|V(n, \star)|$.
+
+\paragraph{The recurrence relation?}
+\begin{lemma}
+  For all $u\in U$ and each $i \in \{0, 1,\ldots,n\}$,
+  \[
+  |V(i, u)| =
+  \begin{cases}
+    1 & \text{if } i = 0, \\
+    |V(i-1, u)| & \text{if } i>0 \text{ and } x[i] = u, \\
+    |V(i-1, u)| + |V(i-1, \star)|& \text{if } i > 0 \text{ and } x[i] \ne u.
+  \end{cases}
+  \]
+\end{lemma}
+\begin{proof}[Proof sketch?]
+  Consider any $u\in U$ and $i\in \{0, 1, \ldots, n\}$.
+  For $i=0$, we have $V(0, u) = \{\emptyset\}$, so $|V(0, u)| = 1$. 
+  So consider the remaining case, $i\ge 1$.
+  
+  In the subcase that $x[i] = u$,
+  index $i$ is not in any subset in $V(i, u)$,
+  so $V(i, u)$ is just $V(i-1, u)$, and the recurrence holds.
+
+  In the remaining subcase, $x[i] \ne u$.
+  Partition the subsets $S$ in $V(i, u)$ into two types:
+  those that don't contain element $i$, and those that do.
+  Those that don't are just the subsets in $V(i-1, u)$.
+  Those that do are of the form $S\cup\{i\}$
+  where $S$ is a subset in $V(i-1,\star)$.
+  Thus, the total number of subsets in $V(i,u)$ is $|V(i-1, u)| + |V(i-1, \star)|$,
+  which equals the right-hand side of the recurrence (in the subcase $x[i]\ne u$).
+  \renewcommand{\qed}{\hfill \framebox{\mbox{\tiny ?}}}
+\end{proof}
+
+\continued
+
+\paragraph{The algorithm.}
+This gives the following iterative algorithm:
+
+\newcommand{\countV}{\textsf{countV}}
+
+\smallskip 
+
+\begin{myframed}
+  \begin{steps}
+  \item[]
+    def \countV$(U, X=(x[1], x[2], \ldots, x[n]))$:
+    \comment{(assume $U$ contains some element~$\star \not\in X$)}
+    \step for $i=0,1,2,\ldots, n$:
+    \step~~~for $u\in U$:
+      \step~~~~~~\(
+      v[i, u] =
+      \begin{cases}
+        1 & \text{if } i=0, \\
+        v[i-1, u] & \text{if } i > 0 \text{ and } x[i] = u, \\
+        v[i-1, u] + v[i-1, \star]& \text{if } i > 0 \text{ and } x[i] \ne u.
+      \end{cases}
+      \)
+    \step return $v[n, \star]$
+  \end{steps}
+\end{myframed}
+
+\vspace*{-10pt}
+\paragraph{Run time.}
+By inspection, the running time is dominated by the time for the additions.
+There are $O(n|U|)$ additions --- at most one for each subproblem.
+The integers that arise can be large, but no larger than $2^n$, so can be represented in $O(n)$ bits,
+so each addition can be done in $O(n)$ time.
+Hence, the algorithm runs in time $O(n^2|U|)$.
+
+
+
+\noindent
+\adjustbox{valign=t}{\parbox{4.75in}{%
+    \paragraph{Your task: fix the bug!}
+    Given the example input where $U=\{a,b,\star\}$ and $X=(a,b,b,a)$,
+    the algorithm sets the array $v$ as shown to the right, then outputs 16.
+    This is wrong! As discussed at the start, the correct output for this example is 11.
+}}~~~{}
+\begin{tabular}[t]{c|c@{~}c@{~}c@{~}c@{~}}
+  $i$ & $x[i]$ & $v[i,a]$ & $v[i,b]$ & $v[i, \star]$ \\ \hline
+  0    &          & 1 & 1 & 1  \\
+  1    &  $a$  & 1 & 2 & 2 \\
+  2    &  $b$  & 3 & 2 & 4 \\
+  3    &  $b$  & 7 & 2 & 8 \\
+  4    &  $a$  & 7 & 10 & 16
+\end{tabular}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+
+  What is the smallest $i$ for which, on the example input, $v[i,\star]$
+  as computed is not $|V(i, \star)|$?
+
+\item
+  
+  What is the set $V(i,\star)$ for that $i$?
+
+\item
+
+  Give a corrected recurrence relation, making as few changes as possible.
+
+  % \item
+
+  %   Give a corrected proof sketch, making as few changes as possible.
+
+\item
+
+  Simulate the corrected algorithm on the example.
+  Show the resulting array $v$.
+
+\item
+
+  Give pseudo-code for the correct algorithm, making as few changes as possible.
+
+\end{enumerate}
+
+You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs101-schedule-and-valid-subsets}
+(the ``Number of valid subsets'' challenge, which asks for the number mod $2^{30}$).
+(This is just for testing. Hacker-Rank submissions won't be graded.)
+
+\newpage
+
+\setlength{\ITEMHT}{1.9in}
+{\injectEnumerate
+  \inputAnswer{problem_2_answer}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3 %%%%%%%%%%%%%%%%%
+
+\newpage
+
+\small
+\problem\emph{(Lecture Note 7)}
+Design a dynamic-programming algorithm for the following problem:
+
+\noindent\textbf{input:} A sequence $(a_1, a_2, \ldots, a_n)$ of $n$ non-negative numbers, defining the following ``Game of Piles''.
+
+  The game starts with a row of $n$ piles $1,2,\ldots,n$ of coins, where pile $i$
+  contains coins of total value $a_i$.
+  Alice and Bob take turns removing either the first or last of the remaining piles, and placing it in their personal stash, until there no piles remain.
+  (If Alice moves pile $1$ into her stash, then Bob can move either pile $2$ or pile $n$ into his, and so on.)
+  Alice's final score is the total value of her stash, minus the total value of Bob's.
+  Bob's final score is the total value of his personal stash, minus the total value of Alice's.
+  (For example, suppose $a=(10, 2, 8)$.  Alice can take the first pile to guarantee a score of at least $10 + 2 - 8 = 4$.
+  But if she takes the last pile she could only guarantee a score of at least $8 + 2 - 10 = 0$.)
+
+\noindent\textbf{output:}
+The maximum score that the first player can guarantee for his or herself,
+assuming the opponent plays optimally to maximize his score.
+Each player's score is the negation of the opponents score, so by playing to maximize his or her own score, each player is also playing to minimize the opponent's score.
+
+\begin{enumerate}[label=(\alph*)]
+  \item
+
+Per Section 7.4, define the subproblems your algorithm solves.
+Which is the final answer?
+
+\item
+
+State an appropriate recurrence relation, including boundary cases.
+
+\item
+  
+  Explain clearly in at most five lines why the recurrence relation is correct.
+
+% Give a long-form proof of the lemma (that your recurrence relation is correct).
+
+% \item
+
+\item
+
+Give the big-$\Theta$ run-time of the resulting algorithm (iterative, or recursive and memoized).
+
+\item
+  
+Explain clearly in at most three lines why this bound holds.
+
+\item
+  
+Give pseudo-code for an iterative implementation of the resulting algorithm.
+
+\item
+
+  Submit your algorithm to the Hacker-Rank challenge at the URL in the footnote below.\footnote
+  {\url{https://www.hackerrank.com/nealeyoung-algs101-game-of-piles}}
+  (For full credit on this part, your submission should pass all tests.)
+  What is the username of your Hacker-Rank submission? 
+  
+\end{enumerate}
+
+\paragraph{Clarification of what it means to ``play optimally''.} Consider the game with $a=(2, 2, 5, 3)$, with Alice as first player.
+ 
+\begin{description}
+\item[Option 1:]
+  Suppose Alice starts by taking the first pile (value 2).
+
+  She'll score 2 for that, and the game that remains will be 2, 5, 3, with Bob as first player.
+  Considering just that game 2, 5, 3 --- whatever Bob does, Alice will take the 5, so Bob will end up with the 2 and the 3.  So Alice will score $5-2-3 = 0$ for this sub-game.
+  So, if Alice starts the game $2, 2, 5, 3$ by taking the 2, her total score for the game will be $2 + 0 = 2$.
+ 
+\item[Option 2:]
+  Suppose Alice starts by taking the last pile (value 3).
+
+  She'll score 3 for that, and the game that remains will be 2, 2, 5, with Bob as first player.
+  Considering just that game $2, 2, 5$ --- Bob should take the 5, then Alice will take a 2, and Bob will take the other 2.  So Alice will score $2-5-2 = -5$ for this sub-game.
+  So, if Alice starts the game $2, 2, 5, 3$ by taking the 3, her total score for the game will be $3 - 5 = -2$.
+\end{description}
+
+The optimal first move for Alice is to take the first pile (value 2).  This maximizes her score, assuming both players play the remaining game optimally.
+This kind of reasoning defines ``optimal play'' for the general case.   Assuming we know what optimal play is for any game with, say, $n-1$ piles, we can inductively define what optimal play is for any game with $n$ piles.  Namely, the first player chooses the first move to maximize his or her resulting total score, assuming that after the first move, both players optimally play whatever game (on $n-1$ piles) remains.
+ 
+
+\emph{Warning: you might be tempted to try a greedy algorithm that chooses the first move just by looking at just a few piles near each end.  This won't work.  You'll need to bring to bear the full power of dynamic programming!}
+
+% Note that we say ``this maximizes her score\ldots assuming both players play the remaining game optimally''.  If Bob isn't too smart (e.g., if Bob always takes the first pile), then Alice may have a strategy that gives her an even better outcome (and makes Bob's worse).  But we aren't considering this case.  We are assuming that Bob always plays to maximize his score.
+
+\normalsize
+
+\newpage
+
+\setlength{\ITEMHT}{1.9in}
+{\injectEnumerate
+  \inputAnswer{problem_3_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3 %%%%%%%%%%%%%%%%%
+
+\newpage
+
+\problem\emph{(Exercise 5.13)}
+Here is a greedy \prob{Minimum Spanning Tree} algorithm:
+
+\begin{myframed}
+  \begin{steps}
+  \item[{{\sf cycleBreaker}$(G=(V,E))$:}]
+    \comment{--- $G$ is a connected, undirected, edge-weighted graph}
+    \step initialize $E' = E$
+    \step while the edges in $E'$ contain a cycle:
+    \begin{block}
+      \step choose any cycle $C$ in $E'$, and let $(u, w)$ be an edge of maximum weight in $C$
+      \step delete $(u, w)$ from $E'$
+    \end{block}
+    \step return the spanning tree formed by the edges in $E'$
+  \end{steps}
+\end{myframed}
+
+Complete the incomplete proof of correctness for this algorithm that is given in the template.
+You may wish to review the proof of correctness of Prim's MST algorithm in Section 5.9.1.
+We will use the following observation:
+
+% [review 2026-09-27] fix: removed \setcounter{observation}{6}, which numbered this observation to match an old numbering of Lecture Note 5
+
+\begin{observation}\label{exchange}
+  Let $(u,w)$ be any edge in any spanning tree $T$ of an undirected graph $G=(V,E)$.
+  Removing $(u,w)$ splits $T$ into two connected subtrees $T_u$ and $T_w$ (see below).
+  Let $(x,y)$ be any edge in $E$ with $x\in T_u$ and $y\in T_w$.
+  Then removing $(u, w)$ from $T$ and adding $(x, y)$ 
+  gives a spanning tree $T'=\{(x, y)\}\cup T \setminus \{(u, w)\}$ of $G$.
+\end{observation}
+
+\tikzset{% >= latex,
+  vertex/.style ={circle, draw=black, minimum width = 12pt, inner sep=0pt},
+  subtree/.style={
+    draw,dotted,shape border uses incircle, yshift=30pt, % fill=lightgray,
+    isosceles triangle,shape border rotate=90, % yshift=-1.45cm
+    minimum height=40pt,
+    minimum width=60pt,
+    isosceles triangle stretches,
+  }
+}
+
+\begin{center}
+\begin{tikzpicture}
+  \node[vertex] (v) at (3, 3.5) {}; 
+  \node[vertex] (c1) at (2, 3) {}; 
+  \node[vertex] (c2) at (1.5, 2) {$u$}; 
+  \node[vertex] (c3) at (2.2, 1) {$w$}; 
+  \node[vertex] (wp) at (3.5, 1) {}; 
+  \node[vertex] (v1) at (2.9, 4.5) {};
+  \node[vertex] (v2) at (4, 3.2) {}; 
+  \node[vertex] (c11) at (1.4, 3.8) {}; 
+  \node[vertex] (c111) at (0.5, 4.3) {}; 
+  \node[vertex] (c112) at (0.4, 3.5) {}; 
+  \node[vertex] (c21) at (0.5, 2) {}; 
+  \node[vertex] (c211) at (-0.5, 3) {}; 
+  \node[vertex] (c212) at (-0.5, 1) {}; 
+  \node[vertex] (c31) at (2, 0) {}; 
+  \node[vertex] (w1) at (4.5, 1) {}; 
+  \node[vertex] (w2) at (3.5, 0) {}; 
+  \node at (5.5, 4.5) {\Large $T~\longrightarrow~~T'$}; 
+  \node at (2.7, 0.5) {\large $T_w$};
+  \node at (1, 3) {\large $T_u$};
+  % (r) edge[treeEdge, dotted] (u)
+  % \draw (v) -- (wp); 
+  \draw (v) -- (c1) -- (c2); 
+  \draw[ultra thick] (c2) -- (c3); 
+  \draw (c3) -- (wp); 
+  \draw (v1) -- (v) -- (v2); 
+  \draw (c1) -- (c11); 
+  \draw (c2) -- (c21); 
+  \draw (c3) -- (c31); 
+  \draw (c111) -- (c11) -- (c112); 
+  \draw (c211) -- (c21) -- (c212); 
+  \draw (w1) -- (wp) -- (w2); 
+  \draw[dotted] (0,0) to [bend left=20] (5,2.5); 
+\end{tikzpicture}
+\begin{tikzpicture}
+  \node[vertex] (v) at (3, 3.5) {$x$}; 
+  \node[vertex] (c1) at (2, 3) {}; 
+  \node[vertex] (c2) at (1.5, 2) {$u$}; 
+  \node[vertex] (c3) at (2.2, 1) {$w$}; 
+  \node[vertex] (wp) at (3.5, 1) {$y$}; 
+  \node[vertex] (v1) at (2.9, 4.5) {};
+  \node[vertex] (v2) at (4, 3.2) {}; 
+  \node[vertex] (c11) at (1.4, 3.8) {}; 
+  \node[vertex] (c111) at (0.5, 4.3) {}; 
+  \node[vertex] (c112) at (0.4, 3.5) {}; 
+  \node[vertex] (c21) at (0.5, 2) {}; 
+  \node[vertex] (c211) at (-0.5, 3) {}; 
+  \node[vertex] (c212) at (-0.5, 1) {}; 
+  \node[vertex] (c31) at (2, 0) {}; 
+  \node[vertex] (w1) at (4.5, 1) {}; 
+  \node[vertex] (w2) at (3.5, 0) {}; 
+  % (r) edge[treeEdge, dotted] (u)
+  \draw (c1) -- (c2); 
+  % \draw (c2) -- (c3);
+  \draw (c3) -- (wp); 
+  \draw[ultra thick] (wp) -- (v); 
+  \draw (v) -- (c1); 
+  \draw (v1) -- (v) -- (v2); 
+  \draw (c1) -- (c11); 
+  \draw (c2) -- (c21); 
+  \draw (c3) -- (c31); 
+  \draw (c111) -- (c11) -- (c112); 
+  \draw (c211) -- (c21) -- (c212); 
+  \draw (w1) -- (wp) -- (w2); 
+  \draw[dotted] (0,0) to [bend left=20] (5,2.5); 
+\end{tikzpicture}
+\end{center}
+
+
+\newpage
+
+\setlength{\ITEMHT}{1.9in}
+{\injectEnumerate
+  \inputAnswer{problem_4_answer}
+}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

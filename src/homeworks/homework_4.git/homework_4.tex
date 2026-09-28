@@ -1,0 +1,224 @@
+\documentclass[11pt]{article}
+
+% \newcommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{4}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+% \setcounter{problem}{1}
+
+\newpage 
+\problem \emph{(Section 5.3)}
+Consider executing the \prob{Activity Selection} algorithm \textsf{rselect} (as defined in Section 5.3)
+on the following instance of the \prob{Activity Selection} problem:
+
+\[I = \{[0, 4], [2, 6], [3, 8], [7, 11], [9, 13], [10, 14], [12, 15], [12, 16], [14, 18]\}.\]
+
+\centerline{
+  \begin{tikzpicture}[scale=0.5]\footnotesize
+    \draw (0,0) -- (4, 0) node[midway,auto] {\footnotesize $J_1$}; 
+    \draw (2,1) -- (6, 1) node[midway,auto] {\footnotesize $J_{2}$};
+    \draw (3,2) -- (8, 2) node[midway,auto] {\footnotesize $J_{3}$};
+    \draw (7,0) -- (11, 0) node[midway,auto] {\footnotesize $J_{4}$};
+    \draw (9, 1) -- (13, 1) node[midway,auto] {\footnotesize $J_{5}$}; 
+    \draw (10,2) -- (14, 2) node[midway,auto] {\footnotesize $J_{6}$};
+    \draw (12,3) -- (15, 3) node[midway,auto] {\footnotesize $J_{7}$};
+    \draw (12,0) -- (16 , 0) node[midway,auto] {\footnotesize $J_{8}$};
+    \draw (14,1) -- (18 , 1) node[midway,auto] {\footnotesize $J_{9}$};
+  \end{tikzpicture}
+}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item When \textsf{rselect}$(I)$ executes, what jobs are in the set $D$ that it computes in Line 3,
+  before recursing?
+
+\item What set of jobs does \textsf{rselect}$(I)$ output?
+
+\item Consider running the linear-time iterative implementation, \textsf{iselect} (Section 5.3, second definition)
+  on input $I$.  What values does the variable $\ell$ take on during the execution?  Give them in increasing order.
+
+\item Consider the following ``theorem'' and ``proof''.  Is the proof correct?
+  If not, what is the first step in the proof that makes an assertion that does not necessarily hold?
+
+  \begin{theorem}
+    Consider any instance $I'=\{[s_1, e_1],  [s_2, e_2], \ldots, [s_n, e_n]\}$ of \prob{Activity Selection}.
+    Let $X=\{x_1, x_2, \ldots, x_k\}$ be a set of times such that,
+    for every job $[s_i, e_i]$ in $I'$, the interval $[s_i, e_i]$ contains at least one of the times in $X$.
+    Then no pairwise-disjoint subset of $I'$ contains more than $k$ jobs.
+  \end{theorem}
+  \begin{longFormProof}
+    \step Consider any such $I'=\{[s_1, e_1],  [s_2, e_2], \ldots, [s_n, e_n]\}$ and $X=\{x_1, x_2, \ldots, x_k\}$.
+    \begin{block}\label{block: as contra}
+      \step Assume for contradiction that some pairwise-disjoint subset $S$ of $I'$ has more than $k$ jobs.
+      \step By the assumption on $X$ in the theorem, each job in $S$ contains at least one point in $X$.
+      \step There are more than $k$ jobs in $S$, but only $k$ points in $X$.
+      \step So (by the previous two steps) some point $x_i$ in $X$ is in at least two jobs in $S$.
+      \step So there are two jobs in $S$ that are not disjoint (as they each contain $x_i$).
+      \step This contradicts that $S$ is pairwise-disjoint.
+    \end{block}
+    \step By Block~\ref{block: as contra}, no pairwise-disjoint subset of $I'$ contains more than $k$ jobs.
+  \end{longFormProof}
+
+\item Is the following conjecture true or false?  Don't justify your answer.
+
+  \begin{conjecture}
+    Consider any instance $I'=\{[s_1, e_1],  [s_2, e_2], \ldots, [s_n, e_n]\}$ of \prob{Activity Selection}.
+    Let $e'_1, e'_2, \ldots, e'_k$ be the end times of the jobs that are chosen by the algorithm.
+    Then, for every job $[s_i, e_i]$ in $I'$, the interval $[s_i, e_i]$ contains at least one of the end times
+    $e'_1, e'_2, \ldots, e'_k$.
+  \end{conjecture}  
+
+  (Note that if the theorem and conjecture are both true,
+  together they imply that no pairwise-disjoint subset of $I'$
+  is larger than the one returned by the greedy algorithm.)
+  
+\end{enumerate}
+
+\newpage
+
+\setlength{\ITEMHT}{1.5in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_1_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
+
+\newpage
+\problem\emph{(Section 5.2)}
+{\small
+  For each $d\in\{6,7,8,9,11\}$, 
+  consider \prob{Making Change} with denominations (coin values) $\{1, 5, d\}$.
+  For one of these five values, 
+  it is true that, for all integers $N\ge 0$, the greedy algorithm (using available denominations $\{1, 5, d\}$)
+  makes change for $N$ using a minimum possible number of coins.
+  For the other four values, it is not true.
+
+  (a) Fill out the table in the template showing, for each value of $d$,
+  the smallest $N$ for which the greedy algorithm uses too many coins.
+  (For the $d$ for which the greedy algorithm always uses a minimum number of coins, put $\infty$.)
+
+  (b) For the value of $d$ for which the greedy algorithm can't use too many coins,
+  give a proof of the following lemma for that particular value of $d$:
+
+  \begin{lemma}
+    For any $N\ge d$, \emph{some} optimal way of making change for $N$ (using coin values in $\{1, 5, d\}$)
+    contains at least one $d$.
+  \end{lemma}
+
+  Note the emphasis on ``some''.
+}
+\bigskip
+
+\lineacross
+
+% \continued
+
+\setlength{\ITEMHT}{2in}
+{
+  % \injectEnumerate 
+
+  \inputAnswer{problem_2_answer}
+}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
+
+\newpage
+\problem \emph{(see Exercise 5.14)}\emph{(Greedy step for \prob{Puncturing Intervals})} {\small
+
+  The \prob{Puncturing Intervals} problem is defined as follows: 
+
+  \begin{mylist}
+  \item[\bf input:] Set $I=\{J_1, J_2, \ldots, J_n\}$ of intervals, where $J_i = [s_i, e_i]$.
+    We assume $e_1 \le e_2 \le \cdots \le e_n$.
+  \item[\bf output:] A minimum-size finite set $P=\{p_1, p_2, \ldots, p_k\}$
+    of points such that $J_i \cap P \ne \emptyset$ for each $J_i\in I$.
+  \end{mylist}
+
+  That is, you want to choose a minimum-size set of points
+  such that every given interval $J_i$ contains at least one of those points.
+  For example, for the set $I$ of intervals in Problem 1,
+  the set $P=\{1, 5, 9, 14\}$ of points does have the property that
+  it contains at least one point in each interval in $I$.
+  However, that set $P$ is not a correct solution, because it doesn't have minimum possible size.
+
+  \begin{enumerate}[label=(\alph*)]
+  \item
+    Give a correct solution $P$ for the % \prob{Minimum Interval Pinner}
+    instance defined by that set $I$ of intervals.
+
+  \item
+    Describe a rule that, given an instance $I$ with $e_1 \le e_2\le \cdots \le e_n$,
+    chooses a single point $p_1$ such that
+    there is guaranteed to exist a correct solution $P$ (for the instance $I$) that contains $p_1$.
+    Describe your rule precisely in a single sentence.
+    Your rule should be implementable as an algorithm that takes $I$
+    as input and produces the desired point $p_1$ in \emph{constant} time.
+    Do not explain your reasoning for why you think your rule works.
+
+  \end{enumerate}
+}
+
+\lineacross
+
+\setlength{\ITEMHT}{1.5in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_3_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

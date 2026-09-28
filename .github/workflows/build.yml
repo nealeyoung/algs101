@@ -1,0 +1,66 @@
+name: Build the PDFs and publish them to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the book, the lecture notes, and the homework templates (latexmk, TeX Live)
+        uses: xu-cheng/latex-action@v3
+        with:
+          # the list of documents is filled in by tools/publish.sh
+          root_file: |
+            src/main.tex
+            src/1_preliminaries/preliminaries.tex
+            src/2_proofs/long_form_proofs.tex
+            src/3_stable_matching/stable_matching.tex
+            src/4_divide_and_conquer/divide_and_conquer.tex
+            src/5_greedy/greedy_algorithms.tex
+            src/6_graph_traversal/graph_traversal.tex
+            src/7_dynamic_programming/dynamic_programming.tex
+            src/8_flow_reductions_LP/flow_reductions_LP.tex
+            src/9_NP/NP.tex
+            src/homeworks/homework_1.git/homework_1/homework_1.tex
+            src/homeworks/homework_2.git/homework_2.tex
+            src/homeworks/homework_3.git/homework_3.tex
+            src/homeworks/homework_4.git/homework_4.tex
+            src/homeworks/homework_5.git/homework_5.tex
+            src/homeworks/homework_6.git/homework_6.tex
+            src/homeworks/homework_7.git/homework_7.tex
+            src/homeworks/homework_8.git/homework_8.tex
+            src/homeworks/homework_9.git/homework_9.tex
+            src/homeworks/homework_10.git/homework_10.tex
+            src/homeworks/homework_11.git/homework_11.tex
+          work_in_root_file_dir: true
+
+      - name: Assemble the site (PDFs, homework zips, index page)
+        run: tools/make_site.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

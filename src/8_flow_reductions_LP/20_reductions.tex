@@ -1,0 +1,514 @@
+
+\section{Polynomial-time reductions}\label{flow: sec: reductions}\doHeader{Reductions}
+So far our primary strategy for solving a given computational problem
+has been to design an algorithm from scratch.
+To this end, we've studied basic algorithm-design techniques
+such as divide-and-conquer, dynamic programming, and greedy algorithms.
+In the remainder of these notes, we consider a different approach:
+solving the problem that you want to solve by \emph{reducing} it to a different problem,
+one that already has a known algorithm.
+More broadly, our interest is in how different computational problems relate to each other.
+We start with some necessary formal definitions,
+then illustrate the concept by describing how to reduce some new problems to \prob{Max Flow}.
+
+\paragraph{Decision problems (definition).} 
+When studying reductions, for simplicity and for historical reasons,
+we usually cast the problems of interest as \emph{decision problems} --- problems with yes/no answers.
+That is, for any input, the output is either `\textsf{yes}' or `\textsf{no}'.
+Most computational problems can easily be recast in this way.
+For example, here is the decision version of \prob{Max Flow}:
+
+\begin{mylist}
+\item[] \prob{Max Flow} (decision version) \dotfill \em
+\item[\bf input:] a flow network (digraph $G=(V,E)$ with edge capacities, source $s$ and sink $t$), and a $k\ge 0$
+\item[\bf output:] `\textsf{yes}' if $G$ has an $s$-$t$ flow with value at least $k$, and otherwise `\textsf{no}'
+\end{mylist}
+
+\paragraph{Polynomial-time (definition).}
+The first question we consider when approaching a new computational problem
+is whether the problem has an algorithm that runs in \emph{polynomial time} ---
+that is, for every possible input, the algorithm computes a correct output
+in time bounded by some polynomial in the size of the input.
+The degree of the polynomial can be large, as long as it's constant.
+(For example, $O(n^{1000})$ is polynomial time.  $O(n\log n)$ is also polynomial time,
+as $O(n\log n) = O(n^2)$.)
+
+\paragraph{Polynomial-time reductions (definition).}
+Now we can formally define a \emph{polynomial-time reduction}.
+Let $A$ and $B$ be any two decision problems.
+A \emph{reduction} from $A$ to $B$ is a function $r$
+that maps each input $x$ for $A$
+to a corresponding input, $r(x)$, for $B$.
+The reduction is \emph{correct} if it has the following property:
+\begin{quote}\em
+  For every possible input $x$ to $A$,
+  \\\hspace*{1em}the answer to $x$ is \textsf{yes} if and only
+if the answer to $r(x)$ (as an instance of $B$) is \textsf{yes}.
+\end{quote}
+That is, if we knew the answer to $r(x)$, it would tell us the answer to $x$.
+
+And the reduction $r$ is a \emph{polynomial time} reduction
+if there is an algorithm that, given any input $x$ outputs $r(x)$,
+with worst-case run time bounded by a polynomial in the length of $x$.
+The notation
+\[
+  A \le_P B
+\]
+means ``$A$ reduces in polynomial time to $B$''.
+It means that (up to polynomial factors)
+$A$ is ``no harder'' than $B$:
+if $A \le_P B$, and $B$ has a polynomial-time algorithm, then so does $A$.
+This is because composing the reduction with any polynomial-time algorithm for $B$
+gives a polynomial-time algorithm for $A$.
+
+\newpage 
+
+\subsection{Example 1: \prob{Bipartite Matching} $\le_P$ \prob{Max Flow}}
+To illustrate the concept, consider the following decision problem:
+
+\begin{mylist}
+\item[] \prob{Bipartite Matching} (decision version) \dotfill \em
+% [review 2026-09-27] fix: the bound was called ell here but k in the reduction and its proofs
+\item[\bf input:] a bipartite graph $G=(U, W ,E)$, and a value $k$
+\item[\bf output:] `\textsf{yes}' if $G$ has matching of size at least $k$, and otherwise `\textsf{no}'
+\end{mylist}
+
+Note that a \emph{bipartite} graph $G=(U, W, E)$
+is an undirected graph in which the vertices are divided into two parts (sets)  $U$ and $W$,
+and each edge $(u,w)$ in $E$ is in $U\times W$ (that is, $u$ is in $U$ and $w$ is in $W$, so all edges
+go between the parts --- no edge has both endpoints in one part).
+
+\emph{[Consider an example for intuition.]}
+
+Next we define a polynomial-time reduction $r$ from this problem to \prob{Max Flow}.
+To define the reduction, one specifies, for every possible input $I$ (for \prob{Bipartite Matching})
+what the output $r(I)$ is.  The output must be some input for \prob{Max Flow}.
+We have to explicitly define this input in terms of $I$ (that is, from the bipartite graph $G$ and $k$).
+Here is the definition of our reduction $r$:
+
+\paragraph{Step 1.  Define the reduction.} Do this by specifying its output for every possible input.
+
+\begin{mylist}
+\item[] Our reduction $r$ from \prob{Bipartite Matching} to \prob{Max Flow}: \em
+\item[\bf input:] any \prob{Bipartite Matching} instance $I=(G=(U, W ,E), k)$
+\item[\bf output:] the output $r(I)$ is the \prob{Max Flow} instance $(G'=(V', E'), s, t, k')$ where
+  \begin{align*}
+    k' & {} = k \\
+    % [review 2026-09-27] fix: V was undefined for a bipartite graph G=(U,W,E)
+    V' & {} = U\cup W\cup\{s, t\} \\
+    E' & {} = E \cup \{(s, u) : u\in U\} \cup \{(w, t) : w\in W\}
+  \end{align*}
+  and all edges have capacity 1.
+\end{mylist}
+
+In words: The reduction takes $k' = k$, then obtains $G'$ from $G$ as follows.
+The vertices of $G'$ are the vertices of $G$ and two new vertices $s$ and $t$.
+For each edge $(u, w)$ from $U$ to  $W$ in $G$,
+there is a directed edge $(u, w)$ in $G'$ with capacity 1.
+For each vertex $u\in U$,
+there is a directed edge $(s, u)$ in $G'$ with capacity 1. 
+For each vertex $w\in W$,
+there is a directed edge $(w, t)$ in $G'$ with capacity 1. 
+
+\smallskip
+
+\emph{[Consider an example for intuition.  See also \KT Section 7.5, which presents the same reduction.]}
+
+\paragraph{Step 2.  Explain how the reduction can be computed in polynomial time.}
+To know that the reduction $r$ is a \emph{polynomial-time} reduction,
+we have to be sure that, given any input $I$, the output $r(I)$
+can be computed in time polynomial in the size of $I$.
+
+By inspection of the reduction $r$ defined above, given $G$ and $k$, 
+$G'$ (and $k'$) can be computed in time linear in the size of $G$,
+by simply enumerating the vertices and edges of $G$ appropriately.
+So the reduction can be computed in polynomial (even linear) time.
+
+\paragraph{Step 3.  Prove that the reduction is correct.}
+To know that the reduction $r$ is \emph{correct},
+we have to be sure that, for every possible input $I$, 
+the answer to the output $r(I)$ is \textsf{yes}
+if and only if the answer to $I$ is \textsf{yes}.
+(In other words, to solve $I$, it suffices to solve $r(I)$.)
+
+Next we'll give a detailed proof.
+Study the form of this proof carefully.
+The reasoning for the correctness of any reduction
+always has the same overall structure.
+Only the details vary, depending on the specific reduction.
+
+Note: Don't be intimidated by the length of the proof.
+Most of the steps in the proof are straightforward.
+Make sure you understand the high-level structure of the reasoning.
+A short-form proof follows the long-form proof.  You may wish to review it first.
+
+\begin{lemma}
+  The reduction $r$ is correct.  That is, for every instance $I$ of \prob{Bipartite Matching},
+  the answer to $I$ is \textsf{yes} if and only the answer to $r(I)$ (as an instance of \prob{Max Flow})
+  is  \textsf{yes}.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any possible input $I=(G=(U, W, E), k)$.  \comment{block: $\forall$}
+  \step Let $G'=(V', E')$ and $k'$ be the output $r(I)$ of the reduction given $I$.
+  \step First, we'll prove that, if the answer to $I$ is \textsf{yes},
+  then the answer to $r(I)$ is \textsf{yes}.
+  \\
+  Then, we'll prove the converse: 
+  if the answer to $r(I)$ is \textsf{yes},
+  then the answer to $I$ is \textsf{yes}.
+  \smallskip
+  \begin{block}[flow: IF]
+    \step Suppose that the answer to $I$ is \textsf{yes}.  \comment{block: if \ldots~then \ldots}
+    \step That is, $G$ has some matching, say $M$, of size at least $k$.
+    \step We'll show that $G'$ has some $s$-$t$ flow of size at least $k'=k$.
+    \step That is, we'll show that the answer to $r(I)$ is \textsf{yes}. 
+    \step Define flow $f$ as follows:
+    \\~~~for every edge $(u,w)$ in $M$,
+    let $f(s, u) = 1$,
+    let $f(u, w) = 1$,
+    and 
+    let $f(w, t) = 1$.
+    \\ (That is, send 1 unit of flow along the path $(s, u, w, t)$.)
+    \\ For every other edge $(u, w)$ in $G'$, let $f(u, w) = 0$.
+    \step By inspection of $f$, the value of $f$ is the size of $M$, which is at least $k'=k$.
+    \step And $f$ satisfies the conservation and capacity constraints, so $f$ is a valid flow.
+    \step So $G'$ has an $s$-$t$ flow of size at least $k'$.
+    \step So, the answer to $r(I)$ is \textsf{yes}.
+  \end{block}
+  \step[flow: IF2] By Block~\ref{flow: IF}, if the answer to $I$ is \textsf{yes}, then the answer to $r(I)$ is \textsf{yes}.
+  \medskip
+  \step Next we show the converse.
+  \begin{block}[flow: ONLYIF]
+    \step Suppose that the answer to $r(I)$ is \textsf{yes}. \comment{block: if \ldots~then \ldots}
+    \step That is, $G'$ has some $s$-$t$ flow, of value at least $k'=k$.
+    \step Since $G'$ has integer capacities, $G'$ has such a flow for which each edge flow is an integer.
+    \step Let $f$ be such a flow.
+     Since each edge capacity in $G'$ is 1, each edge flow $f(u,w)$ is either 0 or 1.
+    \step We'll show that $G$ has some matching of size at least $k$.
+    \step Define $M = \{(u,w)\in E : f(u,w) = 1\}$
+    to contain each edge in $G$ that has flow in $G'$.
+    \step For each vertex $u\in U$, there is only one edge into $u$ in $G'$.
+    \step So, because of the conservation constraints, each vertex $u\in U$ is in at most one edge in $M$. 
+    \step Likewise, each vertex $w\in W$ is in at most one edge in $M$.
+    \step So $M$ is a matching in $G$.
+    \step Also by the conservation constraints,
+    % [review 2026-09-27] fix: u' was a typo for u
+    for each edge $(s, u)$ in $G'$ with $f(s, u) = 1$
+    there is some edge $(u,w)$ in $M$,
+    so the size of $M$ is at least the value of $f$, that is, at least $k$.
+    \step So $M$ is a matching of size at least $k$ in $G$.
+    \step So the answer to $I$ is \textsf{yes}. 
+  \end{block}
+  
+  \medskip
+  
+  \step By Block~\ref{flow: ONLYIF}, if the answer to $r(I)$ is \textsf{yes}, then the answer to $I$ is \textsf{yes}.
+  \step By this and Step~\ref{flow: IF2},
+  the answer to $I$ is \textsf{yes} if and only if the answer to $r(I)$ is \textsf{yes}.
+\end{longFormProof}
+
+As mentioned above, the high-level structure of the proof of correctness is the same
+for all reductions.  Only the details (within the two blocks) depend on the specific reduction.
+For readers who understand this, it is enough to give just those details.
+We could do that as follows:
+
+\newpage
+
+\begin{proof}[Proof of correctness, short form.]
+  Consider any possible input $I=(G=(U,W,E), k)$ to the reduction.
+  Let $G'=(V', E')$ and $k'=k$ be the output of the reduction for that input.
+
+  Suppose that $G$ has some matching $M$ of size at least $k$.
+  Define a flow $f$ in $G'$ by taking $f(s, u) = f(u, w) = f(w, t) = 1$
+  for every matched edge $(u, w)$, and giving zero flow to the remaining edges.
+  Then $f$ is an $s$-$t$ flow whose value is equal to the size of $M$, which is at least $k$.
+  So, if $G$ has a matching of size at least $k$, then $G'$ has a flow of value at least $k'$.
+
+  Conversely, suppose that $G'$ has a flow of value at least $k'=k$.
+  Let $f$ be such a flow that is also integer-valued
+  (there must be one, since the capacities in $G'$ are integers).
+  So, the flow on each edge is either 1 or 0.
+  Let $M$ contain the edges in $E$ whose corresponding edges in $G'$ have flow 1.
+  For each vertex $u\in U$, there is only one edge into $u$ in $G'$,
+  so (by the conservation constraints), each vertex $u\in U$ is in at most one edge in $M$.
+  Likewise, each vertex $w\in W$ is in at most one edge in $M$. 
+  So $M$ is a matching in $G$.
+  Since the value of $f$ is at least $k$,
+  there are at least $k$ edges out of $s$ that have flow 1.
+  So, by inspection of $G'$ (and the conservation constraints),
+  there are at least $k$ edges in $M$.
+  So $M$ is a matching of size at least $k$ in $G$. 
+
+  By the above reasoning, $G$ has a matching of size at least $k$
+  if and only if $G'$ has an $s$-$t$ flow of value at least $k'$.
+  That is, the answer to $I$ is \textsf{yes}
+  if and only if the answer to $r(I)$ is \textsf{yes}.
+  So the reduction is correct.
+\end{proof}
+
+\subsection{Example 2: \prob{Disjoint Paths} $\le_P$ \prob{Max Flow}} 
+We give one more reduction, from the following problem to \prob{Max Flow}.
+
+\begin{mylist}
+\item[] \prob{Disjoint Paths} (decision version) \dotfill \em
+\item[\bf input:] a digraph $G=(V ,E)$, source $s$, sink $t$, and a value $k$
+\item[\bf output:] `\textsf{yes}' if $G$ there are $k$ $s$-$t$ paths in $G$ such that
+  no two share an edge; otherwise `\textsf{no}'.
+\end{mylist}
+
+\emph{[Consider an example for intuition.]}
+
+Next we define a polynomial-time reduction $r$ from this problem to \prob{Max Flow}.
+To define the reduction, we specify, for every possible input $I$ (for \prob{Disjoint Paths})
+what the output $r(I)$ is.  The output must be some input for \prob{Max Flow}, that is, a flow network and a value $k$.
+We have to say specifically how to obtain this flow network from $I$ (that is, from $G$, $s$, $t$, and $k$).
+Here is the definition of our reduction $r$:
+
+\paragraph{Step 1.  Define the reduction.} (Specify the output for every possible input.)
+
+\begin{mylist}
+\item[] Here is our reduction $r$ from \prob{Disjoint Paths} to \prob{Max Flow}:
+\item[\bf input:] any \prob{Disjoint Paths} instance $I=(G=(V ,E), s, t, k)$
+\item[\bf output:] the output $r(I)$ is the \prob{Max Flow} instance $(G', s, t, k)$ where
+  $G'$ is obtained from $G$ by assigning capacity 1 to each edge.
+\end{mylist}
+
+\emph{[Consider an example for intuition.  See also \KT Section 7.6, which presents the same reduction.]}
+
+\paragraph{Step 2.  Explain how the reduction can be computed in polynomial time.}
+By inspection of the reduction $r$ (as defined above), given $I=(G, s, t, k)$, 
+the flow network $G'$ can be computed in time linear in the size of $G$,
+by simply adding a capacity to each edge.
+So the reduction can be computed in polynomial (even linear) time.
+
+\paragraph{Step 3.  Prove that the reduction is correct.}
+Following the previous reduction from \prob{Bipartite Matching},
+we'll assume the reader understands the general high-level structure
+common to all proofs of correctness for reductions.
+We'll give a short-form proof. Before that, we need a utility lemma.
+\begin{lemma}\label{flow: utility2}
+  Given any $s$-$t$ flow $f$ with positive value,
+  $t$ is reachable from $s$ using only edges that have positive flow.
+\end{lemma}
+\begin{shortFormProof}
+  Let $G''$ be the flow network obtained by reducing the capacity of each edge to equal the flow on the edge,
+  then deleting all edges that have flow (and modified capacity) zero.
+  The original flow remains valid in $G''$.
+  
+  Suppose for contradiction that there is no $s$-$t$ path in $G''$.
+  Let $S$ denote the set of vertices reachable from $s$ in $G''$,
+  so that $(S, T=V\setminus S)$ is an $s$-$t$ cut.
+  Note that no edge $(u,w)$ in $G''$ leaves $S$ (otherwise $u$ would be reachable from $s$,
+  but $w$ would not be, even though there is an edge from $u$ to $w$).
+  So, $(S, T)$ is an $s$-$t$ cut of capacity zero in $G''$.
+  So, every $s$-$t$ flow in $G''$ has value at most zero.
+  This is a contradiction, as the original flow is valid in $G''$ and has positive value.
+\end{shortFormProof}
+
+Here is the proof that the reduction is correct.
+\begin{lemma}
+  The reduction $r$ is correct.  That is, for every input $I$,
+  the answer to $I$ is \textsf{yes} if and only if the answer to $r(I)$ is \textsf{yes}.
+\end{lemma}
+\begin{shortFormProof}
+  Consider any possible input $I=(G=(V, E), s, t, k)$ to the reduction.
+  Let $G'$ (and $s, t, k$) be the output of the reduction for that input.
+
+  First suppose that $G$ does have $k$ edge-disjoint $s$-$t$ paths,
+  say, $P_1, P_2, \ldots, P_k$.
+  Assume without loss of generality that each path is simple.
+  (If not, just remove all cycles from each path to get $k$ simple edge-disjoint paths.)
+  Define a flow $f$ in $G'$ by setting $f(u, w)$ to be the number
+  of times $(u,w)$ occurs on these paths.
+  Since the paths are edge-disjoint and simple,
+  each flow value $f(u,w)$ will be 0 or 1.
+  Since each edge capacity  in $G'$ is 1, $f$ obeys the capacity constraints.
+  Since each of the paths leaves $s$,
+  the value of $f$ is $k$.
+  For each vertex $v$ (other than $s$ or $t$),
+  for each edge $(u, v)$ on some path $P_i$ entering $v$,
+  the next edge $(v, w)$ on $P_i$ leaves $v$,
+  so the total flow into $v$ equals the total flow leaving $v$.
+  So $f$ obeys the conservation constraints.
+  So $f$ is a valid flow in $G'$, of value $k$.
+
+  Conversely, suppose that $G'$ does have a flow of value at least $k$.
+  All edge capacities are integers, 
+  so there is also an \emph{integer} flow of value at least $k$.
+  Let $f$ be such a flow.
+  Since each edge capacity is 1, each flow value $f(u,w)$ is 0 or 1.
+  Convert $f$ into a sequence of paths $P_1, P_2, \ldots, P_\ell$ as follows:
+  \begin{myframed}
+    \begin{steps}
+      \step for $i= 1, 2, \ldots$, while the value of flow $f$ is positive:
+      \begin{block}
+        \step let $P_i$ be an $s$-$t$ path that uses only edges $(u,w)$ such that $f(u,w)=1$
+        \step for each edge $(u,w)\in P_i$, reduce the flow $f(u,w)$ on $(u,w)$ by 1 (to 0)
+      \end{block}
+    \end{steps}
+  \end{myframed}
+  In each iteration, the $s$-$t$ path $P_i$ must exist by Lemma~\ref{flow: utility2}.
+  The iteration reduces the flow on each edge in $P_i$ by 1 (to 0).
+  This preserves the conservation constraints, the capacity constraints,
+  and the property that the flow on each edge is either 0 or 1.
+  But it reduces the value of the flow by 1.
+  It follows that the number of iterations will equal the original value of $f$.
+  Since this is at least $k$, the process produces at least $k$ paths.
+  And no edge occurs twice in these paths,
+  because an edge $(u,w)$ is used in a path $P_i$ only when $f(u,w)$ is 1,
+  and after that $f(u,w)$ is reduced to 0.
+  So, if $G'$ has a flow of value at least $k$,
+  then $G$ has $k$ edge-disjoint $s$-$t$ paths.
+  (If the process produces more than $k$ paths, just ignore some.)
+\end{shortFormProof}
+
+\subsection{Exercise: \prob{Bipartite Matching} $\le_P$ \prob{Disjoint Paths}}
+
+As an exercise, find a poly-time reduction from \prob{Bipartite Matching} to \prob{Disjoint Paths}.
+
+\subsection{The two key properties of polynomial-time reductions} 
+Recall that $A \le_P B$ denotes that
+there is a polynomial-time reduction from decision problem $A$
+to decision problem $B$.
+Intuitively, this notation suggests that (up to polynomial time),
+$A$ is ``no harder'' than $B$.
+Formally, the following holds:
+
+\begin{lemma}\label{flow: reduction}
+  Let $A$ and $B$ be decision problems
+  such that $A$ reduces in polynomial time to $B$.
+  If $B$ has a polynomial-time algorithm,
+  then $A$ has a polynomial-time algorithm.
+  That is, if $A \le_P B$ and $B\in P$, then $A\in P$.
+\end{lemma}
+\begin{proof}
+  Assume $r$ is a poly-time reduction from $A$ to $B$,
+  and that $B$ has a poly-time algorithm.
+  Fix $c$ and $c'$ such that $r$ is computable in time $O(n^c)$
+  and $B$ has an algorithm running in time $O(n^{c'})$.
+  Consider the following algorithm for $A$:
+  \begin{myframed}
+    \begin{steps}
+    \item[] algorithm for $A$ (on input $x$):
+      \step compute $y= r(x)$, in time $O(|x|^c)$
+      \step run the algorithm
+      for $B$ on input $y$, taking time $O(|y|^{c'})$
+      \step if the algorithm for $B$ outputs \textsf{yes}, then output \textsf{yes}, otherwise \textsf{no}
+    \end{steps}
+  \end{myframed}
+  \smallskip
+  
+  This algorithm for $A$ is correct by the following reasoning:
+
+  The algorithm for $A$ outputs \textsf{yes} on input $x$
+
+  $\iff$ the algorithm for $B$ outputs \textsf{yes} on input $y$
+  \comment{(by inspection of the algorithm for $A$)}
+
+  $\iff$ the answer for $r(x)$ is \textsf{yes}
+  \comment{(as the algorithm for $B$ is correct)}
+
+  $\iff$ the answer for $x$ is \textsf{yes}
+  \comment{(because $r$ is a correct reduction from $A$ to $B$)}
+
+  So the algorithm is correct.
+  
+  The algorithm takes polynomial time, $O(|x|^{c\,c'})$, by the following reasoning.
+  Step 1, computing $y=r(x)$, takes time $O(|x|^c)$
+  because $r(x)$ is computable in time $O(|x|^c)$.
+  Also, this means that $y$ has size $O(|x|^c)$.
+  So Step 2, running the algorithm for $B$ on $y$,
+  takes time $O(|y|^{c'}) = O( (|x|^c)^{c'}) = O(|x|^{c\,c'})$.
+\end{proof}
+
+One more formal observation:
+poly-time reductions compose,
+so the relation $\le_P$ is transitive:
+
+\begin{lemma}\label{flow: transitive}
+  Let $A$, $B$, and $C$ be decision problems.
+  If $A$ reduces in polynomial time to $B$,
+  and $B$ reduces in polynomial time to $C$,
+  then $A$ reduces in polynomial time to $C$.
+
+  That is, if $A\le_P B$ and $B\le_P C$, then $A\le_P C$.
+\end{lemma}
+\begin{proof}
+  Let $r_1$ and $r_2$ be the poly-time reductions from $A$ to $B$, and from $B$ to $C$.
+  Consider the function $r_3$ defined by composing $r_1$ and $r_2$,
+  that is, $r_3(x) = r_2(r_1(x))$.
+  The function $r_3$ is a correct reduction from $A$ to $C$ by the following reasoning:
+
+  The answer for $x$ is \textsf{yes}
+
+  $\iff$ the answer for $r_1(x)$ is \textsf{yes}
+  \comment{(because $r_1$ reduces $A$ to $B$)}
+
+  $\iff$ the answer for $r_2(r_1(x))$ is \textsf{yes}
+  \comment{(because $r_2$ reduces $B$ to $C$)}
+
+  $\iff$ the answer for $r_3(x)$ is \textsf{yes}
+  \comment{(because $r_3(x) = r_2(r_1(x))$)}
+
+  \smallskip
+  So the reduction $r_3$ is correct.
+  
+  For the running time, fix $c_1$ and $c_2$ such that
+  $r_1$ is computable in time $O(n^{c_1})$
+  and $r_2$ is computable in time $O(n^{c_2})$.
+  The following algorithm computes $r_3$ in polynomial time, $O(n^{c_1 c_2})$:
+
+  \begin{myframed}
+    \begin{steps}
+    \item[] algorithm to compute $r_3(x)$:
+      \step compute $y = r_1(x)$, in time $O(|x|^{c_1})$
+      \step compute and return $r_2(y)$, taking time $O(|y|^{c_2})$
+    \end{steps}
+  \end{myframed}
+  \smallskip
+
+  Clearly the algorithm computes $r_3(x)$.
+  To bound the run time,
+  reason as in the previous proof:
+  Step 1 takes time $O(|x|^{c_1})$,
+  so $y$ has size $|y|=O(|x|^{c_1})$,
+  so Step 2 takes time $O(|y|^{c_2}) = O(|x|^{c_1 c_2})$.
+\end{proof}
+
+\subsection{External sources on polynomial-time reductions}
+
+
+\begin{itemize}
+\item Reducing matching to flow:
+  \KT Section 7.5;
+  \DPV Section 7.3;
+  \CLRS Section 26.3
+
+\item Reducing disjoint paths to flow:
+  \KT Section 7.6
+
+\item For \prob{Seam Carving} (which reduces to shortest $s$-$t$ path in a DAG), see
+  
+  \URLplain{https://en.wikipedia.org/wiki/Seam_carving}
+
+  \URLplain{https://www.youtube.com/watch?v=6NcIJXTlugc}
+
+\item For \prob{Image Segmentation} via \prob{Min Cut}, see \KT Section 7.10.  See also:
+
+  \url{https://discovery.ucl.ac.uk/13383/1/13383.pdf}, Figures 1, 2, and 11
+
+\item Other reductions to \prob{Max Flow} or \prob{Min Cut}:
+
+  \KT Sections 7.5--7.12 (and \KWSlides for Ch.~7); see also \JE Chapter 11 
+
+\item Reductions in general:
+
+  \KT Section 8.1 (and \KWSlides for Ch.~8);  \CLRS Section 34.3; and \JE Chapter 12, and
+  \URLplain{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-23-computational-complexity/}
+
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "flow_reductions_LP"
+%%% End:

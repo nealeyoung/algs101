@@ -1,0 +1,753 @@
+\section{The long-form proof format}\label{proofs: sec: long form}\doHeader{Long-form proof format}
+
+The long-form proof format uses a particular syntactical form
+that helps make the details and logical structure of the proof particularly clear.
+This section defines the format and gives examples.
+Section~\ref{proofs: sec: exercises with solutions} has more examples.
+
+\subsection{There are four kinds of proof steps}
+\begin{figure}
+  \begin{framed}\small
+    \begin{theorem}\label{proofs: thm: first}
+      The number  $x =\log_9 12$ is irrational. 
+      (That is, the $x$ such that $9^x = 12$.)
+    \end{theorem}
+    \begin{longFormProof}
+      \step Assume for contradiction that $x$ is rational.
+      \comment{\ldots starts a proof-by-contradiction block}
+      \step Let $p$ and $q>0$ be integers such that $p/q {} = \log_9 12$.
+      \comment{\ldots definition}
+      \step Raising 9 to the power of each side, it must be that $9^{p/q} = 12$.
+      \comment{\ldots statement}
+      \step\label{proofs: step: eqn}
+      Raising each side to the power of $q$, it must be that $9^p = 12^q$.
+      \comment{\ldots statement}
+      \step Because $q>0$, the right-hand side $12^q$ is a multiple of 2.
+      \comment{\ldots statement}
+      \step But the left-hand side $9^p$ cannot be a multiple of 2.  So $9^p \ne 12^q$.
+      \comment{\ldots statement}
+      \step\label{proofs: step: contr}
+      This contradicts Line~\ref{proofs: step: eqn},  so our assumption in Line~1 is wrong.  So $x$ is irrational.
+      \comment{\ldots statement}
+    \end{longFormProof}
+    \vspace*{-10pt}
+  \end{framed}
+  \vspace*{-10pt}
+  \caption{A long-form proof with one \emph{proof by contradiction} block.}\label{proofs: fig: contradiction}
+  \vspace*{-5pt}
+\end{figure}
+Each long-form proof is given as a sequence of numbered steps.
+Each step takes up about one line on the page.  Figure~\ref{proofs: fig: contradiction} shows an example. 
+There are just four kinds of steps:
+\begin{enumerate}[itemsep=0pt]
+\item A \emph{definition} of a term or variable (for example, Step 2 in the figure defines $p$ and $q$),
+\item A \emph{statement of fact}, with a justification (Steps 3--7), 
+\item A \emph{comment} to guide the reader (the proof above has none),
+\item The first line of a \emph{block} (such as in Step 1); per Section~\ref{proofs: sec: blocks},
+  blocks are used to manage assumptions.   Each block takes one of four forms:
+  \begin{enumerate}[label=(\roman*)]
+  \item a proof by contradiction,
+  \item a proof of an ``if then'' statement,
+  \item a proof by cases,
+  \item a proof of a ``for all'' statement.
+  \end{enumerate}
+\item Some combination of the above (e.g.~a definition and a statement; do this rarely, though).
+\end{enumerate}
+
+A \textbf{definition} gives a name to some quantity (beware: it must be clear that the quantity does exist).
+The definition should be mathematically precise, with no ambiguity.
+The definition holds throughout the remainder of the block in which it occurs.
+(Just as declaring a variable in a computer program makes the variable available
+for the rest of the code block in which the declaration occurs.)
+
+Each \textbf{statement of fact} states some fact, along with a short justification.
+\emph{The given fact must follow directly from the facts established in previous steps},
+and your anticipated reader should be able to easily see why this is the case.
+The level of detail you give thus depends on your anticipated reader.
+For example, the proof in Figure~\ref{proofs: fig: contradiction} assumes the reader is familiar with the definitions of ``rational''
+and ``irrational'', and with the basic properties of integers,
+and it uses such properties without explaining why they hold.
+When writing up exercises for these notes, you should assume the reader is another student
+who knows the material in the notes,
+but who doesn't yet know anything about the line of reasoning you have in mind.
+
+When you are starting out, if you're not sure how much detail to give, err on the side
+of giving more.  For the reader, it's easier to skip unnecessary detail than to figure out what
+you might have had in mind when details are missing.  And gaps (missing details)
+often hide errors.
+
+As necessary, the statement of fact is accompanied by a justification to guide the reader,
+along with explicit references to any previous steps that it depends on.
+(By default, each step depends on the previous step,
+so if that's the only dependence you don't have to mention it.)
+
+\subsection{There are four kinds of blocks}\label{proofs: sec: blocks}
+Long-form proofs can have multiple, possibly nested \textbf{blocks}.
+(The proofs in Figures~\ref{proofs: fig: contradiction} and~\ref{proofs: fig: if then} each have just one, though,
+the main outer block.)
+Blocks are used to keep track of assumptions made during the proof.
+\emph{The first line of each block introduces an assumption} (in some cases only implicitly).
+The assumption is then in effect until the end of the block.
+%
+That is, within the block we use the assumption as if it were a true fact.
+We don't need to know whether the assumption is actually true.
+Rather, within the block we are imagining that it is true,
+and exploring what the logical consequences would be if it were.
+This kind of exploration lets us figure out facts that hold even without any assumptions.
+
+Blocks can be used in long-form proofs in (only) the following four specific ways:
+
+\paragraph{1. Blocks for proof by contradiction.}
+The proof in Figure~\ref{proofs: fig: contradiction} has just one block --- its main block, consisting of Steps~1--\ref{proofs: step: contr}.
+The assumption that starts the block is that the given quantity $\log_9 12$ is rational.
+The block explores the logical consequences of that assumption,
+showing that, if the assumption is true,
+then \emph{$9^p = 12^q$ and $9^p \ne 12^q$ (for some $p$ and $q$).}
+That is, a statement and its negation both hold.
+This is called a \emph{contradiction}.
+Since it cannot be true, we deduce that our original assumption (which implies it) must be false.
+That is, $\log_9 12$ cannot be rational.  It must be irrational.
+
+This is called \emph{proof by contradiction}.  To do proof
+by contradiction, use a block whose first line explicitly assumes the opposite
+of what you want to prove.  To signal the reader,
+in this first line, explicitly use a phrase including the word ``contradiction'' such as 
+\emph{``Assume for contradiction that\ldots''}
+Then, in the body of the block, somehow deduce a contradiction
+--- a statement and its negation.
+If you can do that, you can conclude that the assumption that started the block must be false,
+and the negation of that assumption must be true.
+(By the way, proof by contradiction is usually just a convenient way to organize a proof.
+That is, it is usually possible to give an equivalent ``direct'' proof without using proof by contradiction.)
+
+% Often, the first step in proving a statement
+% is to identify the logical structure of the statement.
+% The logical structure of the statement will guide the structure of the proof.
+% The statements we'll want to prove in this class
+% are, generally, expressible in first-order logic,
+% using just existential and universal quantifiers ($\exists$, $\forall$)
+% and logical operators (and, or, not, if/implies, if and only if).
+
+% This brings us to the subject of \emph{blocks} within the proof.
+% The previous example used just a single outer block.
+% But blocks can also nest.
+% That is, blocks can have sub-blocks.
+
+
+\begin{figure}
+\begin{framed} \small
+  \begin{theorem}
+    Let $n = 31415923576480135764801$.  If $\log_7 n$ is rational, then it is an integer.
+  \end{theorem}
+  \begin{longFormProof}
+    \step Assume that $\log_7 n$ is rational.
+    \comment{\ldots starts an ``if then'' block}
+    \step Let $p$ and $q$ be integers with $q>0$ such that $p/q = \log_7 n$.
+    \comment{\ldots definition}
+    \step Raising 7 to the power of each side gives $7^{p/q} {} = n$.  \comment{\ldots statement}
+    \step Raising each side to the power of $q$ gives $7^p {} = n^q$.\label{proofs: PI: EQ}
+    \step As each integer has a unique prime factorization, this implies that $n$ is a power of 7.
+    \comment{\smash{$\vdots$}~~~}
+    \step That is, $n=7^i$ for some integer $i > 0$.
+    \step Substituting that into the equation in Step~\ref{proofs: PI: EQ}, by algebra we have
+    \begin{align*}
+      7^p & = n^q = (7^i)^q = 7^{iq} \\
+      p & = iq & \comment{(taking the $\log_7$ of each side)} \\
+      p/q & = i & \comment{(dividing each side by $q>0$)} \\
+      \log_7 n & = i & \comment{(using $\log_7 n = p/q$).}
+    \end{align*}
+    \step It follows that $\log_7 n$ is an integer (if it is rational).
+  \end{longFormProof}
+  \vspace*{-10pt}
+\end{framed}
+\vspace*{-10pt}
+\caption{A long-form proof with one \emph{if-then} block.}\label{proofs: fig: if then}
+\vspace*{-5pt}
+\end{figure}
+
+\paragraph{2. Blocks to prove ``if then'' statements.}
+The logical meaning of a statement of the form ``if A then B'' 
+is that, if A is true, then B must also be true.
+You can prove such a statement without knowing whether or not A is true.
+Start a block by assuming A,
+then, under that assumption, show that B must also hold.
+If you can do that, then B is a logical consequence of A,
+so, if A is true, then B must also be true.
+That is, ``if A then B''.
+
+Figure~\ref{proofs: fig: if then} shows an example.
+For some particular $n$, it shows that
+if $\log_7 n$ is rational, then $\log_7 n$ is an integer.
+It doesn't prove whether $\log_7 n$ is rational or not.
+Rather, it shows that, if we assume that $\log_7 n$ is rational,
+it follows by logic and algebra that $\log_7 n$ must in fact be an integer.
+
+\paragraph{3. Blocks to prove ``for all'' statements.}
+A ``for all'' statement is a statement of the following form,
+given some set $N$ and predicate $Q$:
+\begin{quote}
+``for all $n$ in $N$, the predicate $Q(n)$ holds''.
+\end{quote}
+
+To prove such a statement, use a ``for all'' block.
+Start the block with a line such as~\footnote
+{For ``for all'' blocks, the underlying assumption (not explicitly stated)
+  is that $N$ is non-empty, so $n$ is well-defined.}
+\begin{quote}
+  ``\emph{\ldots 1. Consider an arbitrary $n$ in $N$.}'' 
+\end{quote}
+This asks the reader to consider a generic element of the set $N$,
+referred to by the name $n$.
+To let the reader know that your are starting a ``for all'' block,
+make sure you include the qualifier ``arbitrary'' in the first step.
+Within the block,
+assuming only that $n$ is in $N$ (and knowing nothing else about $n$)
+prove that $Q(n)$ must hold.
+Suppose you can indeed prove that.
+Because your reasoning could be applied generically to any particular element of $N$,
+it must be that $Q(n)$ holds for every particular $n$.
+That is, you can deduce the following statement (outside the block!):
+\emph{for all $n$ in $N$, the predicate $Q(n)$ holds.}
+
+For example, note that the proof in Figure~\ref{proofs: fig: if then} doesn't use the specific properties
+of the particular integer $n$ defined there.
+So, we can apply the reasoning in that proof to \emph{any} particular positive integer $n$,
+to show that if $\log_7 n$ is rational, then it is an integer.
+In other words,
+\emph{for all positive integers $n$, if $\log_7 n$ is rational, then it is an integer.}
+\begin{figure}
+\begin{framed}
+  \begin{theorem}
+    For all positive integers $n$, if $\log_7 n$ is rational, then it is an integer.
+  \end{theorem}
+  \begin{longFormProof}
+    \step[proofs: A0] Consider an arbitrary positive integer $n$.
+    \comment{\ldots starts a ``for all'' block}
+    \begin{block}\label{proofs: MCS17: B}
+      \step Assume that $\log_7 n$ is rational.
+      \comment{\ldots starts an ``if then'' block}
+      \step Let $p$ and $q$ be integers with $q>0$ such that $p/q = \log_7 n$.
+      \comment{\ldots definition}
+      \step Raising 7 to the power of each side gives $7^{p/q} {} = n$.  \comment{\ldots statement}
+      \step Raising each side to the power of $q$ gives $7^p {} = n^q$.\label{proofs: PI2: EQ}
+      \step As each integer has a unique prime factorization, this implies that $n$ is a power of 7.
+      \comment{\smash{$\vdots$}~~~}
+      \step That is, $n=7^i$ for some integer $i > 0$.
+      \step Substituting that into the equation in Step~\ref{proofs: PI2: EQ}, by algebra we have
+      \begin{align*}
+        7^p & = n^q = (7^i)^q = 7^{iq} \\
+        p & = iq & \comment{(taking the $\log_7$ of each side)} \\
+        p/q & = i & \comment{(dividing each side by $q>0$)} \\
+        \log_7 n & = i & \comment{(using $\log_7 n = p/q$).}
+      \end{align*}
+      \step It follows that $\log_7 n$ is an integer.
+    \end{block}
+    \step[proofs: AN] By Block~\ref{proofs: MCS17: B}, if $\log_7 n$ is rational, then $\log_7 n$ is an integer.
+  \end{longFormProof}
+  \vspace*{-10pt}
+\end{framed}
+\vspace*{-10pt}
+\caption{This proof has a \emph{for-all} block containing an \emph{if-then} block.}\label{proofs: fig: for all}
+\end{figure}
+Figure~\ref{proofs: fig: for all} shows the corresponding long-form proof.
+It uses a ``for all'' block as described above.
+The logical structure of the proof
+mirrors the logical structure of the statement:
+the main, outer block (Steps~\ref{proofs: A0} through~\ref{proofs: AN}) is a ``for all'' block;
+the inner block (Block~2) is an ``if then'' block.
+
+\paragraph{4. Blocks for proof by cases.}
+The fourth and final type of block is used for case analysis.
+Suppose you know that
+``\emph{$C_1 \text{ or } C_2$}'' holds,
+and you want to show that some proposition $X$ holds.
+(You may not know which of $C_1$ or $C_2$ holds,
+but you know at least one has to.)
+
+First, consider the case that $C_1$ holds.
+Start a block with the assumption that $C_1$ holds.
+Under that assumption (within that block) show somehow that $X$ holds.
+Then you know that, if $C_1$ holds, then $X$ holds.
+
+Then consider the other case, that $C_2$ holds.
+Start a block with the assumption that $C_2$ holds.
+Under that assumption (within that block), show somehow that $X$ holds.
+Then you know that, if $C_2$ holds, then $X$ holds.
+
+Finally, since you know that $C_1 \text{ or } C_2$ holds,
+and you know that in either case $X$ must hold,
+you can conclude (without any assumptions) that $X$ holds.
+
+This is the principle of proof by cases.
+It extends naturally to situations with more than two cases,
+as long as you know that at least one of case's assumption must hold.
+%
+When you start a block for a proof by cases,
+signal it by starting the statement with a label, such as ``\underline{Case 1.} \ldots''.
+You can also use a phrase such as ``\emph{Consider the case} that \ldots'' to signal the reader.
+If necessary, use a comment to the reader before the cases
+to help the reader understand their structure.
+
+Figure~\ref{proofs: fig: cases} shows an example.
+Here's the context for the theorem shown there.
+Assume that, for every pair of people in the world, either the two have met, or they have not.
+For any given group $G$ of people,
+if every pair in $G$ has met, call $G$ a \emph{club}.
+If every pair in $G$ has not met, call $G$ a group of \emph{strangers}.
+The theorem says that in every group of six,
+there must be either a group of three who form a club,
+or a group of three strangers.
+The proof uses two cases, each with two subcases.
+
+It is interesting to note that in that proof,
+the part that proves that $G$ is good is constructive.
+That is, it yields an efficient algorithm, which, given any group $G$ of six people,
+finds three that are a club or are strangers.
+(Choose any person $x$.  If $x$ has met at least three of the others,
+check any pair in those three have met, and so on\ldots)
+
+\begin{figure}
+\begin{framed}
+\begin{theorem}
+  Within every group of six people, there exists a club of three or a group of three strangers.
+\end{theorem}
+\begin{longFormProof}\small
+  \step Let $G$ be an arbitrary group of six people.
+  \comment{\ldots starts a ``for all'' block}
+
+  \step Say that $G$ is \emph{good} if $F$ includes a club of 3 or a group of 3 strangers. 
+  \comment{\ldots definition}
+
+  \step Our goal is to prove $G$ is good.
+  \comment{\ldots comment}
+
+  \step Fix $x$ to be any one of the six people in $G$.
+  \comment{\ldots definition}
+
+  \step There two cases, each with two subcases:
+  \comment{\ldots comment}
+
+  \begin{block}[proofs: C1]
+    \step[proofs: C11] \underline{Case 1}: Suppose that, among the five other than $x$,
+    at least three have met $x$.
+    \comment{\ldots start case block}
+
+    \begin{block}[proofs: C1A]
+      \step \underline{Subcase 1.1}: Suppose that no two among those three have met. 
+      \comment{\ldots start case block}
+
+      \step Then those three people are a group of strangers, so $G$ is good.
+      \comment{\ldots statement}
+    \end{block}
+    \begin{block}[proofs: C1B]
+      \step \underline{Subcase 1.2}: Otherwise some pair among those three have met. 
+      \comment{\ldots start case block}
+
+      \step That pair, and $x$, have all met each other, so form a club of three, so $G$ is good.
+      \comment{\ldots statemen}t
+
+    \end{block}
+    \step One of the Subcases 1.1 or 1.2 must hold, and $G$ is good in each, so $G$ is good (in Case 1). 
+    \comment{\ldots stmnt}
+  \end{block}
+
+  \begin{block}[proofs: C2]
+    \step \underline{Case 2}:  Among the five other than $x$,
+    at least three have \emph{not} met $x$.
+      \comment{\ldots start case block}
+
+    \begin{block}[proofs: C2A]
+      \step \underline{Subcase 2.1}: Suppose that every pair among those three have met. 
+      \comment{\ldots start case block}
+
+      \step Those three are a club, so $G$ is good.
+      \comment{\ldots statement}
+    \end{block}
+    
+    \begin{block}[proofs: C2B]
+      \step \underline{Subcase 2.2}: Otherwise some pair among those three have not met.
+      \comment{\ldots start case block}
+      
+      \step That pair, and $x$, have all not met, so form a group of three strangers, so $G$ is good.
+      \comment{\ldots statement}
+    \end{block}
+    \step One of the Subcases 2.1 or 2.2 must hold, and $G$ is good in each, so $G$ is good (in Case 2). 
+      \comment{\ldots stmnt}
+  \end{block}
+  
+  \step One of the Cases 1 or 2 must hold, and $G$ is good in each, so $G$ is good.
+  \comment{\ldots statement}
+
+\end{longFormProof}
+\vspace*{-10pt}
+\end{framed}
+\vspace*{-10pt}
+\caption{An example of using blocks for cases. (See the definitions in the text for context.)}\label{proofs: fig: cases}
+\end{figure}
+
+\paragraph{Remark.} 
+In doing proof by cases, if the reasoning for a case
+is the same as for a previously proved case,
+you can just point out that the reasoning is the same,
+instead of repeating it.
+
+\paragraph{Follow each inner block by its conclusion.}
+For any inner block,
+the deduction that follows from the reasoning in the block
+should be stated in the first line following the end of the block
+(or sequence of blocks for proof by cases).
+This is true for all of the four block types.
+For example, in Figure~\ref{proofs: fig: for all}, just after Block 2 ends, 
+Step 3 states the conclusion implied by the reasoning in the block. 
+In Figure~\ref{proofs: fig: cases}, just after Blocks 6 and 7 end, 
+Step 8 states the conclusion implied by the reasoning in those blocks. 
+
+\paragraph{The main (outer) block should prove the desired fact.}
+The conclusion that follows from the reasoning in the main (outer) block
+should be the fact that the proof claims to prove.
+
+\paragraph{Lemmas.}
+A lemma is like a ``small'' theorem.
+In these notes, we use lemmas within the context of the main proof,
+to make it modular and therefore easier to understand
+(just as subroutines are used to make programs more modular).
+See Problem~\ref{proofs: prob: with lemma} in Section~\ref{proofs: sec: exercises} for an example.
+
+Section~\ref{proofs: sec: exercises} has many other examples of long-form proofs for study.
+
+% \continued
+
+\subsection{Checklist and cheat sheet}
+After you've written a proof,
+put it aside for a while,
+then come back with fresh eyes to check it.
+Put yourself in the place of the reader,
+who does not yet know anything about the line of reasoning you have in mind.
+The high-level criteria is that
+\emph{from reading just what you wrote,
+the anticipated reader will be able to easily reconstruct and verify your entire line of reasoning.}
+
+The main things to check are
+(i) that each statement and definition is mathematically precise,
+(ii) that the overall logical structure is correct,
+(iii) the reasoning is complete (covers all cases),
+and (iv) that there are no large gaps.
+Consider each step, and make sure that if asked you could easily explain
+in more detail exactly what that step says and why it holds.
+Checking a proof carefully and skeptically is a learned skill.
+
+Figure~\ref{proofs: fig: checklist} gives checklist that will help you avoid common errors.
+Figure~\ref{proofs: fig: cheat sheet} gives a cheat sheet summarizing how to use the four block types.
+
+\begin{figure}
+\begin{myframed}
+\begin{enumerate}
+  \setlength{\labelwidth}{1em}
+  \setlength{\labelsep}{1em}
+  \setlength{\leftmargin}{-1em}
+  \setlength{\itemsep}{0em}
+
+\item The proof is preceded by the statement to be proved (typically as a theorem or lemma).
+
+\item
+  Each step in the proof is either
+  a statement,
+  definition,
+  comment,
+  or the start of a block.
+
+\item
+  Each definition and statement is mathematically precise and well-defined,
+
+\item Each assumption is introduced only in the first line of some block.
+
+\item Each block is of one of the four block types:
+  contradiction, if then, for all, or cases.
+\\  (A definition does not need its own block!)
+
+\item The line following each inner block (or a series of case blocks)
+  states the fact
+  that follows from the reasoning in the block, according to the block's type.
+
+\item The statement you are trying to prove follows from the main (outer) block.
+
+
+\item  Each name (variable) is defined \emph{before} it is used.
+
+\item  Each variable is referred to   only within the block in which it is defined.
+
+\item Each statement follows directly by the justification given in that step
+  from the previous steps, either by domain-specific reasoning,
+  basic logic, or via one of the four block structures.
+  The reader should be able to see why easily,
+  without having to think very much,
+  and without having to guess at what you had in mind.
+
+\item
+  The proof doesn't assume that the reader already knows anything specific about the line of reasoning.
+
+\item
+  You \emph{can} assume the reader knows basic facts about the basic structures
+  you are reasoning with (e.g., numbers, trees, graphs, sets, algorithms).
+  You \emph{should} use standard mathematical structures:
+  numbers, tuples, sets, sequences, permutations, graphs, trees, paths, matrices, etc.
+
+\item
+  Resort to formal notation (rather than precise English) 
+  only when you can't say what you need to say precisely in words alone.
+  You can define a new term or notation for a concept that you introduce,
+  but avoid this if possible as it increases the cognitive load on the reader.
+
+\item Most importantly,
+  from just reading what you write, the reader should be able to easily reconstruct, and hopefully verify,
+  your entire line of reasoning.  
+
+\end{enumerate}
+\end{myframed}
+\caption{A checklist that will help you avoid common errors in proofs.}\label{proofs: fig: checklist}
+\end{figure}
+
+\begin{figure}
+\begin{multicols}{2}[
+      ]\setlength{\parindent}{0in}
+    \newcommand{\bx}[1]%
+    {\framebox{~\begin{minipage}{0.465\textwidth}%
+          ~\\#1 \vspace*{1ex} \end{minipage}~}~}
+
+    % \bx{
+    %   \underline{\emph{To show``$A$ and $B$''}}\smallskip
+
+    %   If you have proved both ``$A$'' and ``$B$'' (separately),
+    %   then you can deduce ``$A$ and $B$''.
+
+    %   \medskip
+
+    %   \vspace*{2pt}
+
+    %   \underline{\emph{To use``$A$ and $B$''}}\smallskip
+
+    %   If you have proved ``$A$ and $B$'',
+    %   then you can deduce ``$A$'', and you can deduce ``$B$''.
+
+    %   \vspace*{1pt}
+    % }
+
+    % \vspace*{2pt}
+
+    \bx{
+    %   \underline{\emph{To show``$A$ or $B$''}}\smallskip
+
+    %   If you have proved ``$A$'', or you have proved ``$B$'',
+    %   then you can deduce ``$A$ or $B$''.
+
+    %   \medskip
+
+    %   \vspace*{2pt}
+
+      % \underline{\emph{To use``$A$ or $B$'' (proof by cases)}}\smallskip 
+
+    \underline{\emph{Proof by cases, given that ``$A$ or $B$'' holds}}\smallskip 
+
+      \begin{steps}
+
+      \item[1.] \ldots
+        
+        \begin{steps}
+          
+        \item[2.1.] \underline{Case 1.}  Assume $A$. 
+
+        \item[2.2.] \emph{ \ldots~within this scope, $A$ holds \ldots}
+
+        \item[] ~~~~~~\emph{\ldots~somehow prove $C$ \ldots }
+
+        \item[2.3.] $C$
+          
+        \end{steps}
+
+        \begin{steps}
+          
+        \item[3.1.] \underline{Case 2.}  Assume $B$. 
+
+        \item[3.2.] \emph{ \ldots~within this scope, $B$ holds \ldots}
+
+        \item[] ~~~~~~\emph{\ldots~somehow prove $C$ \ldots }
+
+        \item[3.3.] $C$
+          
+        \end{steps}
+
+      \item[4.] By Cases 1 and 2, $C$ holds.
+
+      \end{steps}
+    }
+
+    \vspace*{2pt}
+
+    \bx{
+      % \underline{\emph{To use``if $A$ then $B$''}}\smallskip
+
+      % If you have proved ``if $A$ then $B$'', and you have proved ``$A$'',
+      % then you can deduce ``$B$''.
+
+      % \medskip
+
+      % \vspace*{2pt}
+
+      \underline{\emph{``If  then'' blocks}}\smallskip
+      \begin{steps}
+
+      \item[1.] \ldots
+        
+        \begin{steps}
+          
+        \item[2.1.] Assume $A$. 
+
+        \item[2.2.] \emph{ \ldots~within this scope, $A$ holds \ldots}
+
+        \item[] ~~~~~~\emph{\ldots~somehow prove $B$ \ldots }
+          
+        \item[2.3.] B
+          
+        \end{steps}
+        
+      \item[3.] By Block 2, if $A$, then $B$.
+      \end{steps}
+
+      \vspace*{1pt}
+
+      \dotfill
+
+      \emph{Alternatively, show the contrapositive:\\\hspace*{3em} ``if not $B$, then not $A$''.}
+
+      \vspace*{1pt}
+    }
+
+    \newpage
+    
+    % \bx{
+    %   \underline{\emph{To show ``\,$\exists x\in S.~P(x)$''}}
+
+    %   Prove that $P(y)$ holds for a particular $y\in S$.
+
+    %   \medskip
+
+    %   \underline{\emph{To use ``\,$\exists x\in S.~P(x)$''}}
+
+    %   \begin{steps}
+
+    %   \item Let $y$ be an element of $S$ such that $P(y)$.
+
+    %   \item \emph{ \ldots~Now you can use $y$~\ldots}
+    %   \item[] \emph{\ldots~~~and that $y\in S$ and $P(y)$~~\ldots}
+
+    %   \end{steps}
+    % }
+
+    \bx{
+      % \underline{\emph{To use ``not $A$''}}
+
+      % Prove ``$A$ and not $A$'' to reach a \textbf{contradiction}.
+
+
+      % \medskip
+
+      \underline{\emph{Proof by contradiction}}
+
+      \begin{steps}
+
+      \item[1.] \ldots
+
+        \begin{steps}
+          
+        \item[2.1.] Assume \textbf{for contradiction} that $B$ holds. 
+
+
+        \item[2.2.] \emph{ \ldots~within this scope, $B$ holds \ldots}
+
+        \item[] ~~~~~~\emph{\ldots~prove any contradiction \ldots }
+
+        \item[2.3.] contradiction
+          
+        \end{steps}
+        
+      \item[3.] By Block 2, $B$ is false.
+      \end{steps}
+    }
+
+    \vspace*{2pt}
+
+
+    \bx{
+      % \underline{\emph{To use ``\,$\forall x\in S.~P(x)$''}}
+
+      % If you have proved ``\,$\forall x\in S.~P(x)$'',
+      % and you know $y\in S$ for some particular $y$,
+      % you can deduce $P(y)$ for that $y$.
+
+      % \medskip 
+
+      \underline{\emph{``For all''  blocks}}
+
+      \begin{steps}
+
+      \item[1.]\ldots
+
+        \begin{steps}
+          
+        \item[2.1.] Let $x$ be an \textbf{arbitrary} element of $S$.~\footnote
+          {The definition in Step 2.1 assumes $S$ is non-empty.
+            This assumption is implicitly introduced by the block.
+            For other types of definitions, blocks are not needed.}
+
+        \item[2.2.] \emph{ \ldots~within this scope, $x$ is defined \ldots}
+
+        \item[] ~~~~~~\emph{\ldots~somehow prove $P(x)$ \ldots }
+
+        \item[2.3.] $P(x)$
+          
+        \end{steps}
+        
+      \item[3.] By Block 2, every $x$ in $S$ has property $P(x)$.
+      \end{steps}
+    }
+
+    \vspace*{2pt}
+    
+    \bx{
+      \underline{\emph{Basic logic:}}  (``$\equiv$'' means ``is equivalent to'')
+
+      \begin{tabular}{r@{~}l}
+        ``if $A$ then $B$'' &  $\equiv$ ``if not $B$ then not $A$'' 
+        \\
+        ``if $A$ then $B$''  & $\equiv$ ``$B$ or not $A$''
+        \\
+        ``not ($A$ and $B$)'' &  $\equiv$ ``(not $A$) or (not $B$)'' 
+        \\
+        ``not ($A$ or $B$)''  & $\equiv$ ``(not $A$) and (not $B$)'' 
+        \\
+        ``not (not $A$)'' & $\equiv$ ``$A$''
+        \\
+        ``not $\forall x\in S.~P(x)$'' & $\equiv$ ``$\exists x\in S.~\text{not } P(x)$'' 
+        \\
+        ``not $\exists x\in S.~P(x)$'' & $\equiv$ ``$\forall x\in S.~\text{not } P(x)$'' 
+      \end{tabular}
+    }
+  \end{multicols}
+
+  \paragraph{Each block introduces an assumption that lasts for the scope of the block.}
+  The general principle is that
+  \emph{whenever we want to explore the consequences of some assumption,
+    we begin a new block, with a step that makes that assumption}.
+  The block delimits the scope of that assumption.
+  There are four block types:
+  ``proof by contradiction'',  ``if then'',  ``for all'',  and ``cases''.
+  (For the ``for all'' block, what is the underlying assumption that necessitates a block?
+  That $S$ is not empty!)
+\caption{A cheat sheet summarizing the four block types and how to use them.}\label{proofs: fig: cheat sheet}
+\end{figure}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "long_form_proofs"
+%%% End:

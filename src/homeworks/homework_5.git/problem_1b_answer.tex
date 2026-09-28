@@ -1,0 +1,49 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{Problem 1(b) answer} \GradescopeComment{This should be on page 4 (top) of your PDF.}
+
+\begin{lemma}
+  Let $I$ be any non-empty instance of \prob{Puncturing Intervals}.
+  Let $e_1$ be the end-time of the earliest-ending job $J_1$.
+  Let $D$ contain the jobs in $I$ that don't contain $e_1$.
+  Let $R$ be any optimal solution for $D$ (as a \prob{Puncturing Intervals} instance).
+  Then $\{e_1\}\cup R$ must be a correct solution for $I$.
+\end{lemma}
+
+% Give a long-form proof of the lemma above.
+% As much as possible, your proof should mimic the structure of the proof of Lemma 5.5 for \prob{Activity Selection},
+% in Lecture Note 5.  Here is that proof to use as a template.
+% Please modify it (preserving the overall structure) to make a correct proof for the lemma above.
+
+\begin{blue}
+  
+  \begin{longFormProof}
+
+    \step Consider any $I$, $J_1$, $D$, and $R$ as described in the lemma.
+
+    % [review 2026-09-27] fix: "Lemma 4" was the old lecture-note number; in this homework's numbering the greedy-choice lemma of Part (a) is Lemma 1
+    \step Let $S^*$ be a correct solution for $I$ that contains $J_1$ (it exists by Lemma 1).
+
+    \step Let $R' = S^*\setminus \{J_1\}$ be obtained by removing $J_1$ from $S^*$.
+
+    \step Then $R'$ is a pairwise-disjoint subset of $D$ (using here that $S^*$ is pairwise disjoint).
+
+    \step Since $R$ is a maximum-size pairwise-disjoint subset of $D$, we have $|R| \ge |R'|$.
+
+    \step So \( |S^*| = 1 + |R'| \le 1+|R| = |\{J_1\} \cup R|\).
+
+    \step That is, $\{J_1\} \cup R$ is as large as $S^*$.
+
+    \step And $\{J_1\} \cup R$ is pairwise disjoint (because $R$ is, and $R\subseteq D$ so all jobs in $R$ are disjoint from $J_1$).
+
+    \step By the previous two steps, $\{J_1\}\cup R$ must also be a correct solution for $I$.
+
+  \end{longFormProof}
+
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_5"
+%%% End:

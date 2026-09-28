@@ -1,0 +1,133 @@
+
+% \usepackage{tikz}
+% \usepackage{ifthen}
+
+% \input{macros_2018_09_01}
+
+% \newcommand{\subject}{dynamic programming / paragraph layout}
+% \newcommand{\header}{{\footnotesize \classSection, \subject, draft of \today}}
+% \markboth{\header}{\header}
+
+\newcommand{\width}[1]{\ensuremath{\operatorname{\sf width}(#1)}}
+
+\section{Paragraph Layout}\label{dp: sec: paragraph layout}\doHeader{Paragraph Layout}
+
+\begin{mylist}
+\item[\bf input:]
+  A pair $I=(N, w[1..n])$ where $N$ is positive integer,
+  and $w[1..n]$ is an array of words (strings),
+  each of length at most $N$.
+  
+\item[\bf output:]
+  A \emph{minimum-cost layout} of $w$, of width at most $N$.
+\end{mylist}
+
+A layout breaks the sequence $w[1], w[2], \ldots, w[n]$ of words into \emph{lines},
+by inserting line breaks after some of the words.
+For example, suppose $N=6$ and the given sequence of words is
+$W[1]=\texttt{aaa}$, $W[2]=\texttt{bb}$, $W[3]=\texttt{cc}$, $W[4]=\texttt{dddd}$.
+
+\noindent\parbox{5in}{
+  \hspace*{1em}
+  Two possible layouts (each with three lines) are shown to the right.
+The \emph{width} of each line is the number of characters in the line,
+including the spaces that separate the words.
+The three lines in Layout 1 have widths 6, 2, and 4.  
+The three lines in Layout 2 have widths 3, 5, and 4.}
+~~~\parbox{2in}{
+\begin{tabular}{| l | l |} \hline
+ layout 1 & layout 2 \\ \hline
+  \tt aaa.bb  & \tt aaa... \\ 
+  \tt cc.... & \tt bb.cc.\\
+  \tt dddd.. & \tt dddd.. \\ \hline
+\end{tabular}
+}
+
+Each line in the layout must have width at most $N$.
+We define the \emph{cost} of a layout as follows.
+For each line, define the \emph{gap} of the line
+to be $N$ minus the width.
+The three lines in Layout 1 have gaps 0, 4, and 2.  
+The three lines in Layout 2 have gaps 3, 1, and 2.  
+The cost of a layout is the sum,
+over its lines, of the gap of the line \emph{squared}.
+Layout 1 has cost $0^2+4^2+2^2 = 20$.  
+Layout 2 has cost $3^2+1^2+2^2 = 14$.  
+The goal is to compute a layout of minimum cost.
+
+Minimizing the cost tends to reduce the variation
+in the gaps, giving a better-looking layout.
+
+Here is the algorithm.  Fix any instance $(N, w)$.
+
+\paragraph{subproblems.}
+  For each $i\in\{0,1,\ldots, n\}$,
+  let $M(i)$ be the optimal cost for the subproblem $(N, w[1..i])$
+  formed by the first $i$ words.
+  The solution to the given problem $(N, w[1..n])$ is $M(n)$.
+
+\paragraph{recurrence.}
+  First, define $\width {w[i..j]}$ (for $i\le j$)
+  to be the width of a line formed by words $w[i], w[i+1], \ldots, w[j]$.
+  % [review 2026-09-27] fix: the summand used |w[i]| (fixed) instead of the summation variable |w[h]|; changed i to h
+  That is, $\width {w[i..j]} = \sum_{h=i}^j (|w[h]| + 1) - 1$.
+  Then the gap of such a line is $N - \width {w[i..j]}$.
+  Here is the recurrence for $M$:
+  \[
+    M(j) = \begin{cases}
+      0 & \text{ if } j=0 \\
+    \min \Big\{ M(i-1) + \big(N-\width { w[i..j]}\big) ^2
+    ~\Big|~  i\in\{1,\ldots,j\},\,\width { w[i..j] } \le N\Big \}
+    & \text{ if } j > 0.
+  \end{cases}
+\]
+
+\paragraph{correctness.}  The intuition is as follows.
+Each possible layout for words $w[1..j]$
+consists (for some $i$) of a layout for the words in $w[1..i-1]$,
+followed by one last line with the words in $w[i..j]$.
+Any $i\in\{1,2,\ldots,j\}$ with $\width { w[i..j] }\le N$
+gives such a layout.
+
+\paragraph{time.}
+There are $n+1 = \Theta(n)$ subproblems.
+For each, evaluating the right-hand side of the recurrence takes
+time proportional to the maximum number of words that fit in the line.
+This is at worst $O(\min(n, N))$.
+So the algorithm (iterative, or recursive and memoized)
+takes time $O(n\min(n, N))$.
+
+\begin{theorem}
+  There is an $O(n\min(n, N))$-time algorithm for \prob{Paragraph Layout}.
+\end{theorem}
+
+The problem is equivalent to finding a shortest path, in the DAG
+with vertices for each subproblem and appropriate edge costs,
+from the node for $M(0)$ to the node for $M(n)$.
+
+\pythonCode{dynamic_programming/paragraph_layout.py}
+
+% In practice, the number of words that fit on a line is typically constant,
+% in which case the run time will be $O(n)$.
+
+% \medskip
+% \noindent
+% This algorithm is equivalent to running the \prob{Shortest Path} algorithm
+% on a graph with a vertex $v_{j}$ for each subproblem $M(j)$,
+% and appropriately chosen weighted edges.
+
+% \providecommand{\URL}[1]{\parbox[t]{0.8\textwidth}{\url{#1}}}
+
+% \paragraph{External sources on \prob{Paragraph Layout}}
+
+% \begin{itemize}
+
+% \item CLRS Problem 15--4 (Chapter 15). MIT video:
+%   \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-20-dynamic-programming-ii-text-justification-blackjack/}
+  
+% \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

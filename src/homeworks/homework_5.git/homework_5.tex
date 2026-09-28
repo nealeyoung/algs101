@@ -1,0 +1,249 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{5}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+% \setcounter{problem}{1}
+
+\newpage
+\problem \emph{(Greedy algorithm for \prob{Puncturing Intervals}; see Exercise 5.14)}
+
+  Recall the \prob{Puncturing Intervals} problem from Homework 4: 
+
+  \begin{mylist}
+  \item[\bf input:] Set $I=\{J_1, J_2, \ldots, J_n\}$ of intervals, where $J_i = [s_i, e_i]$.
+    We assume $e_1 \le e_2 \le \cdots \le e_n$.
+  \item[\bf output:] A minimum-size finite set $P=\{p_1, p_2, \ldots, p_k\}$
+    of points such that $J_i \cap P \ne \emptyset$ for each $J_i\in I$.
+  \end{mylist}
+
+  Consider the following rule for picking a single point $p_1$ that is guaranteed to be in some
+  correct solution:
+
+  \smallskip 
+
+  \emph{1. Let $p_1$ be the end-time $e_1$ of the earliest-ending interval $J_1$.}
+
+  \smallskip
+
+  Consider the following two lemmas:
+
+  \begin{lemma}\label{lemma: pi greedy choice}
+    Let $I$ be any non-empty instance of \prob{Puncturing Intervals}.
+    Let $e_1$ be the end-time of the earliest-ending interval $J_1$.
+    Then $I$ has a correct solution that contains $e_1$.
+  \end{lemma}
+
+  \begin{lemma}\label{lemma: pi recurse}
+    Let $I$ be any non-empty instance of \prob{Puncturing Intervals}.
+    Let $e_1$ be the end-time of the earliest-ending interval $J_1$.
+    Let $D$ contain the intervals in $I$ that don't contain $e_1$.
+    Let $R$ be any optimal solution for $D$ (as a \prob{Puncturing Intervals} instance).
+    Then $\{e_1\}\cup R$ must be a correct solution for $I$.
+  \end{lemma}
+
+  \begin{enumerate}[label=(\alph*)]
+  \item Give a long-form proof of Lemma~\ref{lemma: pi greedy choice}.
+    As much as possible, your proof should mimic the structure of the proof of Lemma 5.4 (for \prob{Activity Selection})
+    in Lecture Note 5.
+
+  \item Give a long-form proof of Lemma~\ref{lemma: pi recurse}.
+    As much as possible, your proof should mimic the structure of the proof of Lemma 5.5 (for \prob{Activity Selection})
+    in Lecture Note 5.
+
+  \item Following the lemmas, 
+    define a correct recursive algorithm \textsf{rpuncture} for \prob{Puncturing Intervals}.
+    As much as possible, your algorithm should mimic the structure
+    of the \textsf{rselect} algorithm for \prob{Activity Selection}
+    in Section 5.3.
+    Define the algorithm precisely in words, then give pseudo-code for it.
+
+  \item Prove Theorem~\ref{thm: pi correctness}, below, for your algorithm.
+    As much as possible, your proof should mimic the structure
+    of the proof of Theorem 5.2 (for \textsf{rselect}) in Lecture Note 5.
+    But you must give your proof in long form, following the template given here.
+\end{enumerate}
+
+\begin{theorem}\label{thm: pi correctness}
+  For any instance $I=\{J_1, J_2, \ldots, J_n\}$ of \prob{Puncturing Intervals},
+  \textsf{rpuncture}${(I)}$ returns a correct solution for $I$.
+\end{theorem}
+
+\medskip
+
+\emph{Note: for each Part (a)-(d), the template provides the corresponding proof or algorithm
+  for \prob{Activity Selection} as a starting point.  You can edit that proof or algorithm to create
+  your own answer.}
+
+\setcounter{lemma}{0}
+\setcounter{theorem}{0}
+
+\continued
+
+\inputAnswer{problem_1a_answer}
+\continued
+
+\inputAnswer{problem_1b_answer}
+\continued
+
+\inputAnswer{problem_1c_answer}
+
+\vfill
+
+\inputAnswer{problem_1d_answer}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\noindent\adjustbox{valign=t}{\parbox{4.6in}{
+\problem\label{exercise: BFS}\emph{(Exercise 6.3; BFS)}
+Simulate BFS on the graph to the right, starting from the node $a$.
+When there are multiple choices for the next node to visit, break ties alphabetically
+(choose $b$ before $c$, etc.).
+\begin{enumerate}[label=(\alph*)]
+% [review 2026-09-27] fix: removed stray "p" at the end of the sentence
+\item List the nodes in each level $\ell$ (at distance $\ell$ from $a$).
+\item For each node other than $a$, give its parent in the BFS tree.
+\item Optionally, draw the BFS tree.
+  If you do this, and your answers for Parts (a) and (b)
+  are substantially incorrect, you may get partial credit here.
+\end{enumerate}
+}}\adjustbox{valign=t}{
+\begin{tikzpicture}[node distance = 0.6 cm and 1.75cm,on grid,
+thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
+\node[state] (a) {a};
+\node[state] (b) [yshift = 30pt, right =of a] {b};
+\node[state] (c) [yshift = -30pt, right =of b] {c};
+\node[state] (d) [below =of a, yshift=-14pt] {d};
+\node[state] (e) [yshift = 20pt, right =of d] {e};
+\node[state] (f) [yshift = -20pt, right =of e] {f};
+\node[state] (g) [below =of e, xshift=-27pt,yshift=-25pt] {g};
+\node[state] (h) [right =of g] {h};
+\path (a) edge [bend left = 0] (b) 
+		edge [bend left = 0] (c) 
+		edge (d);
+\path (b) edge [bend left = 0] (f);
+\path (c) edge [bend left = 0] (e);
+% [review 2026-09-27] fix: removed the invisible TikZ self-loop "(d) edge (d)" (not an edge of the graph)
+\path (d) edge [bend right = 30] (c) 
+		edge [bend left = 0] (e);
+\path (e) edge [bend left = 0] (h);
+\path (g) edge [bend left = 0] (h);
+\end{tikzpicture}
+}
+\refreshHeader 
+
+\setlength{\ITEMHT}{2in}
+{\injectEnumerate
+  \inputAnswer{problem_2_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\newpage 
+\noindent\adjustbox{valign=t}{\parbox{4.6in}{\small
+    \problem\emph{(Exercise 6.4; DFS)}
+    Simulate DFS (as described in the lecture notes) on the graph to the right.
+    When there are multiple choices for the next node to visit, break ties alphabetically
+    (choose $a$ before $b$, choose $b$ before $c$, etc.).
+
+    \begin{enumerate}[label=(\alph*)]
+    \item What is the parent of each node in the resulting DFS forest?
+      \\(Write ``none'' for each root.)
+      
+    \item What's the post-order number (finishing time, Section 6.3.4), of each node?
+
+    \item Which edges are forward edges?  Back edges?  Cross edges? 
+
+    \item Optionally, draw the DFS tree, and label each node with its post-order number.
+      If you do this, and your answers for Parts (a)--(c)
+      are substantially incorrect, you may get partial credit here.
+
+      % \item Is this graph a directed acyclic graph (DAG)?
+    \end{enumerate}
+  }}
+\adjustbox{valign=t}{
+\begin{tikzpicture}[>= latex, node distance = 1 cm and 1.75cm,on grid, thick,state/.style ={circle,draw=black,black,text=black,minimum width =.3 cm}]
+\node[state] (a) {a};
+\node[state] (b) [right =of a] {b};
+\node[state] (c) [right =of b] {c};
+\node[state] (d) [below =of a, yshift=-10] {d};
+\node[state] (e) [right =of d] {e};
+\node[state] (f) [right =of e] {f};
+\node[state] (g) [below =of d, yshift=-10] {g};
+\node[state] (h) [right =of g] {h};
+\node[state] (i) [right =of h] {i};
+\tikzset{every node/.style={fill=white}} 
+\path[->] 	(a) edge  				(b)
+		(a) edge				(e)
+		(b) edge				(c)
+		(c) edge [bend right=35]	(a)
+		(d) edge				(a)
+		(d) edge				(e)
+		(e) edge				(b)
+		(e) edge				(c)
+		(e) edge				(f)
+		(e) edge				(g)
+		(f) edge				(c)
+		(g) edge				(d)
+		(g) edge				(h)
+		(h) edge				(e)
+		(h) edge				(i)
+		(i) edge				(f);
+\end{tikzpicture}
+}
+% \begin{enumerate}
+% \item[(e)]
+%   If so, give the topological ordering that the DFS-based algorithm (from class and this note)
+%   would output after doing the DFS that you simulated above.
+
+%   If not, how many strongly connected components does the graph have?  List them all.
+% \end{enumerate}
+\refreshHeader 
+
+\setlength{\ITEMHT}{2.1in}
+{\injectEnumerate
+\inputAnswer{problem_3_answer}
+}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

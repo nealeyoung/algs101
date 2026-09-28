@@ -1,0 +1,151 @@
+\paragraph{Problem 1 answer}\GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+
+\begin{enumerate}[label=(\alph*)]
+
+\item[(a)] % Give a recurrence relation for $N(j)$ in terms of $N(1), \ldots, N(j-1)$.
+  Here is the recurrence relation for $N(j)$: 
+
+  \begin{blue}
+    \[
+      N(j) = \REPLACEME
+    \]
+  \end{blue}
+  
+  % For reference, here's the LaTeX source for the recurrence in Section 7.7 for counting pairwise-disjoint subsets.
+  % \[
+  %   N(j) = \begin{cases}
+  %     1 & \text{ if } j=0 \\
+  %     N(j-1) + N(i'-1), \text{ where }  i' = \min\{ i : e_i \ge s_j \}
+  %     & \text{ if } j>0.
+  %   \end{cases} 
+  % \]
+
+\item[(b)]  % Explain precisely in at most four lines why your recurrence relation is correct. 
+  Here is why the above recurrence relation holds:
+
+  \begin{blue}
+    \REPLACEME
+  \end{blue}
+  
+\item[(c)] % Give a recurrence relation for $M(j)$ in terms of $M(1), \ldots, M(j-1)$.
+  Here is the recurrence relation for $M(j)$:
+
+  \begin{blue}
+    \[
+      M(j) = \REPLACEME
+    \]
+  \end{blue}
+
+  % For reference, here's the LaTeX source for the recurrence in Section 7.7 for weighted activity selection.
+  % \[
+  %   V(j) = \begin{cases}
+  %     0 & \text{ if } j=0 \\
+  %     \max\big( V(j-1), V(i'-1) + v_j\big), \text{ where }  i' = \min\{ i : e_i \ge s_j \},
+  %     & \text{ if } j>0.
+  %   \end{cases} 
+  % \]
+
+\item[(d)]  % Explain precisely in at most three or four lines why your recurrence relation is correct. 
+  Here is why the above recurrence relation holds:
+
+  \begin{blue}
+    \REPLACEME
+  \end{blue}
+  
+\end{enumerate}
+
+\newpage
+
+\begin{enumerate}
+
+\item[(e)]   % What is the asymptotic worst-case running time of your algorithm in terms of $n$? 
+  The asymptotic worst-case running time is \GradescopeComment{This should be on page 4 (top) of your PDF.}
+  \BLUE{
+    \[
+      \Theta(\REPLACEME).
+    \]
+  }
+
+\item[(f)] Here is why the above bound holds:
+  % Explain precisely in at most three or four lines why the bound you give is correct. 
+
+  \begin{blue}
+    \REPLACEME
+  \end{blue}
+  
+\end{enumerate}
+
+\begin{itemize}
+
+\item[(g)]  Here is the resulting iterative dynamic-programming algorithm:
+  % Give the resulting iterative dynamic-programming algorithm, for computing $M(n)$.
+  % Present your algorithm in pseudo-code,
+  % following the guidelines in Lecture Note 1 and the examples in Lecture Note 7.
+  %
+  % For readability, use mathematical expressions (such as a sums, maximums, etc.)
+  % that any competent programmer could implement in an obvious way,
+  % without giving the details of how to compute those expressions.
+
+  \begin{myframed}
+    \begin{steps}
+    \ITEM[]
+      \textsf{freeLancer}$(\ell=(\ell_1, \ldots, \ell_n), h=(h_1, \ldots, h_n))$:
+      \comment{--- iterative version}
+      \begin{blue}
+        
+      \step \REPLACEME
+
+      \step $\vdots$            % edit these steps as necessary
+
+      \step return \REPLACEME
+
+      \end{blue}
+    \end{steps}
+  \end{myframed}
+
+  % For reference, here's the LaTeX source for the maxSchedule algorithm in Section 7.7:
+  %
+  % \begin{myframed}
+  %   \begin{steps}
+  %   \ITEM[]
+  %     \textsf{maxSchedule}$(C=\{[s_1, e_1], [s_2, e_2], \ldots, [s_n, e_n]\}, v)$:
+  %     \comment{--- iterative version}
+  %     \step for $j=0,1,2,\ldots, n$:
+  %     \step~~~set~\(W[j] = \begin{cases}
+  %       0 & \text{ if } j=0 \\
+  %       \max( W[j-1], W[i'-1] + v_j), \text{ where }  i' = \min\{ i : e_i \ge s_j \}
+  %       & \text{ if } j>0.
+  %     \end{cases}\)
+  %     \step return $W[n]$
+  %   \end{steps}
+  % \end{myframed}
+
+
+\end{itemize}
+
+\vfill
+
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 4 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_8"
+%%% End:

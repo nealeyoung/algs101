@@ -1,0 +1,183 @@
+
+\newcommand{\calC}{{\cal C}}
+
+\section{Pascal's rule for computing $n$ choose $k$ (with long-form proof)}\label{dp: sec: n choose k}
+\doHeader{Computing $n$ choose $k$}
+
+Given non-negative integers $n$ and $k$,
+the number of size-$k$ subsets of $\{1,2,\ldots, n\}$
+is called \emph{$n$ choose $k$}, and denoted $n\choose k$.
+Consider the problem of computing it:
+
+\paragraph{{\prob{Computing~$n$ choose $k$}}}
+
+\begin{mylist}
+\item[\bf input:]
+  non-negative integers $n$ and $k$
+
+\item[\bf output:] $n\choose k$.
+\end{mylist}
+
+To design an algorithm, first we'll prove Pascal's rule:
+
+\begin{lemma}[Pascal's rule]\label{dp: lemma: pascal}
+  \(\displaystyle {n \choose k} =
+  \begin{cases}
+    1 & \text{ if } k = 0, \\
+    0 & \text{ if } k > 0 \text{ and } n = 0,  \\
+    {n-1 \choose k} + {n-1 \choose k-1} & \text{ otherwise.}
+  \end{cases}
+  \)
+\end{lemma}
+\begin{longFormProof}
+  \step For $m,\ell\ge 0$, let $\calC(m,\ell)$ be the collection of all size-$\ell$ subsets of $\{1,2,\ldots,m\}$,
+  so ${m \choose \ell} = |\calC(m, \ell)|$.
+
+  \step If $k=0$, the empty set is the only size-$k$ subset of $\{1,2,\ldots,n\}$,
+  so the rule holds in this case.
+
+  \step If $k>0$ and $n=0$, there is no size-$k$ subset of $\{1,2,\ldots,n\}$,
+  so the rule holds in this case. 
+
+  \step So assume $n, k > 0$ and consider $\calC(n, k)$.  
+
+  \step Each set in $\calC(n, k)$ either contains $n$ or it doesn't.
+
+  \smallskip
+
+  \step The sets in $\calC(n, k)$ that \emph{don't} contain $n$
+  are just the sets in $\calC(n-1,k)$.
+
+  \step By definition of $\calC$, there are $n-1 \choose k$ of these.
+
+  \step\label{dp: step: choose 1}
+  So, the number of sets in $\calC(n, k)$ that don't contain $n$
+  is $n-1\choose k$.
+
+  \smallskip
+
+  \step To finish, we show that the number of sets in $\calC(n,k)$ that \emph{do} contain $n$ is $n-1\choose k-1$.
+
+  \step For each set $S$ in $\calC(n,k)$ that does contain $n$,
+  let $\phi(S) = S\setminus\{n\}$ be the set with $n$ removed.
+
+  \step Then $\phi$ is a bijection (a one-to-one mapping)
+  between the sets in $\calC(n, k)$ that contain $n$
+  and the sets in $\calC(n-1, k-1)$.
+  (That is, $\phi(S)$ is in $\calC(n-1, k-1)$,
+  and, for each $S'\in\calC(n-1,k-1)$,
+  there is exactly one set $S\in\calC(n,k)$ that contains $n$
+  such that $\phi(S)=S'$ --- namely $S = S'\cup\{n\}$.)
+
+  \step Because there is such a bijection,
+  the number of sets in $\calC(n, k)$ that contain $n$
+  must equal the number of sets in $\calC(n-1, k-1)$.
+  By definition this number is $n-1\choose k-1$.
+
+  % [review 2026-09-27] fix: the last step concluded C(n-1,k) + C(n,k); the second term (sets containing n) is C(n-1,k-1)
+  \step By this and Step~\ref{dp: step: choose 1}, the size of $\calC(n,k)$
+  is ${n-1\choose k} + {n-1 \choose k-1}$.
+  
+\end{longFormProof}
+
+The proof of Pascal's rule illustrates the first main principle of dynamic programming.
+Namely, to reason about a collection of objects
+(in this case the size-$k$ subsets of $\{1,\ldots,n\}$)
+the proof partitions the collection into a few types --- in this case two:
+\begin{mylist}
+\item[(A)] Those subsets not containing the element $n$.
+\item[(B)] Those subsets containing the element $n$.
+\end{mylist}
+Then it handles each type
+by noting that, restricted to objects of that particular type,
+the problem at hand is somehow equivalent to a smaller instance of the original problem.
+
+In the current example, the proof observes that the sets of type (A) are just the size-$k$ subsets of $\{1,\ldots,n-1\}$,
+so counting the type-(A) sets is equivalent to the problem of counting the size-$k$ subsets of $\{1,\ldots,n-1\}$.
+This is a smaller instance of the original problem.
+
+Similarly, the sets of type (B) correspond bijectively (via the deletion of element $n$)
+to the size-$(k-1)$ subsets of $\{1,\ldots,n-1\}$.
+So counting the type-(B) sets is equivalent to counting the size-$(k-1)$ subsets of $\{1,\ldots,n-1\}$.
+Again, this is a smaller instance of the original problem.
+
+This understanding of the recursive structure of the objects in question (subsets)
+yields a recurrence relation (in this case, Pascal's rule).
+This in turn yields a recursive, divide-and-conquer algorithm for the problem.
+In this case, for computing $n \choose k$:
+
+\smallskip
+
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{countSubsets}$(n, k)$:}] \comment{--- $n, k \ge 0$}
+    \step return
+    $\begin{cases} 1 & \text{ if } k=0, \\
+      0 & \text{ if } k > 0 \text{ and } n = 0,\\
+      \textsf{countSubsets}(n-1, k) + \textsf{countSubsets}(n-1, k-1) & \text{ otherwise.}
+    \end{cases}$
+  \end{steps}
+\end{myframed}
+
+Correctness of the algorithm follows by induction and Lemma~\ref{dp: lemma: pascal}.
+
+This seems like a classic \emph{divide-and-conquer} approach.
+But beware!  This implementation is not efficient
+--- indeed, its run time is exponential!  Consider its recursion tree,
+which has branching factor two, and depth between $k$ and $n$,
+so somewhere between $2^k$ and $2^n$ nodes!
+
+There are two standard work-arounds for this obstacle.
+We'll discuss them in the next example.
+
+\subsection*{Exercises}
+
+\exercise\emph{(example with solution)}\label{dp: exercise: choose}
+The proof of Lemma~\ref{dp: lemma: pascal} uses a bijection $\phi$ between
+those sets in $\calC(n, k)$ that contain $n$ and the sets in $\calC(n-1, k-1)$.
+Show this bijection for $n=5$ and $k=3$.
+For reference, here is all of $\calC(5,3)$, and its subset $\calC(4,3)$:
+\[
+  \calC(5,3)\left\{
+  \begin{array}{l}
+    \left.\begin{array}{@{\!}l}
+            \{1,2,3\} \\
+            % [review 2026-09-27] fix: the set {1,2,4} was missing, so the display showed only 9 of the 10 sets of C(5,3) and 3 of the 4 sets of C(4,3); added it
+            \{1,2,4\} \\
+            \{1,3,4\} \\
+            \{2,3,4\}
+          \end{array}
+    \right\} \calC(4,3) \\
+    \{1,2,5\} \\
+    \{1,3,5\} \\
+    \{1,4,5\} \\
+    \{2,3,5\} \\
+    \{2,4,5\} \\
+    \{3,4,5\}
+  \end{array}
+  \right.
+\]
+
+\solution
+\[
+  \begin{array}{ccc}
+    \footnotesize\shortstack{sets in $\calC(5,3)$ \\ that contain $5$}
+    & \shortstack{$\phi$\\$\longleftrightarrow$}
+    & \footnotesize\shortstack{sets in $\calC(4,2)$} \\ \hline
+    \{1,2,5\} && \{1, 2\} \\
+    \{1,3,5\} && \{1, 3\} \\
+    \{1,4,5\} && \{1, 4\} \\
+    \{2,3,5\} && \{2, 3\}\\
+    \{2,4,5\} && \{2, 4\}\\
+    \{3,4,5\} && \{3, 4\}
+  \end{array}
+\]
+\subsection*{External sources}
+\begin{itemize}
+\item \url{https://en.wikipedia.org/wiki/Pascal\%27s_rule}
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

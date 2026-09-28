@@ -1,0 +1,251 @@
+
+\section{All Pairs Shortest Paths / Floyd-Warshall Alg.~(w/ l.~f.~proof)}\label{dp: sec: FW}\doHeader{Floyd-Warshall}
+
+\begin{mylist}
+\item[\bf input:]
+  An edge-weighted digraph $G=(V,E)$ with no negative-weight cycles.
+  To ease notation assume $V=\{1,2,\ldots,n\}$.
+  
+\item[\bf output:]
+  An array of shortest-path distances $d$
+  such that for all $u, w\in V$,
+  $d[u, w] = \dist u w$ is the minimum shortest-path distance in $G$ from $u$ to $w$.
+\end{mylist}
+
+
+\paragraph{subproblems and recurrence relation.}
+Fix an input instance $G=(V,E)$. 
+For each $u, w\in V$ and $i\in\{0, 1,2,\ldots,n\}$
+define $M(u, w, i)$
+to be the minimum weight of any $u$-to-$w$ path in $G$
+whose interior vertices are all in $\{1,2,\ldots,i\}$.
+(If there is no such path, then $M(u, w, i) = \infty$.)
+The final answer is an array $d$
+where $d[u,w] = M(u, w, n)$ for all $u,w\in V$.
+Here is the recurrence relation:
+\[M(u,w,i) =
+  \begin{cases}
+    0 & \text{if } u=w \\
+    \weight {u, w} & \text{if $u\ne w$, $i=0$, and $(u, w)\in E$} \\
+    \infty & \text{if $u\ne w$, $i=0$, and $(u, w)\not\in E$} \\
+    \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) ) & \text{if $u\ne w$ and $i\ne 0$}
+  \end{cases}
+  \]
+  
+\paragraph{correctness.}
+The intuition for the main case of the recurrence (when $i\ne 0$ and $u\ne w$)
+is as follows.
+Say a path $p$ from $u$ to $w$ in $G$ is \emph{allowed for $M(u, w, i)$}
+if the interior vertices of $p$ (the vertices in $p$ other than the endpoints $u$ and $w$)
+are all in $\{1,2,\ldots, i\}$.
+Then $M(u, w, i)$ is the minimum weight of any allowed path for $M(u, w, i)$.
+Partition the allowed paths for $M(u, w, i)$ into three types:
+(A) those that don't have $i$ as an interior vertex,
+(B) those on which $i$ occurs once as an interior vertex,
+and (C) those on which $i$ occurs more than once as an interior vertex.
+
+The type-A paths are just those that are allowed for $M(u, w, i-1)$.
+So the minimum weight of any type-A path is $M(u, w, i-1)$.
+
+The type-B paths are those paths $p$ that can be obtained as follows.
+Let $p_1$ be any allowed path for $M(u, i, i-1)$.
+Let $p_2$ be any allowed path for $M(i, w, i-1)$. 
+Obtain path $p = p_1 \cup p_2$ by appending $p_2$ to $p_1$,
+so $\weight p = \weight {p_1} + \weight{p_2}$.
+A minimum weight type-B path $p$ can be
+obtained by taking $p_1$ to be a minimum-weight allowed path for $M(u, i, i-1)$,
+and taking $p_2$ to be a minimum-weight allowed path for $M(i, w, i-1)$,
+so $p$ has weight $M(u, i, i-1) + M(i, w, i-1)$.
+
+We can ignore any type-C path $p$,
+because by removing cycles (from $i$ to $i$) from $p$,
+we can find a type-B path with $\weight {p'} \le \weight p$.
+A long-form proof of correctness is below.
+
+\paragraph{time.}
+There are $\Theta(n^3)$ subproblems.
+For each, the right-hand side of the recurrence can be evaluated in $\Theta(1)$ time.
+So the algorithm (iterative, or recursive and memoized)
+takes time $\Theta(n^3)$.
+
+\begin{theorem}
+  There is an $O(n^3)$-time algorithm for \prob{All-Pairs Shortest Paths}.
+\end{theorem}
+
+% \paragraph{External resources on \prob{Optimal Binary Search Tree}}
+
+% \begin{itemize}
+% \item CLRS Chapter 15
+
+% % \item Dasgupta et al.~Chapter 6.
+
+% % \item Kleinberg \& Tardos Chapter 6.
+
+% \item Erickson's Lecture 5
+
+%     \url{https://jeffe.cs.illinois.edu/teaching/algorithms/notes/05-dynprog.pdf}
+  
+% \item MIT lecture videos 
+
+% \item MIT lecture video
+  
+% \providecommand{\URL}[1]{\par-- \parbox[t]{0.8\textwidth}{\url{#1}} \medskip\par}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-19-dynamic-programming-i-fibonacci-shortest-paths/}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-20-dynamic-programming-ii-text-justification-blackjack}
+
+    % \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}
+
+%   \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-22-dp-iv-guitar-fingering-tetris-super-mario-bros}
+  
+% \item \prob{Seam Carving}:
+%   \url{https://en.wikipedia.org/wiki/Seam_carving},
+%   CLRS Problem 15-8.
+
+% \end{itemize}
+
+\subsection*{Long-form proof of correctness for the Floyd-Warshall recurrence relation}
+
+Here's a long-form proof that the recurrence is correct.
+
+\begin{longFormProof}
+  \step Following the explanation, for any $u,w\in V$ and $i\in\{0,\ldots,n\}$,
+  say a path $p$ from $u$ to $w$ is \emph{allowed for $M(u, w, i)$}
+  if all interior vertices of $p$ are in $\{1,2,\ldots, i\}$.
+  Then $M(u, w, i)$ is the minimum weight of any allowed path for $M(u, w, i)$.
+  \begin{block}[dp: uwi]
+    \step Consider any $u, w\in V$ and $i\in\{0,1,\ldots,n\}$.
+    \step \underline{First we consider the boundary cases of the recurrence.}
+    \begin{block}[dp: u equal w]
+      \step \underline{Case 1.}
+      Suppose $u=w$.
+      \step The empty path (of weight zero) is a $u$-to-$w$ path.
+      \step There is no path of less weight (as the graph has no negative cycles).
+      \step So $M(u, w, i) = 0$, and the recurrence holds in Case 1.
+    \end{block}
+    \smallskip 
+    \begin{block}
+      \step \underline{Case 2.}
+      Suppose $u\ne w$, $i=0$, and $(u,w)\in E$.
+      \step As $i=0$, the allowed paths for $M(u, w, i)$ are the $u$-to-$w$ paths
+      with no interior vertices.
+      \step
+      The only such path consists of just the edge $(u,w)$,
+      with weight $\weight{u,w}$.
+      \step
+      So $M(u, w, i) = \weight{u,w}$, and the recurrence holds in Case 2.
+    \end{block}
+    \smallskip 
+    \begin{block}
+      \step \underline{Case 3.}
+      Suppose $u\ne w$, $i=0$, and $(u,w)\not\in E$.
+      \step As $i=0$, the allowed paths for $M(u, w, i)$ are the $u$-to-$w$ paths
+      with no interior vertices.
+      \step
+      Since $(u,w)$ is not an edge, there is no such allowed path.
+      \step
+      So $M(u, w, i) = \infty$, and the recurrence holds in Case 3.
+    \end{block}
+    \smallskip 
+    \step \underline{Next we consider the main case of the recurrence.}
+    \begin{block}[dp: main]
+      \step \underline{Case 4.}
+      In the remaining case, $u\ne w$, and  $i\ne 0$.
+      \step We show that $M(u,w,i) = \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$.
+
+      \step Every allowed path for $M(u, w, i-1)$ is also allowed for $M(u, w, i)$.
+
+      \step[dp: A] So $M(u,w,i) \le M(u,w,i-1)$.
+
+      \step Next we show $M(u, w, i) \le M(u, i, i-1) + M(i, w, i-1)$.
+      
+      \step If $M(u, i, i-1) + M(i, w, i-1) = \infty$, then the above inequality holds,
+      so assume otherwise.
+
+      \step Let $p_1$ be an allowed path for $M(u, i, i-1)$
+      with $\weight {p_1} = M(u, i, i-1)$.
+
+      (It exists, as $M(u, i, i-1)$ is finite.)
+
+      \step Let $p_2$ be an allowed path for $M(i, w, i-1)$
+      with $\weight {p_2} = M(i, w, i-1)$.
+
+      (It exists, as $M(i, w, i-1)$ is finite.)
+
+      \step Then $p=p_1 \cup p_2$ is a path from $u$ to $w$
+      whose interior vertices are all in $\{1,\ldots, i\}$.
+
+      \step That is, $p$ is an allowed path for $M(u, w, i)$.
+
+      \step So $M(u, w, i) \le \weight {p} = \weight{p_1} + \weight{p_2}
+      = M(u, i, i-1) + M(i, w, i-1)$.
+
+      \step[dp: C] By this and Step~\ref{dp: A},
+      $M(u, w, i) \le \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$.
+
+      \smallskip 
+
+      \step \underline{Next we show
+        $M(u, w, i) \ge \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$.}
+
+      \smallskip
+
+      \step If $M(u, w, i)$ is infinite, then the inequality above holds,
+      so assume otherwise.
+
+      \step Let $p$ be an \emph{acyclic} allowed path for $M(u, w, i)$ with $\weight p = M(u, w, i)$.
+
+      (It exists, because $M(u, w, i)$ is finite, and the graph has no negative-weight cycles.)
+
+      \begin{block}[dp: not i]
+        \step \underline{Case 4.1} First consider the case that $i$ is not an interior vertex of $p$.
+        \step Then $p$ is allowed for $M(u, w, i-1)$,
+        so $M(u, w, i-1) \le \weight p = M(u, w, i)$.
+
+        \step So  $M(u, w, i) \ge \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$. 
+      \end{block}          
+
+      \begin{block}[dp: i]
+        \step \underline{Case 4.2} Otherwise $i$ occurs as an interior vertex of $p$,
+        just once since $p$ is acyclic.
+        
+        \step Let $p_1$ be the prefix of $p$ ending at $i$.
+        Let $p_2$ be the suffix of $p$ starting at $i$.
+
+        \step Since $i$ occurs just once as an interior vertex of $p$,
+        $i$ is not an interior vertex of $p_1$ or $p_2$.
+
+        \step So $p_1$ is an allowed path for $M(u, i, i-1)$,
+        and $p_2$ is an allowed path for $M(i, w, i-1)$.
+
+        \step So $\weight {p_1} \ge M(u, i, i-1)$,
+        and  $\weight {p_2} \ge M(i, w, i-1)$.
+
+        \step So $M(u, w, i) = \weight p = \weight {p_1} + \weight {p_2}
+        \ge M(u, i, i-1) + M(i, w, i-1)$.
+
+        \step So  $M(u, w, i) \ge \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$. 
+      \end{block}          
+
+      \step By Blocks~\ref{dp: not i} and~\ref{dp: i},
+      $M(u, w, i) \ge \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$. 
+
+      \step By this and Step~\ref{dp: C},
+      $M(u, w, i) = \min( M(u, w, i-1), M(u, i, i-1) + M(i, w, i-1) )$.
+
+      \step So the recurrence holds in Case 4.
+    \end{block}
+    \step By Blocks~\ref{dp: u equal w}-\ref{dp: main},
+    the recurrence holds for $M(u,w,i)$.
+  \end{block}
+\end{longFormProof}    
+
+\pythonCode{dynamic_programming/Floyd_Warshall.py}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

@@ -1,0 +1,48 @@
+% The book's appendices: the Python code, and the homework assignments.
+% Input by main.tex after \appendix (book mode only).
+
+% running head for the appendices, linking to the global table of contents
+\newcommand{\appendixHeader}[1]{%
+  \renewcommand{\header}{%
+    \clap{\raisebox{0pt}{\protect\hyperlink{TOC}{$\uparrow$\scriptsize\,\textsc{contents}\hspace{1.1in}}}}%
+    {\footnotesize Appendix \thechapter, #1}}%
+  \markboth{\header}{\header}}
+
+\chapter{Python code}\label{appendix: code}
+\appendixHeader{Python code}
+
+This appendix lists the Python code for the lecture notes, grouped by lecture note.
+(Each lecture note, on its own, ends with a section listing its code.)
+Click on a file's name to open the file on GitHub (\url{\codeFolder}).
+Copying code from GitHub is more reliable than copying it from this PDF,
+since some PDF viewers drop the leading spaces (the indentation) of copied lines.
+
+\codeAppendix
+
+\chapter{Homework assignments}\label{appendix: homeworks}
+\appendixHeader{Homework assignments}
+
+The homework assignments are available at \url{\siteURL}.
+For how to use LaTeX to prepare the homeworks, see Section~\ref{latex: sec: latex}, at the end of this appendix.
+For each homework, listed below are the topics (lecture notes) it covers
+and the topic of each of its problems,
+then links to the assignment (PDF), to a LaTeX template for writing up solutions (a zip file),
+and to the template opened in Overleaf.
+
+% \homework{topics}{problems}: the next homework (numbered by the list)
+\newcommand{\homework}[2]{%
+  \item #1
+  \begin{enumerate}[label=\arabic*.]
+  #2
+  \item[] \href{\siteURL homeworks/homework_\arabic{enumi}.pdf}{PDF},
+    \href{\siteURL homeworks/homework_\arabic{enumi}.zip}{template},
+    \href{https://www.overleaf.com/docs?snip_uri=\siteURL homeworks/homework_\arabic{enumi}.zip}{Overleaf}
+  \end{enumerate}}
+\newcommand{\hwproblem}[1]{\item #1}
+
+\begin{enumerate}[label=\arabic*., itemsep=1.2ex]
+\input{appendices/homework_list}
+\end{enumerate}
+
+\newpage
+\input{appendices/latex_for_homeworks}

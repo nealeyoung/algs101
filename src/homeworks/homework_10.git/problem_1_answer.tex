@@ -1,0 +1,165 @@
+
+
+\newpage
+
+\paragraph{Problem 1 answer}\GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(a) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{(a)}
+
+% Define your reduction $r$
+% by defining, for every possible instance $A[1..n, 1..m]$ of  \prob{Tiling by Bars},
+% what output $r(A)$ the reduction gives.
+
+Given an instance $A[1..n, 1..m]$ of \prob{Tiling by Bars},
+the reduction $r$ outputs the pair $(G, k) = r(A)$ where
+$G=(U,W,E)$ and $k$ are defined as follows:
+
+\begin{blue}
+  \REPLACEME
+\end{blue}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(b) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{(b)}  
+
+% Show that your reduction is a \emph{polynomial-time} reduction,
+% by explaining carefully how, given $A$, one can compute the output $r(A)$ in time polynomial in the input size, $n\, m$.
+
+Given an instance $A[1..n, 1..m]$ of \prob{Tiling by Bars}, the output $(G, k)$
+of the reduction defined in Part (a) can be computed in time polynomial in the size of $A$, that is, $n\,m$, as follows:
+
+\begin{blue}
+  \REPLACEME
+\end{blue}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(c) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{(c)}
+
+% Show the ``if'' direction.
+% Given an arbitrary \prob{Tiling by Bars} instance $A$,
+% let $G=(U, W, E)$ and $k$ be the output of your reduction $r$ given $A$.  That is, $(G, k) = r(A)$.
+% Describe carefully how, given any bipartite matching $A$ in $G$ of size at least $k$,
+% one could obtain from $A$ a valid covering of $A$ by bars.
+
+ Fix an arbitrary \textsc{Tiling by Bars} instance $A[1..n, 1..m]$. 
+ % [review 2026-09-27] fix: K: reduction output written r(I) but the instance is A -> r(A)
+ Let $G=(U,W,E)$ and $k$ be the output $r(A)$ of the reduction $r$ given $A$.
+ Consider any matching $M$ in $G$ of size at least $k$. 
+ From $M$, we can obtain a valid tiling $T$ (of $A$ by bars) as follows.
+ 
+\begin{blue}
+  \REPLACEME
+\end{blue}
+
+\newpage                        % please don't delete this, doing so will mess up the page layout
+
+\paragraph{Problem 1 answer, continued}\GradescopeComment{This should be on page 4 (top) of your PDF.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(d) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{(d)}
+
+% Now show the ``only if'' direction.
+% Given an arbitrary \prob{Tiling by Bars} instance $A$,
+% let $G=(U, W, E)$ and $k$ be the output of your reduction $r$ given $A$.
+% Describe carefully how, given any valid covering of $A$ by bars,
+% one could obtain a bipartite matching $M$ in $G$ of size at least $k$.
+
+Fix an arbitrary \textsc{Tiling by Bars} instance $A[1..n, 1..m]$. 
+% [review 2026-09-27] fix: K: reduction output written r(I) but the instance is A -> r(A)
+Let $G=(U,W,E)$ and $k$ be the output $r(A)$ of the reduction $r$ given $A$.
+Consider any valid tiling $T$ of $A$ by bars.
+From the tiling $T$, we can obtain a matching $M$ of size at least $k$ as follows.
+
+\begin{blue}
+  \REPLACEME
+\end{blue}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1(e) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{(e)}
+
+% Give pseudo-code for an algorithm that uses $R$ and $B$ to solve the \prob{Tiling by Bars} decision problem
+% in polynomial time.  Your algorithm may call $B$ and $R$ as subroutines.  You don't need to define $B$ or define $R$.
+% Your pseudo-code should have just a few short lines. \emph{Hint: Section 8.2.4, Lemma 8.6.}
+
+Here is the algorithm that uses $R$ and $B$ to solve \textsc{Tiling by Bars}:
+
+\bigskip
+
+\begin{steps}
+\item[] \textsf{TileWithBars}$(A[1..n, 1..m])$:
+  \begin{blue}
+    \step \REPLACEME
+    \step $\vdots$              % you might need more than two steps
+  \end{blue}  
+\end{steps}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 1 COLLABORATORS AND CITATIONS 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\vfill
+\begin{answerBox}{2in}          % please don't edit this line, doing so will throw off the page layout
+
+  \paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment
+  {This should be on page 4 (bottom) of your PDF.}
+
+  I collaborated on this problem with the following people:
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none 
+    \end{itemize}
+  \end{blue}
+
+  My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none 
+    \end{itemize}
+  \end{blue}
+
+\end{answerBox}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_10"
+%%% End:

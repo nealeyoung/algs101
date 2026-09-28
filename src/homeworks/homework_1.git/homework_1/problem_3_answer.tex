@@ -1,0 +1,181 @@
+
+%%%%%%%%%% YOU KNOW THE DRILL... REPLACE ALL THE \REPLACEMEs WITH YOUR ANSWERS  %%%%%%%%%
+
+\paragraph{Problem 3 answer}~
+
+\begin{enumerate}[label=(\alph*)]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item                           % (a)
+
+  \(C(1) = \BLUE{
+    \REPLACEME 
+  }\) 
+
+  \(C(2) = \BLUE{
+    \REPLACEME 
+  }\)
+
+  \(C(3) = \BLUE{
+    \REPLACEME 
+  }\)
+
+  \(C(4) = \BLUE{
+    \REPLACEME 
+  }\) 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item                           % (b)
+
+  \begin{lemma}
+    For all $n\ge 1$, executing $C(n)$ does at most $2+2\log_2 n$ additions.
+  \end{lemma}
+
+  \begin{longFormProof}
+
+    \step The proof is by induction on $n\ge 1$.
+
+    \step\label{step: base additions}
+    For the base case $n=1$, \BLUE{
+      \REPLACEME 
+    }
+
+    \begin{block}\label{block: mysterious additions}
+
+      \step For the inductive step, consider any $n\ge 2$, and assume the lemma holds for smaller values.
+
+      \begin{blue}
+
+        \step \REPLACEME  
+ 
+        \step \REPLACEME
+
+        % ETC. (YOU MAY NEED MORE THAN TWO STEPS.)
+
+      \end{blue}
+      
+      \step So $C(n)$ does at most $2 + 2\log_2 n$ additions.
+    \end{block}
+
+    \step By Block~\ref{block: mysterious additions}, for any $n\ge 2$, if the lemma holds for smaller values,
+    then it holds for $n$.
+
+    \step By induction (with Step~\ref{step: base additions}), the lemma holds for all $n$.
+    
+  \end{longFormProof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \continued 
+
+\item \emph{(Problem 3, continued)}   % part (c)
+  
+  \begin{lemma}
+    For all $n\ge 0$, the value output by $C(n)$ is \(\BLUE{
+      \REPLACEME
+    }\)
+  \end{lemma}
+  
+  \begin{longFormProof}
+    
+    \step The proof is by induction on $n$.
+
+    \step\label{step: base}
+    For the base case $n=0$, \BLUE{
+      \REPLACEME
+    }
+
+    \begin{block}\label{block: mysterious}
+
+      \step For the inductive step, consider any $n\ge 1$, and assume the lemma holds for smaller values.
+
+      \step Consider the execution of $C(n)$.
+
+      \begin{blue}
+        
+      \step \REPLACEME
+
+      \step \REPLACEME
+
+      % ETC. (YOU MAY NEED MORE THAN TWO STEPS)
+
+      \end{blue}
+
+      \begin{block}
+        \step \underline{Case 1.} First consider the case that $n$ is odd.
+
+        \begin{blue}
+          
+          \step \REPLACEME
+
+          \step \REPLACEME
+
+          % ETC. (YOU MAY NEED MORE THAN TWO STEPS)
+
+        \end{blue}
+
+      \end{block}
+
+      \begin{block}
+        \step \underline{Case 2.} Otherwise $n$ is even. 
+
+        \begin{blue}
+
+          \step \REPLACEME
+
+          \step \REPLACEME
+
+          % ETC. (YOU MAY NEED MORE THAN TWO STEPS) 
+
+        \end{blue}
+        
+      \end{block}
+
+      \step In either case, $C(n)$ returns \BLUE{\(
+        \REPLACEME
+        \).}
+      That is, the lemma holds for this $n$.
+    \end{block}
+
+    \step By Block~\ref{block: mysterious}, for any $n\ge 1$, if the lemma holds for smaller values,
+    then it holds for $n$.
+
+    \step By induction (with Step~\ref{step: base}), the lemma holds for all $n$.
+    
+  \end{longFormProof}
+
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_1"
+%%% End:

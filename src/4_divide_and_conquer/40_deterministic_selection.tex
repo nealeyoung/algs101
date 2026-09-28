@@ -1,0 +1,299 @@
+
+\section{An algorithm for selecting the $k$th smallest}\doHeader{Selection}\label{dc: sec: selection}
+
+\paragraph{Problem definition.}
+The Selection problem is defined as follows:
+\begin{mylist}
+\item \textbf{input:} array $A[1..n]$ of numbers, integer $k$ in $\{1,\ldots,n\}$.
+\item \textbf{output:} the $k$th smallest number in the array
+\end{mylist}
+
+When $k=1$, the output is $\min_i A[i]$.
+When $k=n$, the output is $\max_i A[i]$.
+When $k=n/2$, the output is the median.
+
+\paragraph{Algorithm.}
+One simple way to solve the problem is to sort $A$, then return $A[k]$.
+This takes $\Theta(n\log n)$ time.
+Next we present a faster, linear-time algorithm.
+We assume for simplicity that all elements in $A$ are distinct.
+
+\begin{myframed}
+\begin{steps}
+  \item[] \textsf{select}$(A[1..n], k)$
+    \step if $n \le 15$, sort $A$ in place and \textbf{return} $A[k]$
+    \comment{(since $n\le 15$, this takes constant time)}
+    \step choose pivot $p\in A[1..n]$ as described in the text below
+    \step partition $A$ around $p$ into $A[1..i-1]$, $A[i]=p$, and $A[i+1..n]$
+
+    (so that elements smaller than $p$ are in $A[1..i-1]$
+    and elements larger than $p$ are in $A[i+1..n]$)
+  
+    \step if $k=i$: return $A[i]$
+    \step else if $k<i$: \textbf{return} \textsf{select}$(A[1..i-1], k)$ \comment{(discard $A[i..n]$)}
+    \step else ($k>i$): \textbf{return} \textsf{select}$(A[i+1..n], k-i)$ \comment{(discard $A[1..i]$)}
+  \end{steps}
+\end{myframed}
+
+\paragraph{Correctness.}
+We omit the proof.
+% [review 2026-09-27] fix: correctness sketch said "largest" (should be smallest, 3x), "A[1..i]" (should be A[1..i-1], as in Step 5), and "otherwise" (should be the case k>i, since k=i is handled by Step 4)
+The idea is that if $k<i$, then the $k$th smallest in $A[1..n]$ (after Step 3)
+is the $k$th smallest in $A[1..i-1]$,
+and if $k>i$ it is the $k-i$th smallest in $A[i+1..n]$.
+Correctness follows from this and induction.
+
+\paragraph{Run time.}
+Step 3 (the partition step) takes linear time.
+After that, \textsf{select} discards some elements of $A$
+and calls itself recursively on the rest.
+If the pivot is chosen badly,
+this could lead to quadratic running time.
+For example, if $k=1$ and the pivot is chosen as the maximum element each time,
+then each recursive call would discard just one element,
+so there would be $n-1$ recursive calls,
+with the $i$th call taking time proportional to $n-i$,
+yielding total time $\Theta(\sum_{i=0}^n n-i) = \Theta(n^2)$.
+
+To avoid this, the algorithm uses a complicated scheme to choose the pivot in Step 2.
+It first partitions the array $A$ into $n/5$ columns, each with 5 elements, as shown below
+(the diagram assumes $n$ is a multiple of 2 and 5, that is, a multiple of 10):
+
+\[
+  \underbrace{ \vspace*{1pt}
+  \begin{array}{|l|l|c|c|c|l|}
+    \hline
+    % [review 2026-09-27] fix: middle column A[n/2-2..n/2+2] is not a column of the scheme (columns are A[5j-4..5j]); changed to A[n/2-4..n/2]
+    A[1] & A[6] &&A[n/2-4]&&A[n-4]\\\hline
+    A[2] & A[7] &&A[n/2-3]&&A[n-3]\\\hline
+    A[3] & A[8] &~\cdots~&A[n/2-2]&~\cdots~&A[n-2]\\\hline
+    A[4] & A[9] &&A[n/2-1]&&A[n-1]\\\hline
+    A[5] & A[10] &&A[n/2]&&A[n]\\\hline
+  \end{array}
+}_{n/5}
+\]
+
+It then finds the median within each individual column of 5.
+This takes constant time for each column, so the total time for this step is linear.
+There are $n/5$ of these medians.
+It then \emph{recursively computes the median of these $n/5$ medians,
+and chooses the pivot $p$ to be the result}.
+This completes the description of the algorithm.
+To analyze the run time, we use the following lemma:
+\begin{lemma}
+  The rank $i$ of the pivot satisfies $3n/10 \le i \le 7n/10$,
+  so the recursive call in Line 5 or 6 has at most $7n/10$ elements.\footnote
+  {This observation and some of the following discussion
+    is not necessarily true when $n$ is not a multiple of 10,
+    because we are ignoring rounding issues.
+    See the discussion at the end of the note.}
+\end{lemma}
+\begin{shortFormProof}
+  The pivot $p$,
+  being the median of the $n/5$ column medians,
+  is larger than $n/10$ of those medians.
+  And each such median is in turn larger
+  than 2 elements in its column.
+  So $p$ is larger than at least $3n/10$ other elements.
+  By similar reasoning, $p$ is smaller than at least $3n/10$ other elements.
+  So at least $3n/10$ elements are discarded in the recursive call.
+\end{shortFormProof}
+
+Define $T(n)$ to be the worst-case running time of \textsf{select} on $n$ elements.
+The above reasoning gives (for some constant $c>0$) the inequality
+\[
+  T(n) \,\le\, c \cdot n + T(n/5) + T(7n/10).
+\]
+
+The next crucial observation is that sum of the subproblem sizes
+is $n/5 + 7n/10 = 9n/10$,
+so the total problem size drops by a factor of 9/10:
+
+\tikzset{
+    vertex/.style={inner sep=0pt, minimum size=17pt},
+    edge/.style={> = latex'}
+}
+
+\noindent\adjustbox{valign=c, raise=-8pt}{
+\begin{tikzpicture}[scale=0.68]
+  \node[vertex] (1) at (7.5,4) {$n$} ;
+
+  \node[vertex] (2) at (3.5,3) {$\frac{1}{5}n$} ;
+  \node[vertex] at (7.5,3) {$+$}; 
+  \node[vertex] (3) at (11.5,3) {$\frac{7}{10}n$} ;
+  \draw[edge] (2) -- (1); 
+  \draw[edge] (3) -- (1); 
+
+  \node[vertex] (4) at (1.5,2) {$\frac{1}{5}(\frac{1}{5} n)$} ;
+  \node[vertex] at (3.5,2) {$+$}; 
+  \node[vertex] (5) at (5.5,2) {$\frac{7}{10}(\frac{1}{5} n)$} ;
+  \node[vertex] (6) at (9.5,2) {$\frac{1}{5}(\frac{7}{10} n)$} ;
+  \node[vertex] at (11.5,2) {$+$};
+  \node[vertex] (7) at (13.5,2) {$\frac{7}{10}(\frac{7}{10}n)$} ;
+  \draw[edge] (4) -- (2); 
+  \draw[edge] (5) -- (2); 
+  \draw[edge] (6) -- (3); 
+  \draw[edge] (7) -- (3); 
+
+  \node[vertex] (8) at (0.5,0.8) {} ;
+  \node[vertex] (9) at (2.5,0.8) {} ;
+  \node[vertex] (10) at (4.5,0.8) {} ;
+  \node[vertex] (11) at (6.5,0.8) {} ;
+  \node[vertex] (12) at (8.5,0.8) {} ; 
+  \node[vertex] (13) at (10.5,0.8) {} ; 
+  \node[vertex] (14) at (12.5,0.8) {} ; 
+  \node[vertex] (15) at (14.5,0.8) {} ;
+  \draw[edge] (8) -- (4);
+  \draw[edge] (9) -- (4);
+  \draw[edge] (10) -- (5);
+  \draw[edge] (11) -- (5);
+  \draw[edge] (12) -- (6);
+  \draw[edge] (13) -- (6);
+  \draw[edge] (14) -- (7);
+  \draw[edge] (15) -- (7);
+  % \draw[edge] (a) -- (b); 
+\end{tikzpicture}
+}
+\adjustbox{valign=c}{
+  \begin{tabular}{@{}cc@{}}
+    level & total size \\ \hline \\[-9pt]
+    0 & $n$ \\[5pt]
+    1 & $\frac{1}{5}n + \frac{7}{10}n = \frac{9}{10} n$ \\[6pt]
+    2 & $\frac{9}{10}(\frac{1}{5} n) + \frac{9}{10}(\frac{7}{10} n) = (\frac{9}{10})^2 n$ \\
+        \vdots
+  \end{tabular}
+}
+
+
+This happens at each level of the recursion tree.
+For each subproblem of any size $n'$,
+its two subproblems on the level below have combined size at most $\frac{9}{10} n'$,
+so the total size at each level is $\frac{9}{10}$th of the total size at the level above.
+So, by induction, the sum of the problem sizes in level $i$ is at most $(9/10)^i n$.
+Since the \emph{work} for each subproblem is linear in the subproblem size,
+the total work in level $i$ is also $O((9/10)^i n)$.
+So the total work is $O(\sum_{i=0}^{O(\log n)} (9/10)^i n) = O(n)$
+(using here that the sum is geometric).
+
+\paragraph{Correcting for rounding issues.}
+The previous discussion is wrong when $n$ is not a multiple of 10,
+because it ignores rounding issues.
+For completeness, we give a more careful, correct analysis,
+starting with the choice of the pivot.
+When $n$ is not a multiple of 10, to choose the pivot $p$,
+the algorithm partitions into columns of 5 something like this:
+\[
+  \begin{array}{|l|l|c|l|c|l|}
+    \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+                & \multicolumn{1}{c}{\cdots} & \multicolumn{1}{c}{m=\lfloor n/10\rfloor}
+                               & \multicolumn{1}{c}{\cdots} & \multicolumn{1}{c}{\lceil n/5\rceil}
+                                                              \\[1pt]\hline
+    A[1] & A[6] &\cdots&A[5m-4]&\cdots&\text{\footnotesize{empty}}\\\hline 
+    A[2] & A[7] &&A[5m-3]&\cdots&\text{\footnotesize{empty}}\\\hline 
+    A[3] & A[8] &~\cdots~&{A[5m-2]}&~\cdots~&A[n-1]\\\hline 
+    A[4] & A[9] &\cdots&A[5m-1]&\cdots&A[n]\\\hline 
+    A[5] & A[10] &\cdots&A[5 m]&\cdots&\text{\footnotesize{empty}}\\\hline
+  \end{array}
+\]
+There are $\lceil n/5\rceil$ columns.
+The last column has between 1 and 5 elements.
+After finding the $\lceil n/5\rceil$ medians of those columns in $\Theta(n)$ time
+the algorithm recursively finds the median
+of those medians ---
+% [review 2026-09-27] fix: the pivot is the m-th smallest of the medians, not the m-th largest (the k<i count below already assumes "smallest")
+specifically, the $m$th smallest, where $m=\lfloor n/10 \rfloor$,
+and takes that to be the pivot $p$.
+
+In the case $k>i$ in Step 6 of the algorithm, it discards $p$ and all elements smaller than $p$.
+% [review 2026-09-27] fix: "at least 3m" ignored that the last column may be partial (its median may exceed no other element of its column, e.g. n=16); corrected to 3m-2
+This will be at least $3m-2$ elements (not necessarily $3m$, because the last column may have fewer than three elements).
+Recalling that $m=\lfloor n/10\rfloor$,
+% [review 2026-09-27] fix: consequence of the corrected 3m-2 count above (was 3 floor(n/10))
+in this case at least $3\lfloor n/10\rfloor - 2$ elements are discarded.
+In the other case ($k<i$ in Step 5), the algorithm discards $p$ and all elements larger than $p$.
+The number of such elements is at least
+\begin{align*}
+  3(\lceil n/5\rceil - m + 1) -2
+  & = 1 + 3(\lceil n/5\rceil - m) \\
+  & = 1+ 3(\lceil n/5\rceil - \lfloor n/10 \rfloor) \\
+  & \ge 1+ 3(n/5 - n/10) \\
+  & = 1+ 3 n/10 \ge 3\lfloor n/10 \rfloor.
+\end{align*}
+
+% [review 2026-09-27] fix: at least 3 floor(n/10) - 2 elements are discarded in either case, so at most n - 3 floor(n/10) + 2 remain (was n - 3 floor(n/10)); recurrence updated accordingly
+Hence the number of remaining elements in the recursive call
+is at most $n-3\lfloor n/10\rfloor + 2$,
+and
+\[T(n) \le n + T(\lceil n/ 5\rceil) + T(n-3\lfloor n/10\rfloor + 2).\]
+
+\begin{lemma}
+  $T(n) = O(n)$.
+\end{lemma}
+\begin{proof}
+  We give a proof by induction that $T(n) \le c\, n$ for some (large) constant $c$.
+
+  The base cases $n\le 80$ will hold as long as $c \ge \max\{ T(n)/n : n \le 80\}$.
+
+  For $n> 80$, we have
+  % [review 2026-09-27] fix: redid the induction for the corrected recurrence T(n) <= n + T(ceil(n/5)) + T(n - 3 floor(n/10) + 2): n/5 + 1 + n - 3(n/10 - 1) + 2 = 9n/10 + 6, so the bound is c n (1/c + 6/n + 9/10) <= c n (1/c + 3/40 + 9/10), which needs c >= 40 (was 4/n, 1/20, c >= 20)
+  \begin{align*}
+    T(n)
+    & \le n + T(\lceil n/5\rceil) + T(n-3\lfloor n/10 \rfloor + 2)
+    &&\comment{(see above)}
+    \\
+    & \le n + c\, \lceil n/5\rceil + c\, (n-3\lfloor n/10 \rfloor + 2)
+    &&\comment{(by induction, using that $n> 80$)}
+    \\
+    & < n + c\, \big( n/5 + 1 + n-3( n/10 - 1) + 2\big)
+    &&\comment{(using $\lceil x \rceil < x + 1$ and $\lfloor x \rfloor > x-1$)}
+    \\
+    & = c\,n\big(1/c + 6/n + 9/10\big)
+    &&\comment{(algebra)}
+    \\
+    & \le c\,n(1/c + 3/40 + 9/10)
+    &&\comment{(using $n\ge 80$)}
+    \\
+    & \le c\,n
+    &&\comment{(as long as $c \ge 40$)}.
+  \end{align*}
+  It follows that $T(n) \le c\,n$,
+  % [review 2026-09-27] fix: constant updated from 20 to 40 to match the corrected induction above
+  where $c = \max\big(40, \max\{ T(n)/n : n \le 80\}\big)$.
+\end{proof}
+
+We have proved the following theorem:
+\begin{theorem}
+  There is a (deterministic) linear-time algorithm for Selection (and Median Finding).
+\end{theorem}
+
+Above we assumed that all numbers in the array are distinct.
+Exercise~\ref{dc: exercise: selection} asks you to consider what happens if that's not the case.
+
+\pythonCode{divide_and_conquer/selection.py}
+
+\subsection{Exercise}
+
+\exercise\label{dc: exercise: selection} \emph{(\prob{Selection} algorithm)}
+In analyzing the Selection algorithm in Section~\ref{dc: sec: selection},
+we assumed that each number was distinct.
+On inputs where that's not the case,
+can the algorithm give an incorrect output, or fail to run in time $O(n)$?
+If so, how would you fix the algorithm to deal with such inputs?
+  
+
+\subsection{External sources on deterministic selection}
+
+\begin{mylist}[-]
+\item \JE Chapter 1, Section 1.8 (\& exercises); \CLRS Chapter 9.3 (\& exercises);  MIT lecture video:
+
+\URLsmall{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/video-lectures/lecture-6-order-statistics-median/}
+
+\item \DPV Ch.~2.4 and \KT Ch.~1.5 discuss a simpler randomized algorithm (random pivot)
+
+\end{mylist}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "divide_and_conquer"
+%%% End:

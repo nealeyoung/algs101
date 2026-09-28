@@ -1,0 +1,160 @@
+\section{Edit Distance and Sequence Alignment}\label{dp: sec: edit distance}\doHeader{Edit Distance}
+
+\begin{mylist}
+\item[\bf input:]
+  A pair $I=(A[1..m], B[1..n])$ of strings.
+
+\item[\bf output:]
+  The \emph{edit distance} between $A$ and $B$.
+  This is the minimum cost of any \emph{alignment}
+  between $A$ and $B$.
+  An alignment is a matching between characters of $A$
+  and characters of $B$ such that the matching doesn't \emph{cross}:
+  that is, there are no two matched pairs $(A[i], B[j])$ and $(A[i'], B[j'])$
+  where $i < i'$ but $j > j'$.
+  The cost of an alignment is the total number of unmatched characters (in both sides)
+  plus the number of matched pairs $(A[i], B[j])$ where $A[i] \ne B[j]$.
+\end{mylist}
+Equivalently, the edit distance is the minimum number
+of edit operations that transforms $A$ into $B$,
+where each edit operation either deletes a character,
+inserts a character, or replaces any one character by some other character.
+
+\paragraph{intuition.}
+Fix any input instance $(A[1..m], B[1..n])$.
+The collection of objects we are working with is the set of alignments between $A$ and $B$.
+To derive the algorithm, we classify these alignments into three types:
+\begin{mylist}
+\item[(A)] Those that don't match $A[m]$ at all.
+\item[(B)] Those that  don't match $B[n]$ at all. 
+\item[(C)] Those that match $A[m]$ to $B[n]$.
+\end{mylist}
+Every alignment is of one of these types, because an alignment cannot both match $A[m]$
+to some character in $B[1..n-1]$ and match $B[n]$ to some character in $A[1..m-1]$.
+(This is because in such a matching those matched pairs would cross.)
+It is possible for an alignment to be both type (A) and type (B),
+but this is not a problem for the algorithm.
+Next we consider the three types of alignments,
+and for each we observe that the problem of finding a minimum-cost alignment of that type
+reduces to a smaller subproblem:
+\begin{mylist}
+% [review 2026-09-27] fix: m and n were swapped (input is A[1..m], B[1..n]); type (A) now uses A[1..m-1] and B[1..n]
+\item[(A)] An alignment of type (A) is just an alignment of $A[1..m-1]$ and $B[1..n]$,
+  so the minimum cost of any alignment of type (A)
+  is just the minimum cost of any alignment between $A[1..m-1]$ and $B[1..n]$.
+
+% [review 2026-09-27] fix: m and n were swapped (input is A[1..m], B[1..n]); type (B) now uses A[1..m] and B[1..n-1]
+\item[(B)] Likewise, the minimum cost of any alignment of type (B)
+  is just the minimum cost of any alignment between $A[1..m]$ and $B[1..n-1]$.
+
+% [review 2026-09-27] fix: m and n were swapped (input is A[1..m], B[1..n]); type (C) now matches A[m] to B[n] and uses A[1..m-1], B[1..n-1]
+\item[(C)] Any alignment of type (C) matches $A[m]$ to $B[n]$, and then the rest of the alignment
+  is just an alignment between $A[1..m-1]$ and $B[1..n-1]$.
+  So, the minimum cost of any alignment of type (C)
+  is just the minimum cost of any alignment between  $A[1..m-1]$ and $B[1..n-1]$,
+  plus the cost of matching $A[m]$ to $B[n]$
+  (1 if $A[m] \ne B[n]$, otherwise 0).
+\end{mylist}
+
+When we apply this reasoning recursively,
+each subproblem that arises is to compute
+the minimum cost of any alignment between some prefix of $A$
+and some prefix of $B$.
+That is, between $A[1..i]$ and $B[1..j]$ for some $i$ and $j$.
+Here is the algorithm:
+
+\paragraph{subproblems and recurrence relation.}
+For each pair $(i, j)$ with $i\in\{0,1,\ldots, m\}$ and $j\in\{0,1,\ldots,n\}$,
+define $M(i, j)$ to be the minimum cost of any alignment between $A[1..i]$ and $B[1..j]$.
+% [review 2026-09-27] fix: final answer was M(n,m) but i ranges over 0..m and j over 0..n; changed to M(m,n)
+The final answer is $M(m, n)$.  The recurrence relation is
+\[
+  M(i, j) =
+  \begin{cases}
+    \max(i, j) & \text{ if } i=0 \text{ or } j=0, \\
+    \min (M(i-1, j) + 1, M(i, j-1) + 1, M(i-1, j-1)) & \text{ if } i,j > 0 \text{ and } A[i] = B[j],  \\
+    \min (M(i-1, j) + 1, M(i, j-1) + 1, M(i-1, j-1) + 1) & \text{ if } i,j > 0 \text{ and } A[i] \ne B[j]. 
+  \end{cases}
+\]
+
+\paragraph{correctness.}
+Correctness follows from the ideas sketched above under ``intuition.''
+
+\paragraph{time.}
+There are $(n+1)\cdot(m+1) = O(nm)$ subproblems,
+and for each, the right-hand side of the recurrence takes
+constant time to evaluate
+(assuming the smaller subproblems are already solved).
+So the algorithm (iterative, or recursive and memoized)
+take $O(nm)$.
+
+\begin{theorem}
+  There is an $O(nm)$-time algorithm for \prob{Edit Distance}.
+\end{theorem}
+
+\pythonCode{dynamic_programming/edit_distance.py}
+
+\subsection*{Extending the algorithm to Sequence Alignment}\doHeader{Sequence Alignment}
+
+\KT Section 6.6 considers a generalization of \prob{Edit Distance} called \prob{Sequence Alignment}:
+
+\begin{mylist}
+\item[\bf input:]
+  A pair $I=(A[1..m], B[1..n])$ of strings, \emph{gap penalty} $\delta>0$,
+  and \emph{mismatch cost function} $\alpha$ defining,
+  for each character $a$ in $A$ and $b$ in $B$,
+  a \emph{mismatch cost} $\alpha(a, b)\ge 0$.
+
+\item[\bf output:]
+  The minimum cost of any alignment of $A$ and $B$,
+  where an alignment is a non-crossing matching (as defined for \prob{Edit Distance}),
+  but the cost of the alignment is $\delta$ times the total number of unmatched characters (in both sides),
+  plus the sum over the matched pairs $(A[i], B[j])$ of $\alpha(A[i], B[j])$.
+\end{mylist}
+\prob{Edit Distance} is the special case when $\delta=1$
+and $\alpha(a, b) = 1$ for $a\ne b$, and $\alpha(a, b) = 0$ for $a=b$.
+Following the same reasoning as for the algorithm for \prob{Edit Distance}
+gives the following algorithm.
+Fix any input instance $(A[1..m], B[1..n])$.
+
+\paragraph{subproblems and recurrence relation.}
+For each pair $(i, j)$ with $i\in\{0,1,\ldots, m\}$ and $j\in\{0,1,\ldots,n\}$,
+define $M(i, j)$ to be the minimum cost of any alignment between $A[1..i]$ and $B[1..j]$.
+% [review 2026-09-27] fix: final answer was M(n,m) but i ranges over 0..m and j over 0..n; changed to M(m,n)
+The final answer is $M(m, n)$.  The recurrence relation is
+\[
+  M(i, j) = \begin{cases}
+    \delta \max(i, j) & \text{ if } i=0 \text{ or } j=0 \\
+    \min \big(M(i-1, j) + \delta, M(i, j-1) + \delta, M(i-1, j-1) + \alpha(A[i], B[j])\big)  & \text{ if } i, j > 0.
+  \end{cases}
+\]
+
+\paragraph{correctness.}  Correctness follows by reasoning similar to the reasoning
+for the correctness of the recurrence relation for \prob{Edit Distance}.
+
+\paragraph{time.}
+There are $(n+1)\cdot(m+1) = O(nm)$ subproblems,
+and for each, the right-hand side of the recurrence takes
+constant time to evaluate
+(assuming the smaller subproblems are already solved).
+So the algorithm (iterative, or recursive and memoized) takes time $\Theta(nm)$.
+
+\begin{theorem}
+  There is an $O(nm)$-time algorithm for \prob{Sequence Alignment}.
+\end{theorem}
+
+% \paragraph{External sources on \prob{Edit Distance}}
+  
+% \providecommand{\URL}[1]{\parbox[t]{0.8\textwidth}{\url{#1}}}
+
+% \begin{itemize}
+% \item \JE Section 3.7. KT 6.6. CLRS Problem 15--5 (Chapter 15). DPV~Chapter 6.3. MIT video:
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}
+
+% \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

@@ -1,0 +1,161 @@
+\documentclass[11pt]{article} 
+
+\input{macros}
+
+% \usetikzlibrary{shapes}
+% \usetikzlibrary{positioning}
+% \usetikzlibrary{shapes.misc}
+
+\begin{document}
+
+\doTitle{7}{Dynamic Programming}{Dynamic Programming}
+
+\newpage
+\inputSection{01_n_choose_k}
+
+\newpage
+\inputSection{02_paths_in_DAGs}
+
+\newpage
+\inputSection{03_making_change}
+
+\newpage
+\inputSection{04_four_steps}
+
+\newpage
+\inputSection{05_subset_sum}
+
+\newpage
+\inputSection{06_knapsack}
+
+\newpage
+\inputSection{07_activity_selection}
+
+\newpage
+\inputSection{10_longest_common_subsequence}
+
+\newpage
+\inputSection{11_edit_distance}
+
+\newpage
+\inputSection{12_palindrome} 
+
+\newpage
+\inputSection{13_paragraph_layout} 
+
+\newpage
+\inputSection{20_min_wt_triangulation}
+
+\newpage
+\inputSection{21_binary_search_tree} 
+
+\newpage
+\inputSection{30_Bellman_Ford} 
+
+\newpage
+\inputSection{31_Floyd_Warshall} 
+
+
+\newpage
+
+\section{External sources on dynamic programming}
+
+\newcommand{\myhref}[2]{\href{#1}{#2}}%\footnote{#1}}
+
+{\small
+\begin{tabular}{ r | c@{~~} c @{~~} c c c c c }
+           &  &  &  & \KT &  & MIT  & Python  \\
+           & \JE & \DPV & \KT & slides & \CLRS & video & code \\ \hline 
+  intro & 3  & 6.1 & 6.1 & - & 15 &   \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-19-dynamic-programming-i-fibonacci-shortest-paths/}{19 (2011)}
+ & -
+  \\  % & \JE & DPV & KT & KT slides & CLRS & MIT video & BB code folder
+  paths in DAGS & 8.5 & 4.7 & - & - & 24.2 & - & \pycode[py]{dynamic_programming/dynamic_programming_paths.py}
+  \\
+  \prob{Making Change} & Ex.\,1;\,Ch.\,3 & Ex.~6.17--6.19 & - & - & - & - & \pycode[py]{dynamic_programming/making_change.py}
+  \\
+  \prob{Subset Sum} and \prob{Knapsack} & 3.8 & 6.4 & 6.4 &                                                            \myhref{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf}{6.4}
+ & - & \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}{21 (2011)}
+ & \pycode[py]{dynamic_programming/subset_sum.py}, \pycode[py]{dynamic_programming/knapsack.py}
+  \\
+  \prob{Weighted Activity Selection}  & - & - & 6.1 & \myhref{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf}{6.1} & - & - & -
+  \\
+  \prob{Longest Common Subsequence}  & - & - & - & -
+ & 15.4 &  \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/video-lectures/lecture-15-dynamic-programming-longest-common-subsequence/}{15 (2005)}
+                                   & \pycode[py]{dynamic_programming/longest_common_subsequence.py}
+  \\
+  \prob{Edit Distance}  & 3.7 & 6.3 & 6.6 &
+\myhref{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingII.pdf}{6.6}
+ & - & \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}{21 (2011)}
+                                   & \pycode[py]{dynamic_programming/edit_distance.py}
+  \\
+  \prob{Longest Palindromic Subseq.}
+   % & \JE & DPV & KT & KT slides & CLRS & MIT video & BB code folder 
+           & - & - & - & - & Prob.\,15-2 &
+\myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-design-and-analysis-of-algorithms-spring-2015/lecture-videos/lecture-10-dynamic-programming-advanced-dp/}{10 (2015)}
+ & \pycode[py]{dynamic_programming/longest_palindrome.py}
+  \\
+  \prob{Paragraph Layout}
+           & - & - & - & - & Prob.~15--4 & \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-20-dynamic-programming-ii-text-justification-blackjack}{20 (2011)}
+ & \pycode[py]{dynamic_programming/paragraph_layout.py}
+  \\
+  \prob{Min-Wt Polygon Triangulation}
+   & - & Prob.\,6.12 & - & - & - & - & \pycode[py]{dynamic_programming/min_wt_triangulation.py}
+  \\
+  \prob{Optimal Binary Search Tree}
+   & 3.9 & - & - & - & 15.5 & - & \pycode[py]{dynamic_programming/optimal_binary_search_tree.py}
+   \\  % & \JE & DPV & KT & KT slides & CLRS & MIT video & BB code folder
+                                                           Bellman-Ford & 8.7 & 4.6 & 6.8 &
+                                                                                            \myhref{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingII.pdf}{6.8}
+ & 24.1 &
+                                                                                                       \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/video-lectures/lecture-18-shortest-paths-ii-bellman-ford-linear-programming-difference-constraints/}{18 (2005)}
+          & \pycode[py]{dynamic_programming/Bellman_Ford.py}
+  \\
+  Floyd-Warshall
+           & 9.8 & 6.6 & - & - & 25.2 & \myhref{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-design-and-analysis-of-algorithms-spring-2015/lecture-videos/lecture-11-dynamic-programming-all-pairs-shortest-paths/}{11 (2015)}
+                                   & \pycode[py]{dynamic_programming/Floyd_Warshall.py}
+  \\
+ \prob{Segmented Least Squares}
+           & - & - & 6.3 & \myhref{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf\#page=24}{6.3}
+ & - & - & - \\ \hline
+\end{tabular}
+}
+
+\medskip
+
+The table entries in blue above (for the slides, videos, and code) are hyperlinked to their sources.
+In case you have a printed copy of these notes, you can find them via the following
+URLs:
+
+\parbox{0.8\textwidth}{\footnotesize
+
+  \begin{description}
+  \item[\KT slides:] \url{https://www.cs.princeton.edu/~wayne/kleinberg-tardos/}
+  \item[2005 videos:] \url{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/}
+  \item[2011 videos:] \url{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/}
+    \item[2015 videos:] \url{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-design-and-analysis-of-algorithms-spring-2015/}
+    \item[Python code:] \expandafter\url\expandafter{\codeFolder}
+    \end{description}
+  }
+
+\codeSection{
+  dynamic_programming/graph_library.py,
+  dynamic_programming/dynamic_programming_paths.py,
+  dynamic_programming/making_change.py,
+  dynamic_programming/subset_sum.py,
+  dynamic_programming/knapsack.py,
+  dynamic_programming/longest_increasing_subsequence.py,
+  dynamic_programming/longest_common_subsequence.py,
+  dynamic_programming/edit_distance.py,
+  dynamic_programming/longest_palindrome.py,
+  dynamic_programming/paragraph_layout.py,
+  dynamic_programming/min_wt_triangulation.py,
+  dynamic_programming/optimal_binary_search_tree.py,
+  dynamic_programming/Bellman_Ford.py,
+  dynamic_programming/Floyd_Warshall.py}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

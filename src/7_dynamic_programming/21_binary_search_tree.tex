@@ -1,0 +1,97 @@
+
+\section{Optimal Binary Search Tree}\label{dp: sec: optimal BST}\doHeader{Optimal Binary Search Tree}
+
+\begin{mylist}
+\item[\bf input:]
+  A sequence $p[1..n]$ of \emph{frequencies},
+  where $p[j]$ is the frequency of \emph{key} $j$.
+  
+\item[\bf output:]
+  The minimum cost of any \emph{binary search tree} $T$ for the $n$ keys.
+  A binary search tree is a rooted binary tree with the $n$ keys $\{1,2,\ldots,n\}$
+  as nodes, \emph{in search-tree order}.  (So, at each node,
+  the key is larger than the keys in the node's left subtree,
+  and smaller than the keys in the node's right subtree.)
+  % [review 2026-09-27] fix: the depth convention was unstated; the subtree-cost observation and the recurrence hold only if the root has depth 1, so stated that convention
+  The cost of $T$ is the weighted average depth of the keys
+  (where the root has depth 1, so $\depth T j$ is the number of nodes visited when searching for key $j$):
+  \[\cost T = \sum_{j=1}^n p[j] \depth T j.\]
+\end{mylist}
+
+For any such tree $T$ and key $j$, define $T_j$ to be the subtree
+whose root node has key $j$, containing $j$ and all its descendants.
+
+\begin{observation}\label{dp: subtree}
+  For any tree $T$ and key $j$,
+  the set of keys in the subtree $T_j$
+  is some contiguous sequence $\{i, i+1, \ldots, k\}$,
+  where $i\le j \le k$.
+  So any such subtree $T_j$ is a binary search tree
+  for the \prob{Optimal Binary Search Tree} instance $p[i..k]$.
+\end{observation}
+The cost of $T_j$ for its instance $p[i..k]$
+is the weighted average depth of keys in $T_j$,
+that is,
+\(\cost {T_j} = \sum_{h=i}^k p[h] \depth {T_j} h\).
+For any such subproblem $p[i..k]$,
+define $\weight {p[i..k]} = \sum_{h=i}^k p[h]$
+to be the sum of the frequencies in the instance $p[i..k]$.
+
+\begin{observation}\label{dp: tree cost}
+  Consider any subtree $T_j$.  Let $p[i..k]$ be the subproblem it solves.
+  Let $T_\ell$ and $T_r$ be its left and right subtrees.
+  Then $\cost {T_j} = \weight {p[i..k]} + \cost {T_\ell} + \cost {T_r}$.
+
+  Also, the subproblems solved by $T_\ell$ and $T_r$
+  are $p[i..j-1]$ and $p[j+1..k]$.
+\end{observation}
+
+Here is the algorithm.  Fix any input instance $p[1..n]$.
+
+\paragraph{subproblems and recurrence relation.}
+For each $i\in\{1,2,\ldots,n+1\}$ and $k\in\{0,1,\ldots,n\}$ with $i\le k+1$,
+define $M(i, k)$
+to be the minimum cost of any binary search tree for the subproblem $p[i..k]$
+(which is empty if $i=k+1$).
+The given instance $p[1..n]$ has solution $M(1, n)$.
+Here's the recurrence relation:
+\[M(i,k) =
+  \begin{cases}
+    0 & \text{if } i>k \\
+    \min\Big\{ \weight {p[i..k]} + M(i, j-1) + M(j+1, k) ~\big|~ j \in \{i,i+1,\ldots,k\} \Big\}
+    & \text{if } i \le k.
+  \end{cases}
+\]
+
+\paragraph{correctness.}
+The intuition is that an optimal tree for $p[i..k]$
+can be obtained by choosing some key $j\in\{i,i+1,\ldots,k\}$ for the root,
+then choosing any optimal tree $T_\ell$ for subproblem $p[i..j-1]$ as the left subtree,
+and any optimal tree $T_r$ for subproblem $p[j+1..k]$ as the right subtree.
+The subtree for $p[i..k]$ is then a subtree $T_j$,
+and, by Observation~\ref{dp: tree cost}, its cost is
+$\cost {T_j} = \weight {p[i..k]} + \cost {T_\ell} + \cost {T_r}
+= \weight {p[i..k]} + M(i,j-1) + M(j+1, k)$.
+
+\paragraph{time.}
+There are $O(n^2)$ subproblems.
+For each, the right-hand side of the recurrence can be evaluated in time $O(n)$.
+So the algorithm (iterative, or recursive and memoized)
+takes time $\Theta(n^3)$.
+
+\begin{theorem}
+  There is an $O(n^3)$-time algorithm for \prob{Optimal Binary Search Tree}.
+\end{theorem}
+
+\paragraph{does not reduce to Shortest Paths!}
+The standard trick of creating a graph with one vertex per subproblem $M(i,k)$
+doesn't work, because, in the right-hand side of the recurrence for $M(i,k)$,
+% [review 2026-09-27] fix: the recurrence's minimum ranges over j (k is fixed); changed "for each k" to "for each j"
+for each $j$, the term includes \emph{two} subproblems $M(i,j-1)$ and $M(j+1, k)$.
+
+\pythonCode{dynamic_programming/optimal_binary_search_tree.py}
+  
+  %%% Local Variables:
+  %%% mode: latex
+  %%% TeX-master: "dynamic_programming"
+  %%% End:

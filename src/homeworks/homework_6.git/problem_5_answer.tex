@@ -1,0 +1,113 @@
+\paragraph{Problem 5 answer}\GradescopeComment{This should be on page 10 (top) of your PDF.}
+
+\begin{enumerate}\small
+
+\item[(a)]
+  \BLUE{\footnotesize
+  \[
+    \REPLACEME
+  \]
+}
+
+\item[(b)]
+  % Explain clearly in just a few English sentences exactly how you modify DFS to obtain your algorithm.
+  % First state the high-level idea, then give more details.
+
+  \begin{blue}
+    
+    \REPLACEME
+
+  \end{blue}
+
+\end{enumerate}
+\begin{itemize}\small
+
+\item[(c)]
+  
+% Define your algorithm in pseudocode, using the pseudo-code in the answer template as a starting point.
+  
+% Please color the text you add BLUE
+  
+  \begin{steps}
+
+  \item[]  \textsf{StreetSweeper}$(G=(V, E))$
+    
+    \step visited $= \emptyset$
+
+    \step ancestors $ = \emptyset$
+
+    \smallskip 
+
+    \step def \textsf{DFS1}$(u)$: 
+
+    \begin{block}
+
+      \step add $u$ to visited and to ancestors
+
+      \step for each neighbor $w$ of $u$:
+
+      \step~~~~if $w$ is not in visited: 
+
+      \step~~~~~~~~\BLUE{print ``tree edge:'' $(u, w)$  \comment{Please color the text you add blue.}}
+
+      \step~~~~~~~~\textsf{DFS1}$(w)$
+      
+      \step~~~~else if $w$ is not in ancestors:
+
+      \step~~~~~~~~\BLUE{print ``forward edge:'' $(u, w)$}
+      
+      \step remove $u$ from ancestors
+      
+    \end{block}
+
+    \smallskip 
+
+    \step for each vertex $v$ in $V$:
+
+    \step~~~if $v$ is not in visited:~\textsf{DFS1}$(v)$
+  
+  \end{steps}
+
+
+\item[(d)]
+
+  % Give the best bound you can on the worst-case running time of your algorithm in terms of $n=|V|$ and $m=|E|$.
+  % Explain carefully why the bound you give holds for all inputs.
+  % You may use (without reproving them) any facts about DFS that we've observed in class or the lecture notes.
+  % For full credit, your algorithm should run in time linear in the graph size, $\Theta(|V|+|E|)$.
+
+  \begin{blue}
+    
+    \REPLACEME
+    
+  \end{blue}
+  
+
+\item[(e)]  My username for my Hacker-Rank submission is \BLUE{
+    \REPLACEME
+  }.
+
+\end{itemize}
+
+\newpage
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 11 (top) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_6"
+%%% End:

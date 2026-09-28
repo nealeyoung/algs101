@@ -1,0 +1,174 @@
+
+\section{Introduction}\doHeader{Introduction}
+
+\paragraph{Why algorithms?}
+Information surrounds us, but much of it is out of our reach. 
+Here's a simple example.
+Suppose you want to know the prime factors of the following 186-digit number:
+{\footnotesize
+11679847981112819759721399310592745791658017001955007325132913837831330495881519756453703742878526148\textbackslash\\84146888067442512219413748768010657572575384986457405973985247465176041951676954461208131403777}. 
+Like every positive integer, this one has a unique set of prime factors.
+In principle you could find the factors by exhaustive search ---
+after all, there are only finitely many possibilities.
+But there are about $10^{93}$ possible factors to check,
+so that would take too long, even for a computer.
+In fact, no algorithm is known that can factor large integers
+in any reasonable amount of time
+(e.g., the lifetime of the universe).\footnote
+{No such algorithm is known
+  --- indeed, standard encryption schemes rely on this fact.
+  But nobody knows for sure that there isn't one.
+  (We do know that, if a so-called quantum computer can be built,
+  it would be able to factor efficiently.)}
+The information is (in some sense) ``there'', but it is out of reach,
+because we don't know an efficient algorithm to compute it.
+
+This kind of barrier to knowledge is common.  For example, Google has a database with details of all the roads in the United States.  From that data, Google Maps can quickly compute, say, a shortest possible route from New York City to San Francisco.  But what about a shortest possible route that \emph{visits all 50 U.S. capitols in any order}?  Nobody knows how to find such a route with a reasonable amount of computation time.
+
+Whether or not we can learn a desired piece of information often depends on whether there is an \emph{efficient algorithm to solve the underlying computational problem}.  Further, for many important and easily stated problems, whether the problem has an efficient algorithm \emph{is not currently known}.  New algorithms can lead to advances in science, medicine, biology, business, and so on.  % This is a fundamental scientific frontier, one that is accessible to you sitting at a desk and working only with paper and pencil.
+
+\paragraph{Why proofs?}
+Algorithms are important, but can be difficult to reason about.
+For example, consider the following simple algorithm:
+
+\begin{framed}
+  \vspace*{-1ex}
+  \begin{steps}
+  \item[\bf input:] integer $N\ge 1$
+    \step while $N > 1$:
+    \begin{block}
+      \step if $N$ is even:  $N\leftarrow N/2$
+      \step else: $N\leftarrow 3*N + 1$
+    \end{block}
+    \step print ``done''
+  \end{steps}
+  \vspace*{-1ex}
+\end{framed}
+
+In 1937, L.~Collatz conjectured that, for every input, this algorithm eventually halts.
+But even after years of study, nobody knows for sure!\,\footnote
+{See \url{https://en.wikipedia.org/wiki/Collatz_conjecture}.}
+Many simple algorithms are hard to reason about.
+So, when searching for an algorithm to solve a particular problem,
+we limit our search to algorithms that
+we \emph{do} know some way to reason about ---
+that is, algorithms that we can prove do work.
+For this reason, \emph{proofs drive algorithm design.}
+(More on this later.)
+% The mental process of searching for an algorithm is intertwined
+% with the process of searching for a proof.
+% So, if you want to be good at designing algorithms,
+% you must be able to do proofs!
+% \,\footnote
+% {Of course, correctness is just one of many considerations in algorithm design.
+% Other factors such as efficiency and simplicity are also important.  They are just
+% not our focus here.}
+
+\paragraph{Do your own pull-ups!}
+Textbooks and lectures generally present algorithms that are already very well studied.
+The author and reader (or instructor and student) generally \emph{already know} that the algorithms are correct.
+So textbooks and lectures focus on conveying the main underlying ideas.
+Listening to such a lecture or reading such a text,
+it is not hard to get an intuitive sense of the algorithm and why it works.
+And in many algorithms courses, this is all you would do.
+
+But this experience does not teach you how to design your own algorithms.
+To find an algorithm that works, you typically must search through a variety of ideas.
+Ideas that seem promising often fail, sometimes for deviously subtle reasons.
+To know that an idea works, you must also find an airtight line of reasoning as to why.
+That is, the search for an algorithm proceeds hand-in-hand along with the search for a proof that it works.
+Doing this is much harder than following a proof in a lecture or textbook.
+The difference is like the difference between watching someone else do pull-ups,
+versus doing them yourself.
+If you want to build the strength to do pull-ups, it doesn't help to just watch someone else do them.
+You have to do them yourself!
+So, what does this entail?
+
+\paragraph{Mind the gap!  (Check the details.)}
+When you are developing a new proof, you are usually not quite sure it is right.
+With experience, you will learn that your intuition has blind spots. 
+Because of this, you have to check the details carefully by writing out your reasoning.
+Any gap in your \emph{explanation} can hide a gap or error in your \emph{reasoning}.
+So, when developing a new proof,
+it is important to explain (and check!) your reasoning step by step,
+in more detail than you see in a typical textbook or lecture.
+Also, the more clearly you communicate your reasoning,
+the more a reader can understand about the line of reasoning you have in mind,
+so the more useful their feedback can be.
+
+\paragraph{Exploring the logical consequences of an assumption.}
+Suppose we don't know that a given statement is true.
+We can still assume for the moment that the statement is true, and explore the logical consequences if it is.
+This kind of imaginative thinking can help figure out what is actually true.
+It is so common that keeping track of assumptions
+is one of the main organizational challenges in presenting a proof.
+Conventionally, this is done via four standard proof patterns,
+\emph{proof by contradiction}, reasoning by \emph{cases},
+and when proving \emph{if then} and \emph{for all} statements.
+When creating complex proofs, it is useful to know these forms
+like the back of your hand, so you can keep track of your assumptions
+and organize your reasoning clearly.
+
+\paragraph{These notes: \emph{long-form} proofs.}
+To learn to develop proofs with enough detail,
+and to learn the four standard forms for managing assumptions,
+we'll use \emph{long-form proofs}.
+A long-form proof is given as a sequence of numbered steps,
+where each step is small, has a clear meaning, and follows easily from previous steps.
+The numbering allows each step to be identified unambiguously.
+(This is useful during the proof to make it easy to tell the reader which previous steps a particular step follows from.
+It also makes communicating about the proof, including giving feedback on it, easier.)
+
+In long-form proofs, assumptions are explicitly managed by using what we call \emph{blocks}.  
+Each block introduces an assumption, which then holds for the scope of the block.
+Blocks nest like code blocks in computer programs.
+There are four block types --- one for each of the four standard proof forms mentioned above. 
+Section~\ref{proofs: sec: long form} describes the long-form proof format in detail.
+
+\paragraph{Basic terms: \emph{problem}, \emph{algorithm}, \emph{proof}}
+To design algorithms, and to reason and communicate clearly about them,
+it is crucial that the language we use is clear,
+with a precise and unambiguous meaning.
+To this end, we use the language of mathematics.
+
+A computational \textbf{\emph{problem}} is defined by
+specifying what the possible inputs are,
+and what the output should be for each input.
+(This means that defining a problem is just defining a function.)
+We cast our problems in terms of standard mathematical objects
+such as numbers, strings, trees, graphs, sequence, sets and so on.
+
+As described previously in \LN{prelim},
+to define an \textbf{\emph{algorithm}}, one specifies exactly how,
+given any input, the algorithm processes the input to produce the output.
+The definition should be mathematically precise,
+and written to be clear and accessible to any competent reader.
+For this reason, use words, not code.
+Any competent programmer should be able to translate the definition into code.
+An algorithm is \textbf{\emph{correct}} (for a given problem) if,
+for every input, the algorithm produces a correct output.
+
+
+A \textbf{\emph{proof}} of a fact is a clear explanation, typically in writing,
+of a complete and correct line of reasoning that establishes that the fact must be true.
+Typically, the proof is preceded by a clear statement of the fact being proven,
+e.g.~stated as a theorem or lemma.
+%
+Before you try to write a proof for a fact,
+you should already have in mind a line of reasoning as to why the fact must be true.\footnote
+{But of course it is also useful
+to write partial proofs to guide your thinking.}
+The reasoning must be complete (covering all cases) and without logical gaps.
+The goal of the written proof is to communicate your line of reasoning to the reader.
+The fundamental guiding principle is this:
+\emph{from what you write,
+  the reader should be able to easily reconstruct your reasoning in detail,
+  and to easily verify that it is correct.}
+% We say much more later about how to write proofs.
+% We use a particular form that we call \emph{long form}.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "long_form_proofs"
+%%% End:

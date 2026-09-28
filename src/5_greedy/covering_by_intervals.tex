@@ -1,0 +1,474 @@
+\section{Covering by Intervals}\label{greedy: sec: covering by intervals}\doHeader{Covering by Intervals}
+
+Here is another example where the algorithm makes one greedy choice, then recurses.
+ 
+\paragraph{Problem definition.}
+The (unweighted) \prob{Covering by Intervals} problem is defined as follows:
+
+\begin{mylist}
+\item[\bf input:]
+  A collection of real intervals (called ``jobs'') $J=([s_1, e_1], [s_2, e_2], \ldots, [s_m, e_m])$,
+  with $s_j \le e_j$ for all $j$,
+  and a set of  ``demand'' points $X=\{x_1, x_2,\ldots, x_n\}$.
+  % [review 2026-09-27] fix: endpoint was written $t_j$ but the intervals are $[s_j, e_j]$; changed to $e_j$
+  We use $J_j$ to denote the job $[s_j,e_j]$.
+
+\item[\bf output:]
+  A minimum-size subset $S$ of $J$ such that every demand point is in at least one interval in $S$.
+\end{mylist}
+
+We want to use as few intervals as possible, while ``covering'' the demands.
+To build intuition, consider an example:
+
+\smallskip
+
+\centerline{
+  \begin{tikzpicture}[scale=0.5]\footnotesize
+    \node[anchor=east] at (2,-1) {demand points:};
+    \node at (3.2,-1) {\textbullet}; 
+    \node at (4,-1) {\textbullet}; 
+    \node at (6,-1) {\textbullet}; 
+    \node at (7,-1) {\textbullet}; 
+    \node at (8.5,-1) {\textbullet}; 
+    \node at (10,-1) {\textbullet}; 
+    \node at (12.7,-1) {\textbullet}; 
+    \draw (5,0) -- ++(-2,0) node[anchor=south] {$J_1$} -- ++(-2,0); 
+    \draw (7,1) -- ++(-2,0) node[anchor=south] {$J_2$} -- ++(-2,0); 
+    \draw (8,0) -- ++(-1,0) node[anchor=south] {$J_3$} -- ++(-1,0); 
+    \draw (10,3) -- ++(-3,0) node[anchor=south] {$J_4$} -- ++(-2.5,0); 
+    \draw (12,2) -- ++(-2.75,0) node[anchor=south] {$J_5$} -- ++(-2.75,0); 
+    \draw (13,0) -- ++(-2,0) node[anchor=south] {$J_6$} -- ++(-2,0); 
+    \draw (14,1) -- ++(-1.5,0) node[anchor=south] {$J_7$} -- ++(-1.5,0); 
+  \end{tikzpicture}
+}
+
+\smallskip
+
+One correct solution for this input is $S^*= \{J_2, J_5, J_7\}$.
+The goal is to minimize the size $|S^*|$ of $S^*$.
+Note that the size is the \emph{number of intervals} in $S$,
+not the total area covered by intervals in $S$.
+
+\paragraph{Coming up with an algorithm.}
+
+A greedy algorithm for this problem should maintain a subset $X$ of the jobs.
+It should start with $X$ empty, then add jobs one by one,
+until all demand points are covered by intervals in $X$.
+It should then return the final set $X$.
+Our goal is to guarantee that the final set $X$ returned by the algorithm will be a correct solution,
+that is, a minimum-size set of intervals covering the demands.
+
+To start we consider just the first step of the algorithm.
+Let's look for a rule that, given $I$, 
+identifies a job that \emph{has to} be in some correct solution for $I$.
+Here are some possible candidates for the rule:
+\begin{steps}
+  \step Choose a job with earliest start time (minimizing $s_j$). 
+  \step Choose a largest job (maximizing $e_j - s_j$).
+  \step Choose one that covers the most demand points.
+  \step Among jobs covering the first demand point,
+  choose one with latest end time (maximizing $e_j$). 
+\end{steps}
+
+To build intuition, find a counter-example for each of the first three three rules
+(that is, an input for which the job chosen by the rule is not in any optimal solution).
+But what about the fourth rule?
+Is it the case that, for every instance $I$,
+this rule always gives a good first choice?
+That is, for every instance $I$,
+is the job selected by that rule guaranteed to be in at least one correct solution for $I$?
+
+The intuition is that any correct solution has to have some job covering the first demand point,
+and, among jobs that do, the latest-ending job is as good a choice as any:
+\emph{compared to any other choice among jobs covering the first demand point,
+  choosing the latest-ending job covers all the demand points that any such job can.}
+Here's a careful proof:
+
+\begin{lemma}\label{greedy: covering by intervals: first}
+  Let $(J, X)$ be any problem instance with at least one demand point.
+  Among jobs covering the first demand point,
+  let $J_i$ be one that ends latest.
+  Then $(J, X)$ has a correct solution that contains $J_i$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any such $(J, X)$ and $J_i$. Let $S^*$ be any correct solution for $(J, X)$.  
+
+  \begin{block}
+    \step \underline{Case 1.}  Suppose that $J_i$ is in $S^*$.
+    \step Then $(J, X)$ has a correct solution that contains $J_i$ (namely, $S^*$).
+  \end{block}
+  
+  \begin{block}
+    \step \underline{Case 2.}  In the remaining case, $J_i$ is not in $S^*$.
+
+    \step Let $J_j^*$ be any job in $S^*$ that contains the first demand point.  (There must be one.)
+
+    \step We'll show that exchanging $J_i$ for $J_j^*$ in $S^*$ gives a correct solution (containing $J_i$).
+
+    \step Let $S' = \{J_i\}\cup S^* \setminus \{J^*_j\}$ be obtained from $S^*$ by replacing $J^*_j$ by $J_i$.
+
+    \step Job $J_i$ ends no earlier than $J^*_j$ ends, so $J_i$ contains all the demand points that $J^*_j$ does.
+    
+    \step So $S'$ covers all the demand points.  And $S'$ has the same size as $S^*$.
+
+    \step So $S'$ is also a correct solution. So $(J, X)$ has a correct solution (namely $S'$) that contains $J_i$.
+  \end{block}
+  \step So $(J, X)$ has a correct solution that contains $J_i$.
+\end{longFormProof}
+
+\paragraph{Computing the rest of the solution.}
+We know now that the latest-ending job $J_i$ that contains the first demand point
+is in some correct solution.  So we can commit to putting that job $J_i$ in our solution.
+Given that $J_i$ is in, the demand points that $J_i$ covers are taken care of
+--- we can remove all those from consideration.
+The problem that remains is to find a minimum-size set of jobs to cover the remaining points.
+That is, to solve the \prob{Covering by Intervals} instance defined
+by the given jobs and the remaining demand points.
+We solve that recursively.
+
+\paragraph{Algorithm.}
+This gives us an algorithm:
+choose the latest-ending job $J_i$ among jobs that contain the first demand point $x_1$,
+then recurse on the instance formed by all the jobs and the remaining demand points.
+Here is pseudo-code:
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{rcover}$(J, X)$ where $J=(J_1, J_2, \ldots, J_m)$ and $X=(x_1, x_2, \ldots, x_n)$:}]
+    \comment{--- assuming $x_1 \le x_2 \le \cdots \le x_n$}
+    % \comment{\normalsize --- recursive \prob{Activity Selection} algorithm ---}
+    \step If $n = 0$ then return $\emptyset$.  \comment{--- no demand points, return the empty set}
+    \step Let $J_i$ be the latest-ending job that contains $x_1$.
+    \step Let $X'$ contain the demand points that are not in $J_i$.
+    \step Recursively compute $R = \textsf{rcover}(J, X')$, then return $\{J_i\} \cup R$.
+  \end{steps}
+\end{myframed}
+
+\paragraph{Correctness.}
+Next we give a utility lemma that formally proves that,
+after the first choice of $J_i$, the remaining problem is equivalent
+to the instance $(J, X')$ as defined in the algorithm.
+
+\begin{lemma}\label{greedy: lemma: as recurse}
+  Let $(J, X)$ be any \prob{Covering by Intervals} instance with at least one demand point.
+  Let $J_i$ be a latest-ending job among jobs that contain the first demand point $x_1$.
+  Let $X'$ contain the demand points that are not in $J_i$.
+  Let $R$ be any correct solution for $(J, X')$ (as a \prob{Covering by Intervals} instance).
+  Then $\{J_i\}\cup R$ must be a correct solution for $(J, X)$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any such $(J, X)$, $J_i$, $X'$, and $R$.
+  \step All demands in $X'$ are covered by $R$, so $\{J_i\}\cup R$ covers all points in $X$, as it should.
+  \step To finish we show that $\{J_i\}\cup R$ has minimum possible size.
+  \step Let $S^*$ be a correct solution for $(J, X)$ that contains $J_i$ (it exists by Lemma~\ref{greedy: covering by intervals: first}).
+  \step Let $R' = S^*\setminus\{J_i\}$ be obtained by removing $J_i$ from $S^*$.
+  \step\label{greedy: step: as soln}
+  The jobs in $R'$ must cover all demand points in $X'$, so $R'$ is a possible solution for $(J, X')$.
+  \step Since $R$ is a minimum-size solution for $(J, X')$, we have $|R| \le |R'|$.
+  \step So \(|\{J_i\} \cup R| = 1 + |R| \le 1+|R'| =  |S^*|\).  So $\{J_i\} \cup R$ also has minimum possible size.
+\end{longFormProof}
+
+Given Lemma~\ref{greedy: lemma: as recurse},
+the reasoning for correctness is as usual for for recursive algorithms ---
+by induction.  Here is a (short-form) proof.
+
+\begin{theorem}
+  The recursive algorithm is correct.  That is, for every instance $(J, X)$, it gives a correct output.
+\end{theorem}
+\begin{shortFormProof}
+  The proof is by induction on the number of demand points in $X$.
+  The base case is when there are no demand points ($X=\emptyset$).
+  Then the empty set is clearly the optimal solution,
+  so $\textsf{rcover}(J,X)$ is correct in this case.
+
+  For the induction step, consider the execution of $\textsf{rcover}(J, X)$ on any instance with $|X|\ge 1$.
+  Let $J_i$, $X'$, and $R=\textsf{rcover}(J, X')$ be as computed by Lines 2--4 of the algorithm.
+  Assume inductively that $\textsf{rcover}(J, X')$ is correct.
+  So $R$ is a correct solution for $(J, X')$.
+  By Lemma~\ref{greedy: lemma: as recurse},
+  the solution $\{J_i\} \cup R$ returned by $\textsf{rcover}(J, X)$ is correct for $(J, X)$.
+\end{shortFormProof}
+
+\paragraph{Run time.}
+% The proof above follows the so-called \emph{greedy-choice / optimal-substructure}
+% approach suggested by the CLRS text.
+% That approach is elegant.
+% But for more complicated problems
+% a different approach sometimes works better.
+% That approach is to consider an \emph{iterative} implementation of the algorithm
+% and to explicitly prove that it maintains the so-called greedy invariant.
+Assume the demand points are given in non-decreasing order
+($x_1 \le x_2 \le \cdots \le x_n$)
+and the jobs are given in order of non-decreasing end time
+($e_1 \le e_2 \le \cdots \le e_m$).
+If not, preprocess the input to make it so.
+Unwinding the tail recursion in the recursive algorithm
+yields the following equivalent iterative implementation.
+
+\begin{myframed}
+  \begin{steps}
+  \item[{{\sf icover}$(J=(J_1, J_2, \ldots, J_m), X=(x_1, x_2, \ldots, x_n))$:}]
+    \comment{--- assumes $e_1 \le \cdots \le e_m$ and $x_1 \le \cdots \le x_n$}
+    \step initialize $A$ to be $\emptyset$ (the empty set of jobs)
+    \step for $t = 1$ to $n$:
+    \step~~~if $x_t$ is not covered by any job in $A$:
+    \step~~~~~~let $J_i$ be the latest-ending job that covers $x_t$
+    \step~~~~~~add $J_i$ to $A$
+    \step return $A$
+  \end{steps}
+\end{myframed}
+
+If $J_i$ is the latest-ending job that covers $x_t$,
+then the latest-ending job that covers $x_{t+1}$ will be some job $J_{i'}$ where $i'\ge i$.
+Using this fact, and carefully keeping track of which jobs we've considered,
+we can obtain a linear-time implementation.  We omit the details here.\footnote
+{Assume that each point $x_t$ is in at least one interval.  (Otherwise there is no solution.)
+  For each point $x_t$, define $L_t$ to be the index of the latest-ending job that contains $x_t$.
+  Note that $L_t \le L_{t+1}$ for all $t$, because the points are in increasing order and the jobs are ordered by increasing end-time.
+First, in a linear-time preprocessing step, compute $L_t$ for all $t$.  To do this, enumerate the points in reverse (from latest to earliest).  For each point $x_t$, find $L_t$ by starting at $L_{t+1}$, and scanning backwards.  Here's a linear-time implementation of this part:
+ 
+\begin{myframed}
+\begin{steps}
+  \step let $j = m$
+  \step for $t = n, n-1, \ldots, 1$:
+  % [review 2026-09-27] fix: loop tested interval $j-1$ but then set $L_t = j$ (off by one; e.g. J=([0,1],[0,2],[5,6]), x_1=0.5 gave L_1=3); now tests interval $j$
+  \step~~~while $j > 1$ and interval $j$ does not contain $x_t$:  decrement $j$
+  \step~~~$L_t = j$
+\end{steps}
+\end{myframed}
+
+To see that this takes linear time, note that in Line 3, throughout the entire execution, the number of times the while loop executes is at most $m$ (once for each interval).
+Now, in \textsf{icover}, the latest-ending job that contains a particular point $x_t$ can be found in constant time --- it's the job with index $L_t$.
+}
+
+% % First, an easy lemma:
+% % \begin{lemma}\label{greedy: bijection}
+% %   For any subset $S'\subseteq I$ of the jobs, conditions (i) and (ii) below are equivalent:
+% %   \begin{mylist}
+% %   \item[(i)] $\{J_i\} \cup S'$ is pairwise disjoint;
+% %   \item[(ii)] $S'$ is a pairwise-disjoint subset of $D$.
+% %   \end{mylist}
+% % \end{lemma}
+% % (That the two conditions are ``equivalent'' means that (i) holds if and only if (ii) holds.)
+% % % \begin{longFormProof}
+% % %   \step Consider any subset $S'\subseteq I$ of the jobs.
+% % %   \begin{block}[greedy: if]
+% % %     \step Assume that (i) holds.
+% % %     \step That is, $\{J_i\}\cup S'$ is pairwise disjoint. So $S'$ is pairwise disjoint.
+% % %     \step And also each job in $S'$ is disjoint from $J_i$, that is, in $D$.
+% % %     That is, $S'$ is a subset of $D$.
+% % %     \step So (ii) holds.
+% % %   \end{block}
+% % %   \begin{block}[greedy: only]
+% % %     \step Conversely, assume that (ii) holds.
+% % %     \step That is, $S'$ is pairwise disjoint and contains only jobs in $D$
+% % %     (which are disjoint from $J_i$).
+% % %     \step So adding $J_i$ to $S'$ doesn't introduce any conflicts.
+% % %     That is, $\{J_i\} \cup S'$ is pairwise-disjoint.
+% % %     \step So (i) holds.
+% % %   \end{block}
+% % %   \step[greedy: if2] By Blocks~\ref{greedy: if} and~\ref{greedy: only}, (i) holds if and only if (ii) holds.
+% % % \end{longFormProof}
+% % We leave the proof as an exercise.
+
+% To prove that this iterative algorithm is correct,
+% we will show that it maintains the greedy invariant at all times:
+% \begin{quote}
+%   greedy invariant: \emph{The current sequence $X$ is a prefix of some optimal solution}.
+% \end{quote}
+% The invariant is initially true (when $S=()$).
+% By Lemma~\ref{greedy: first}, the first step maintains the invariant.
+% Next we show that every step maintains the invariant.
+% The reasoning is the same as for Lemma~\ref{greedy: first}.
+
+% \begin{lemma}[generalizes Lemma~\ref{greedy: first}]\label{greedy: rest}
+%   The iterative algorithm maintains the following invariant:
+%   the partial solution $X$ is a prefix of some optimal solution.
+% \end{lemma}
+% \begin{longFormProof}
+%   \step Consider the execution of the algorithm on any instance $I=(J_1,J_2,\ldots,J_n)$.
+
+%   \step The invariant holds at the start of the first iteration, when $X = ()$.
+
+%   \begin{block}[greedy: inv]
+%     \step Consider any iteration $t$ such that the invariant holds at the start of the iteration.
+
+%     \step Let $X=(X_1, \ldots, X_k)$ be the jobs in $X$
+%     at the start of the iteration.
+
+%     \smallskip 
+    
+%     \begin{block}[greedy: easy]
+%       \step \underline{Case 1.}
+%       Consider the case that iteration $t$ doesn't change $X$.
+%       \step By inspection of the invariant, the iteration preserves the invariant.
+%     \end{block}
+
+%     \smallskip 
+
+%     \begin{block}[greedy: hard]
+%       \step \underline{Case 2.}  
+%       Otherwise iteration $t$ changes $X$, to, say, $X'=(X_1,\ldots,X_k, J_t)$.
+
+%       \step[greedy: S] Let $S=(X_1, \ldots, X_k, J_s , Z_1, \ldots, Z_\ell)$
+%       be an optimal solution that $X$ is a prefix of
+%       (per invariant).
+
+%       \step Let $S'=(X_1, \ldots, X_k, J_t , Z_1, , \ldots, Z_\ell)$
+%       be obtained by replacing $J_s$ in $S'$ by $J_t$.
+
+%       \step Then $X'$ is a prefix of $S'$.
+%       To show the invariant is maintained, we show $S'$ is optimal for $I$.
+      
+%       \step Since $S$ is pairwise disjoint,
+%       the job $J_s\in S$ is disjoint from each $X_i\in S$.
+
+%       \step So job $J_s$ was not considered in any previous iteration
+%       (as it would've been added to $X$ then).
+
+%       \step So $s \ge t$, and job $J_t$ ends no later than $J_s$ ends.
+%       (Using here the ordering of the jobs.)
+
+%       \step And $J_s$ ends before any subsequent job $Z_j\in S'$ starts,
+%       so $J_t$ must also.
+
+%       \step And Alg.~Line 3.1 ensures that $J_t$ is disjoint
+%       from each preceding job $X_i \in S'$.
+
+%       \step So $S'$ is also pairwise disjoint.  It has the same size as $S$, so is also optimal.
+
+%       \step So the invariant is maintained.
+%     \end{block}
+
+%     \smallskip
+    
+%     \step By Blocks~\ref{greedy: easy} and~\ref{greedy: hard}, the invariant holds after the iteration.
+%   \end{block}
+%   \step By Block~\ref{greedy: inv}, each iteration that starts with the invariant true ends with it true.
+%   \step And the invariant holds initially.  So it holds throughout.
+% \end{longFormProof}
+
+% Correctness follows easily from the invariant.
+
+Here's what we've figured out:
+
+\begin{theorem}
+  There is a linear-time algorithm for (unweighted) \prob{Covering by Intervals}
+  (or $O((n+m)\log (n+m))$ time if jobs and demand points are not already sorted).
+\end{theorem}
+% \begin{longFormProof}
+%   \step Consider the execution of the algorithm on any instance $I$.
+%   \step Consider the state after the final iteration $n$.  Let $X$ be the set at that time.
+%   \step By Lemma~\ref{greedy: inv}, the invariant holds then,
+%   so $X \subseteq S$ for some optimal solution $S$.
+%   \step But $S$ can't contain any job $J_t$ that isn't in $X$
+%   (otherwise job $J_t$, being in $S$, is disjoint from each job in $X$,
+%   and would have been added to $X$ in iteration $t$).
+%   \step So $X=S$, and the set $X$ returned by the algorithm is an optimal solution for $I$.
+% \end{longFormProof}
+% % proof. [we leave the proof as an exercise.. just adapt the proof of Claim1.]
+
+\subsection{Exercises}
+
+% \paragraph{Exercise with solution}
+\exercise\label{greedy: exercise: covering by intervals rules} \emph{(\prob{Covering by Intervals} counter-examples)}
+Find a counter-example for each of the first three rules
+proposed in Section~\ref{greedy: sec: covering by intervals}
+for choosing a first job for \prob{Covering by Intervals}.
+(Earliest start time, largest job, job that covers the most demand points.)
+
+% \solution The first two rules are easy to break.
+% Here's a counter-example for the third:
+% \(I=\{
+%   [0,2],
+%   [1,4], [1,4], [1,4], 
+%   [3,6],
+%   [5,8], 
+%   [7,10],
+%   [9,12], [9,12], [9,12],
+%   [11,13]
+%   \}\).
+% Graphically:
+
+% \centerline{
+%   \begin{tikzpicture}[scale=0.5]\footnotesize
+%     \draw (0,0) -- (2, 0) node[midway,auto] {\footnotesize $J_1$}; 
+%     \draw (1,1) -- (4, 1) node[midway,auto] {\footnotesize $J_{2}$};
+%     \draw (1,2) -- (4, 2) node[midway,auto] {\footnotesize $J_{3}$};
+%     \draw (1,3) -- (4, 3) node[midway,auto] {\footnotesize $J_{4}$};
+%     \draw (3,0) -- (6, 0) node[midway,auto] {\footnotesize $J_{5}$}; 
+%     \draw (5,1) -- (8, 1) node[midway,auto] {\footnotesize $J_{6}$};
+%     \draw (7,0) -- (10, 0) node[midway,auto] {\footnotesize $J_{7}$};
+%     \draw (9,1) -- (12 , 1) node[midway,auto] {\footnotesize $J_{8}$};
+%     \draw (9,2) -- (12 , 2) node[midway,auto] {\footnotesize $J_{9}$};
+%     \draw (9,3) -- (12 , 3) node[midway,auto] {\footnotesize $J_{10}$};
+%     \draw (11,0) -- (13, 0) node[midway,auto] {\footnotesize $J_{11}$};
+%   \end{tikzpicture}
+% }
+
+% \smallskip
+
+% The third rule chooses $J_6=[5,8]$ first, but the only correct solution
+% is $S=\{J_1, J_5, J_7, J_{11}\} = \{[0,2], [3,6], [7,10], [11,13]\}$,
+% which does not contain $J_6$.
+
+% \paragraph{Exercises without solutions}
+
+\exercise\label{greedy: exercise: covering by intervals example}
+What is a correct output for the \prob{Covering by Intervals} instance below?
+
+\[J = \{[0, 4], [2, 6], [3, 8], [7, 11], [9, 13], [10, 14], [12, 15], [12, 16], [14, 18]\};
+  X = \{4, 5, 6, 8, 10, 13, 15, 17\}.
+\]
+
+\centerline{
+  \begin{tikzpicture}[scale=0.5]\footnotesize
+    \draw (0,0) -- (4, 0) node[midway,auto] {\footnotesize $J_1$}; 
+    \draw (2,1) -- (6, 1) node[midway,auto] {\footnotesize $J_{2}$};
+    \draw (3,2) -- (8, 2) node[midway,auto] {\footnotesize $J_{3}$};
+    \draw (7,0) -- (11, 0) node[midway,auto] {\footnotesize $J_{4}$};
+    \draw (9, 1) -- (13, 1) node[midway,auto] {\footnotesize $J_{5}$}; 
+    \draw (10,2) -- (14, 2) node[midway,auto] {\footnotesize $J_{6}$};
+    \draw (12,3) -- (15, 3) node[midway,auto] {\footnotesize $J_{7}$};
+    \draw (12,0) -- (16 , 0) node[midway,auto] {\footnotesize $J_{8}$};
+    \draw (14,1) -- (18 , 1) node[midway,auto] {\footnotesize $J_{9}$};
+    \node[anchor=east] at (2,-1) {demand points:};
+    \node at (4,-1) {\textbullet}; 
+    \node at (5,-1) {\textbullet}; 
+    \node at (6,-1) {\textbullet}; 
+    \node at (7.9,-1) {\textbullet}; 
+    \node at (10.1,-1) {\textbullet}; 
+    \node at (13,-1) {\textbullet}; 
+    \node at (15,-1) {\textbullet}; 
+    \node at (17,-1) {\textbullet}; 
+  \end{tikzpicture}
+}
+
+% \paragraph{External exercises without solutions}
+% \begin{itemize}
+% \item \JE Chapter 4, Exercises 1, 2, 3 (Covering by Intervals)
+% \end{itemize}
+
+\subsection{External sources on \prob{Covering by Intervals}}
+
+\begin{itemize}
+\item  \JE Chapter 4 (and Exercises 1, 2, 3)
+\end{itemize}
+
+% This gives us the following iterative algorithm:
+
+% 1. Assume (by sorting the jobs if necessary) that the jobs are ordered by increasing ending time.
+% 2. Initialize A to the empty set.
+% 3. For each job J_d, in order of increasing ending time, do:
+% 4.   If J_d conflicts with any job in A, skip it.
+% 5.   Otherwise, add it to A.
+% 6. Return A.
+
+% It follows from the "general claim" above that the algorithm maintains the desired invariant.  Does this mean the algorithm is correct?  Not quite.  We know the invariant holds at the end.  So, the solution A at termination is a subset of some optimal solution S*.  But is A in fact an _entire_ optimal solution?  
+
+% Suppose for contradiction that A is a proper subset of S*.  Then there is at least one job, say J_d, that is in S* but not A.  The algorithm considered J_d in some iteration, and when it did, it did not add it (because it is not in A now).  So, that job must have a conflict with some job in A.  But A is a subset of S*, so that job also has a conflict with some job in S*.  This contradicts that S* is an independent set.  So we can conclude that A is not a proper subset of S*.  So it must equal S*.  So A is an optimal solution.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

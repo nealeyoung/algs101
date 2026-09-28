@@ -1,0 +1,262 @@
+\section{An incorrect algorithm for finding a 2D Local Maximum}\label{dc: sec: local max}
+\doHeader{Local Maximum (NOT!)}
+
+\subsection{1D Local Maximum}
+For warm-up, we first consider the 1-dimensional problem.
+
+\paragraph{Problem definition.}
+The 1D Local Maximum problem is defined as follows:
+
+\begin{mylist}
+
+\item[\textbf{input:}] An array $A[1..n]$ of numbers.
+
+\item[\textbf{output:}]
+A \emph{local maximum}, which is a cell $A[i]$ such that every neighboring cell in the array has a value that is at most $A[i]$.  (The neighboring cells are those among $A[i-1]$ and $A[i+1]$ that are actually present in $A$.) 
+
+\end{mylist}
+
+\paragraph{Algorithm.}
+There is a linear-time (that is, $O(n)$-time) algorithm: just check each cell.
+
+Here is an $O(\log n)$-time algorithm using divide and conquer:
+
+\begin{myframed}\small
+  \begin{steps}
+  \item[] {\sf local-max-1D}$(A[1..n])$
+
+    \step if $n = 1$, return $A[1]$
+
+    \step let $m = \lceil n/2\rceil$
+
+    \step if $A[m]$ is a local maximum of $A[1..n]$, return $A[m]$
+
+    \step if $A[m+1] > A[m]$, return {\sf local-max-1D}$(A[m+1..n])$
+
+    \step else ($A[m-1] > A[m]$)  return {\sf local-max-1D}$(A[1..m-1])$
+  \end{steps}
+\end{myframed}  
+
+\paragraph{Running time.}
+The running time $T(n)$ satisfies $T(n) = O(1) + T(n/2)$.  So $T(n) = O(\log n)$.
+
+\paragraph{Correctness.}
+
+\begin{lemma}
+  The 1D algorithm is correct.
+\end{lemma}
+\begin{longFormProof}
+  \step The proof is by induction on $n$.
+
+  \step Let $P(n)$ be the predicate ``the algorithm is correct on all inputs of size $n$''.
+
+  \step By inspection of algorithm~Line 1 and the definition of local maximum, $P(1)$ holds.
+
+  \begin{block}[dc: ind hyp 1D]
+    \step Consider any execution of the algorithm on any input $A$ with $n\ge 2$.
+    Assume $P(i)$ for $1\le i < n$.
+
+    \begin{block}[dc: X]
+      \step \underline{Case 1}.
+      Suppose $A[m]$ is a local maximum of $A[1..n]$.
+      \step By inspection of algorithm Line 3, the algorithm is correct on this input.
+    \end{block}
+    \begin{block}
+      \step \underline{Case 2}.
+      Otherwise, suppose $A[m+1] > A[m]$.
+      \step Then any local maximum of $A[m+1..n]$ is also a local maximum of $A[1..n]$.
+      \\ (Note: in the case that the local max is $A[m+1]$, this follows from $A[m+1] > A[m]$.)
+      \step So (by inspection of Line 4), the algorithm is correct on this input.
+    \end{block}
+    \begin{block}
+      \step \underline{Case 3}. In the remaining case, $A[m-1] > A[m]$.
+      \step Then any local maximum of $A[1..m-1]$ is also a local maximum of $A[1..n]$.
+      \step So (by inspection of Line 5), the algorithm is correct on this input.
+    \end{block}
+    \step One of the three cases holds, so the algorithm is correct in this input.
+  \end{block}
+  \step By Block~\ref{dc: ind hyp 1D}, $P(n)$ holds as long as $P(i)$ holds for $1\le i < n$.
+  \step Since $P(1)$ holds, by induction $P(n)$ holds for all $n\ge 1$.
+\end{longFormProof}
+
+
+\subsection{2D Local Maximum}
+
+Next we consider two dimensions.
+
+\paragraph{Problem definition.}
+The 2D Local Maximum problem is defined as follows:
+
+\begin{mylist}
+
+\item[\textbf{input:}] An $n\times n$ array $A[1..n, 1..n]$ of numbers.  %, where $n=2^k-1$ for some integer $k$.
+
+\item[\textbf{output:}]
+A \emph{local maximum}, which is a cell $A[i,j]$ such that every neighboring cell in the array has a value that is at most $A[i,j]$.  (The neighboring cells are those among $A[i, j+1]$, $A[i, j-1]$, $A[i-1, j]$, $A[i+1, j]$ that are actually present in $A$.) 
+
+\parbox{4in}{
+Note that the neighbors of a local max $A[i,j]$ can have the \emph{same} value as $A[i,j]$.
+For example, in the array to the right, the local maxima are in bold.}
+~~{\footnotesize
+\(
+\begin{array}{ccc|c|ccc}
+  \mathbf 0 & 0 & 0 & \mathbf 0 & 0 & 0 & \mathbf 0 \\
+  0 & 1 & \mathbf 1 & 0 & 3 & \mathbf 4 & 0 \\
+  \mathbf 3 & 2 & 0 & 1 & \mathbf 3 & 1 & 0\\ \hline
+  2 & \mathbf 5 & 0 & \mathbf 3 & 0 & 1 & 0\\ \hline
+  \mathbf 4 & 1 & 0 & 0 & 1 & \mathbf 3 & 0\\
+  3 & \mathbf 3 & 0 & 1 & \mathbf 2 & 1 & 0 \\
+  0 & 0 & \mathbf 0 & 0 & 0 & 0 & \mathbf 0
+\end{array}
+\)}
+\end{mylist}
+
+\paragraph{Algorithm.}
+There is a linear-time (that is, $O(n^2)$-time) algorithm: just check each cell.
+We want a faster algorithm.
+We propose the following algorithm.
+Assume for simplicity that $n$ is of the form $2^i-1$ for some integer $i$. 
+(The ``cross'' $X$ in Step 2 below is shown in the array above.)
+
+\begin{myframed}\small
+  \begin{steps}
+  \item[] {\sf local-max}$(A[1..n, 1..n])$ \comment{We assume $n\ge 1$.}
+
+    \step Let $X$ be the set consisting of the $2n-1$ cells lying in column $(n+1)/2$ or row $(n+1)/2$ of $A$.
+
+    \step Check each cell in $X$ to see if it is a local maximum in $A$.  If so, return such a cell.  Otherwise:
+
+    \step Let $A[i, j]$ be any cell in $X$ with maximum value (among cells in $X$).
+
+    \step Let $A[i', j']$ be a neighbor of $A[i,j]$ in $A$ with $A[i', j'] > A[i,j]$.  (It exists, as $A[i,j]$ is not a local max.)
+
+    \step Partition $A \setminus X$ (the array $A$, minus the cells in $X$) around $X$ into its four
+    $(n-1)/2 \times (n-1)/2$ quadrants --- the upper left, upper right, lower left, and lower right --- in the natural way.
+
+    \step Among those, let $A'$ be the quadrant containing the cell $A[i', j']$.
+
+    \step Recursively compute a local maximum of the subarray $A'$, and return that cell.
+  \end{steps}
+\end{myframed}
+
+\paragraph{Run time.}
+Recall that the input has size $n\times n = n^2$.
+
+\begin{lemma}
+  The algorithm above can be implemented to run in $O(n)$ time.
+\end{lemma}
+\begin{proof}[Proof sketch.]
+  Let $T(n)$ denote the worst-case run time on an $n\times n$ input array.
+  Then $T(1) = O(1)$.
+  Consider running the algorithm on any input with $n\ge 2$.
+  The cross $X$ has $O(n)$ cells, so Lines 2--7 can be implemented to take $O(n)$ time.
+  So $T(n) = T((n-1)/2) + O(n)$.
+  So $T(n) = O(n)$.
+\end{proof}
+
+\paragraph{Correctness.}
+Before we prove correctness, we prove the following utility lemma:
+\begin{lemma}\label{dc: lemma: utility}
+  % [review 2026-09-27] fix: stale line number; A' is defined in Line 6 of the algorithm (was Line 7)
+  During any execution of the algorithm that reaches Line 6,
+  the quadrant $A'$ defined there contains a local maximum of $A$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider the following process.
+  
+  \begin{myframed}
+    \begin{steps}
+    \item[~(i)] Put a token on the cell $A[i', j']$.
+
+    \item[\,(ii)] While the token's cell is not a local maximum in $A$ do:
+
+    \item[(iii)]~~~~Move the token to a neighboring cell with larger value.
+    \end{steps}
+  \end{myframed}
+
+  % [review 2026-09-27] fix: stale line number; A[i,j] is chosen as a maximum of X in Line 3 of the algorithm (was Line 4)
+  \step Each cell in $X$ is no larger than $A[i,j]$ (by Line 3 of the algorithm), and $A[i, j] < A[i',j']$.
+
+  \step So each cell in $X$ is smaller than $A[i', j']$.
+
+  \step So by inspection of the process it never moves the token into $X$.  The token stays in $A'$.
+
+  \step The process must stop, because each move increases the value of the cell with the token.
+
+  \step So the token ends on a cell in $A'$ that is also a local maximum of $A$.
+\end{longFormProof}
+
+Now we prove correctness...
+
+\begin{lemma}[Wrong!]\label{dc: lemma: local max}
+  The algorithm is correct.
+\end{lemma}
+\begin{longFormProof}
+  \step The proof is by induction on $n$.
+
+  \step Let $P(n)$ be the predicate ``the algorithm is correct on all $n\times n$ inputs''.
+
+  \step For any input with $n=1$, the cross $X$ contains the entire array, so Line 2 returns a local max.
+
+  \step So $P(1)$ holds.
+
+  \begin{block}[dc: ind hyp]
+    \step\label{dc: step: ind} Consider any execution of the algorithm on any input $A$ with $n\ge 2$.
+    Assume $P(i)$ for $1\le i < n$.
+
+    \begin{block}
+      % [review 2026-09-27] fix: stale line numbers; the early return is in Line 2 of the algorithm (was Line 3, twice)
+      \step \underline{Case 1.} Suppose the algorithm returns in Line 2.
+      \step By inspection of Line 2, it returns a local max of $A$.
+    \end{block}
+    \begin{block}
+      % [review 2026-09-27] fix: stale line number; the recursive return is Line 7 of the algorithm (was Line 8)
+      \step \underline{Case 2.} Otherwise the algorithm returns in Line 7.
+      \step The quadrant $A'$ contains a local max of $A$ (by Lemma~\ref{dc: lemma: utility}).
+      \step By Step~\ref{dc: step: ind}, $P((n-1)/2)$ holds, so the recursive call (on $A'$) returns a local max of $A'$.
+      % [review 2026-09-27] fix: stale line number; the recursive return is Line 7 of the algorithm (was Line 8)
+      \step By the previous two steps, the algorithm (Line 7) returns a local max of $A$.
+    \end{block}
+    \step So, in either case, the algorithm returns a local max of $A$.  That is, it is correct on input $A$.
+  \end{block}
+
+  \step By Block~\ref{dc: ind hyp}, for any $n\ge 2$, if $P(i)$ holds for $1\le i < n$,
+  then $P(n)$ holds.
+  
+  \step By Step 4, $P(1)$ holds.
+
+  \step By the previous two steps and induction, $P(n)$ holds for all $n\ge 1$.
+
+  \step That is, the algorithm is correct.
+\end{longFormProof}
+
+\pythonCode{divide_and_conquer/local_maximum.py}
+
+\subsection{Exercise}
+\exercise\label{dc: exercise: local max} \emph{(\prob{Local Max} proof)}
+The proof of Lemma~\ref{dc: lemma: local max} is wrong.
+
+\begin{enumerate}[label=(\alph*)]
+\item In the proof of correctness (Lemma~\ref{dc: lemma: local max}),
+where precisely is the error?  More specifically,
+what is the \emph{first} step in the long-form proof that asserts a statement that is not necessarily true?  What is the mistake in the reasoning in that line?
+
+\item Give an input (with $n\le 7$) on which the \prob{2D Local Max} algorithm in Section~\ref{dc: sec: local max} fails.
+  Describe the execution of the algorithm on that input.
+  We encourage you to verify your answer using the Python implementation in
+  \pycode{divide_and_conquer/local_maximum.py}.  
+\end{enumerate}
+
+
+\subsection{External sources on finding a local maximum}
+
+\begin{mylist}[-]
+\item MIT (``Peak Finding''):
+  \\ slides: \url{https://courses.csail.mit.edu/6.006/spring11/lectures/lec02.pdf}
+  \\ video and lecture notes: \URLsmall{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-1-algorithmic-thinking-peak-finding/}
+\end{mylist}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "divide_and_conquer"
+%%% End:

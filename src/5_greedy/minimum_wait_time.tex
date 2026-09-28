@@ -1,0 +1,315 @@
+\section{Minimizing Total Wait Time}\label{sec: min wait time}
+\doHeader{Minimizing Total Wait Time}
+
+\paragraph{Problem Definition}
+\begin{mylist}
+\item[\bf input:] a sequence $T=(t_1, t_2, \ldots, t_n)$ of $n$ \emph{tasks},
+  each with an associated \emph{length} $\ell(t_i)$.
+\item[\bf output:] a permutation $T'=(t'_1, t'_2, \ldots, t'_n)$ of $T$ minimizing the \emph{total wait time},
+  denoted  $W(T')$ and defined as $W(T') = \sum_{i=1}^n \sum_{j=1}^i \ell(t'_j)$.
+\end{mylist}
+Intuitively, we must choose an order in which to do the tasks
+so as to minimize the sum of their respective times until completion,
+assuming the $j$th task we do (task $t'_j$)
+starts when the $(j-1)$st task finishes,
+and then takes time $\ell(t'_j)$ equal to the task's length.
+
+We start with some observations that will be useful for developing an algorithm.
+\begin{observation}\label{obs: wait time 1} 
+  % Fix any instance $T=(t_1, \ldots, t_n)$ and permutation $T'=(t'_1, \ldots, t'_n)$.
+  The wait time $W(T')$ can also be expressed as
+  \[
+    W(T') = \sum_{j=1}^n (n-j+1)\, \ell(t'_j).
+    % = n\, \ell(t'_1) + (n-1) \ell(t'_2) + \cdots + 2\, \ell(t'_{n-1}) + \ell(t'_n).
+  \]
+\end{observation}
+The observation holds by considering the sum that defines $W(T')$:
+the $j$th task $t'_j$ contributes its length $\ell(t'_j)$
+to its own completion time, and to the completion times of the $n-j$ following jobs.
+
+Next we consider how swapping two adjacent tasks changes the wait time.
+\begin{observation}\label{obs: wait time 2} 
+  For any permutation $T'=(t'_1, \ldots, t'_n)$,
+  and any $j$ with $1\le j \le n-1$,
+  let $T''=(t''_1, \ldots, t''_n)$ be the permutation obtained from $T'$ by swapping
+  the $j$th job $t'_j$ with the following job $t'_{j+1}$.
+  That is, $t''_j = t'_{j+1}$, $t''_{j+1} = t'_j$,
+  and $t''_i = t'_i$ for all $i\not\in \{j, j+1\}$.
+
+  Then $W(T'') = W(T') + \ell(t'_{j+1}) - \ell(t'_j)$.
+\end{observation}
+The observation follows from the previous one.
+(Swapping increases the coefficient of $\ell(t'_{j+1})$ by 1,
+and decreases the coefficient of  $\ell(t'_{j})$ by 1.)
+
+We'll use the observation to show that $t'_1$ should be the shortest task.
+The next observation will then allow us to decouple the problem of choosing the first task $t'_1$
+from the problem of ordering the remaining $n-1$ tasks, $(t'_2, \ldots, t'_n)$.
+\begin{observation}\label{obs: wait time 3} 
+  For any permutation $T'=(t'_1, \ldots, t'_n)$,
+  let
+  $R'=(r'_1, r'_2, \ldots, r'_{n-1}) = (t'_2, t'_3, \ldots, t'_{n})$
+  be the permutation that $T'$ induces on the $n-1$ tasks other than $t'_1$.
+  Then
+  \[
+    W(T') = n\, \ell(t'_1) + W(R').
+  \]
+\end{observation}
+Note that $W(R')$ is the total wait time of the permutation $R'$ of the remaining $n-1$ tasks,
+considered as an independent instance with just those $n-1$ tasks.
+(Observation~\ref{obs: wait time 3} can be verified by using Observation~\ref{obs: wait time 1}
+to expand $W(T')$ and $W(R')$, then using $r'_j = t'_{j+1}$.)
+
+\paragraph{Algorithm.}
+Now we consider the first greedy choice.
+We use Observation~\ref{obs: wait time 2} to show that
+we can put any shortest task first:
+
+\begin{lemma}\label{lemma: wait time 1}
+  Consider any instance $T=(t_1, \ldots, t_n)$ with $n\ge 1$.
+  Let $t_m$ be any task of minimum length, so $\ell(t_m) = \min_i \ell(t_i)$.
+  Then there is an optimal solution $T'$ that starts with job $t_m$.
+  % That is, $T'$ is of the form $T'=(t_m, r'_1, r'_2, \ldots, r'_{n-1})$,
+  % where  $R'=(r'_1, r'_2, \ldots, r'_{n-1})$ is some permutation of the remaining $n-1$ tasks.
+\end{lemma}
+\begin{longFormProof}[Proof of Lemma~\ref{lemma: wait time 1}.]
+  \step Consider any instance $T$ with $n\ge 1$ and let $t_m$ be any task of minimum length.
+  \step Let $T'$ be an optimal permutation (there is one, as the number of permutations is finite).
+  \begin{block}
+    \step \underline{Case 1.} Suppose $T'$ starts with task $t_m$ (that is, $t'_1 = t_m$).
+    \step Then there is an optimal solution (namely $T'$) that starts with task $t_m$.
+  \end{block}
+  \begin{block}
+    \step \underline{Case 2.} Otherwise task $t_m$ is not first in $T'$.
+    \step Consider bringing task $t_m$ to the front by repeatedly swapping it with the task before it.
+    \step By Observation~\ref{obs: wait time 2} (and $\ell(t_m) \le \ell(t_j)$ for all $j$)
+    each swap does not increase the total wait time.
+    \step So the resulting permutation (which starts with task $t_m$) is also optimal.
+  \end{block}
+\end{longFormProof}
+
+By Lemma~\ref{lemma: wait time 1}, it is safe to choose any minimum-length task $t_m$ to go first.
+Next we use Observation~\ref{obs: wait time 3},
+to show that, once the first task is chosen as $t_m$,
+we can simply recurse on the remaining $n-1$ tasks.
+That is, any optimal permutation of those tasks (considered as an independent instance with $n-1$ tasks)
+will work.
+
+\begin{lemma}\label{lemma: wait time recurse}
+  Consider any instance $T=(t_1, t_2, \ldots, t_n)$ with $n\ge 1$.
+  Let $t_m$ be any task of minimum length, so $\ell(t_m) = \min_i \ell(t_i)$.
+  Let $R=(r_1, r_2, \ldots, r_{n-1})$ be the $n-1$ remaining tasks (other than $t_m$).
+  Let $R'=(r'_1, r'_2, \ldots, r'_{n-1})$ be any optimal permutation of those $n-1$ tasks.
+
+  Then the permutation $T'=(t_m, r'_1, r'_2, \ldots, r'_{n-1})$ is optimal for $T$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any such $T$, $m$, $R$, $R'$, and $T'$.
+
+  \step Let $T^*=(t^*_1, t^*_2, \ldots, t^*_{n})$ be an optimal permutation of $T$ with $t^*_1=t_m$
+  ($T^*$ exists by Lemma~\ref{lemma: wait time 1}).
+
+  \step Let $R^*=(t^*_2, \ldots, t^*_n)$ be the permutation that $T^*$ induces on the tasks other than $t_m$.
+
+  \step Since $R'$ is an optimal permutation of those $n-1$ tasks, $W(R') \le W(R^*)$.
+
+  \step Using  Observation~\ref{obs: wait time 3}, then $W(R') \le W(R^*)$, then Observation~\ref{obs: wait time 3} again,
+  \[
+    W(T') \,=\, n\, \ell(t_m) + W(R') \,\le\, n\, \ell(t_m) + W(R^*) \,=\, W(T^*).
+  \]
+
+\end{longFormProof}
+
+This gives us the following algorithm:
+
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{rMinWaitTime}$(t_1, t_2, \ldots, t_n)$:}]
+    \step if $n = 0$: return the empty sequence
+    \step let $t_m$ be a job of minimum length
+    \step let $(r_1, r_2, \ldots, r_{n-1})$ be the $n-1$ jobs other than $t_m$, in any order
+    \step let $(r'_1, r'_2, \ldots, r'_{n-1}) = \textsf{rMinWaitTime}(r_1, r_2, \ldots, r_{n-1})$
+    \step return $T'=(t_m, r'_1, \ldots, r'_{n-1})$
+  \end{steps}
+\end{myframed}
+
+\paragraph{Correctness}
+\begin{lemma} The algorithm is correct.
+\end{lemma}
+\begin{shortFormProof}
+  The proof is by induction on $n$.
+  For the base case $n=0$, the algorithm is clearly correct.
+  Consider any $n\ge 1$.
+  Assume inductively that the algorithm is correct on all inputs of length $n-1$.
+  Consider executing the algorithm on any input $T=(t_1, t_2, \ldots, t_n)$ of length $n$.
+  Let $t_m$, $(r_1, r_2, \ldots, r_{n-1})$, $(r'_1, r'_2, \ldots, r'_{n-1})$, 
+  and $T'$ be as computed in the algorithm.
+  (See the algorithm for their definitions.)
+  By the inductive assumption $(r'_1, r'_2, \ldots, r'_{n-1})$ is optimal for $(r_1, r_2, \ldots, r_{n-1})$.
+  Hence, by Lemma~\ref{lemma: wait time recurse}, $T'$ is optimal for $T$.
+\end{shortFormProof}
+
+\paragraph{Run time.}
+Clearly the algorithm can be implemented to run in $O(n^2)$ time.
+But we can do better.  Observe that the algorithm simply sorts the jobs
+by increasing length.  This can be done via Mergesort in $O(n\log n)$ time.
+So  the algorithm can be implemented to run in $O(n\log n)$ time.
+
+The next theorem summarizes what we've figured out:
+\begin{theorem}
+  There is an $O(n\log n)$-time algorithm for \prob{Minimizing Total Wait Time}.
+\end{theorem}
+
+Exercise~\ref{exercise: min wait time} % (Section~\ref{sec: exercises})
+asks you to extend this result to a more general
+% [review 2026-09-27] fix: weights must be positive (not just non-negative), since the exercise orders jobs by $\ell_i/w_i$, which is undefined for $w_i = 0$
+problem where each task also has a positive \emph{weight},
+and the goal is to minimize the \emph{weighted} sum of completion times.
+
+\subsection{Exercises}
+
+\paragraph{Exercise without solution}
+
+\exercise\label{exercise: min wait time}
+Consider the following generalization of the problem in Section~\ref{sec: min wait time}.
+\begin{mylist}
+\item[\bf input:] an integer $n\ge 0$, and for each $i\in\{1,\ldots,n\}$,
+  % [review 2026-09-27] fix: weight must be positive so that $\ell_i/w_i$ (used below) is defined
+  a \emph{job length} $\ell_i$ and positive \emph{weight} $w_i$.
+\item[\bf output:] a permutation $\pi$ of the $n$ jobs minimizing the \emph{weighted sum of completion times},
+  % [review 2026-09-27] fix: objective attached weight $w_i$ to position $i$ instead of to the job $\pi(i)$ in that position (as written, ordering by $\ell_i/w_i$ is not optimal); changed to $w_{\pi(i)}$
+  defined as $\sum_{i=1}^n w_{\pi(i)} \sum_{j=1}^i \ell_{\pi(j)}$.
+\end{mylist}
+Prove carefully that ordering the jobs by increasing $\ell_i/w_i$ works
+(generalizing the algorithm in Section~\ref{sec: min wait time}).
+% [review 2026-09-27] fix: "even when $(\ell_i,w_i) = (\ell_j,w_j)$" should be $\ne$ (ties in the ratio occur with unequal pairs, e.g. (1,2) and (2,4))
+Make sure your proof correctly handles instances with ties, where $\ell_i/w_i = \ell_j/w_j$ for some jobs $i$ and $j$.  This can happen even when $(\ell_i, w_i) \ne (\ell_j, w_j)$!
+
+
+\subsection{External sources on \prob{Minimizing Total Wait Time}}
+
+\begin{itemize}
+\item 
+  \href{http://jeffe.cs.illinois.edu/teaching/algorithms/book/04-greedy.pdf}{JE Chapter 4} Section 4.1
+  (As of August 2019,
+  Erickson's presentation has a subtle error.
+  In our terminology, his Lemma 4.1 states that
+  \emph{any permutation that orders the tasks by increasing length is optimal}.
+  But what his proof actually shows is the converse:
+  \emph{any permutation that doesn't order the tasks by increasing length isn't optimal}.
+  These are not the same!  We've filed a bug report.)
+  
+\end{itemize}
+
+% \section{Minimizing Total Wait Time}\label{sec: min wait time}
+% \doHeader{Minimizing Total Wait Time}
+
+% \paragraph{Problem Definition.}
+% \begin{mylist}
+% \item[\bf input:] a sequence $\ell=(\ell_1, \ell_2, \ldots, \ell_n)$ of non-negative numbers, called \emph{job lengths}
+% \item[\bf output:] a permutation $\pi$ of the $n$ jobs minimizing the \emph{total wait time},
+%   defined as $\sum_{i=1}^n \sum_{j=1}^i \ell_{\pi(j)}$.
+% \end{mylist}
+% Intuitively, there are $n$ jobs $1, 2, \ldots, n$.
+% We must choose a permutation $\pi(1), \pi(2), \ldots, \pi(n)$ of those jobs
+% so as to minimize the sum of their respective wait times (time until completion),
+% assuming the $j$th job we do (job $\pi(j)$)
+% starts when the $(j-1)$st job finishes,
+% and takes additional time $\ell_{\pi(j)}$.
+
+% \paragraph{Algorithm.}
+% Let's try the ``make one choice then recurse'' approach.
+% For this problem, a natural first choice is to commit to placing the shortest job first.
+% The algorithm does this, then recurses on the remaining jobs:
+
+% \begin{myframed}
+%   \begin{steps}
+%   \item[{\textsf{rMinWaitTime}$(\ell_1, \ell_2, \ldots, \ell_n)$:}]
+%     \step if $n = 0$: return the empty sequence
+%     \step let $\ell_j$ be a job of minimum length
+%     \step let $\ell'_1, \ell'_2, \ldots, \ell'_{n-1}$ be the jobs other than $\ell_j$
+%     \step return $\ell_j$ followed by \textsf{rMinWaitTime}$(\ell'_1, \ell'_2, \ldots, \ell'_{n-1})$
+%   \end{steps}
+% \end{myframed}
+
+% This can be implemented in $O(n\log n)$ time using, say, Mergesort.
+
+% Note that if some jobs have equal lengths, the output depends on how ties are broken.
+
+% We can also think of this algorithm as follows:
+% choose the shortest job to go first,
+% then recurse on the remaining jobs.
+% ``Choose one piece then recurse''
+% is a common template for many greedy algorithms.
+
+% \paragraph{Correctness.}
+% We first calculate how swapping two adjacent changes the wait time.
+% \begin{observation}\label{obs: wait time} 
+%   Fix any input $\ell_1, \ell_2, \ldots, \ell_n$ and permutation $\pi$.
+%   Let $\pi'$ be the permutation obtained from $\pi$ by swapping
+%   two jobs $\pi(j)$ and $\pi(j+1)$, for some given $j$.
+%   That is, $\pi'(j) = \pi(j+1)$, $\pi'(j+1) = \pi(j)$,
+%   and $\pi'(i) = \pi(i)$ for all $i\ne j$.
+
+%   Then the total wait time for $\pi'$ equals the total wait time for $\pi$ plus
+%   $\ell_{\pi(j+1)} - \ell_{\pi(j)}$.
+% \end{observation}
+% The observation holds by calculation.
+% (After swapping,
+% job $\pi(j)$ now has to wait for job $\pi(j+1)$,
+% increasing the total wait time by $\ell_{\pi(j+1)}$.
+% But job $\pi(j+1)$ no longer has to wait for job $\pi(j)$,
+% decreasing the total wait time by $\ell_{\pi(j)}$.)
+
+% Now we show that the algorithm is correct:
+
+% \begin{lemma}\label{lemma: ordered is opt}
+%   For any input $\ell_1, \ell_2, \ldots, \ell_n$, any permutation $\pi$
+%   that orders the jobs by increasing length is optimal.
+%   That is, the algorithm is correct.
+% \end{lemma}
+% \begin{longFormProof}
+%   \step Consider any input $\ell$ and permutation $\pi$ that orders the jobs by increasing length.
+%   \step Let $\pi^*$ be an optimal permutation (there is at least one, as the number of permutations is finite).
+%   \step Then $\pi^*$ also orders the jobs by increasing length.
+%   (Otherwise it has a job followed by a shorter job.
+%   By Observation~\ref{obs: wait time} swapping them
+%   decreases the wait time, contradicting that $\pi^*$ is optimal).
+%   \step So $\pi$ and $\pi^*$ both order the jobs by increasing length.
+%   \step So $\pi$ can be obtained from $\pi^*$ by repeatedly swapping
+%   adjacent, equal-length jobs.
+%   \step By Observation~\ref{obs: wait time}, each such swap preserves the wait time.
+%   \step So the two permutations give the same total wait time, and $\pi$ is also optimal.
+% \end{longFormProof}
+
+% We have shown the following result:
+% \begin{theorem}
+%   There is an $O(n\log n)$-time algorithm for Minimizing the Total Wait Time.
+% \end{theorem}
+
+% Exercise~\ref{exercise: min wait time} (Section~\ref{sec: exercises})
+% asks you to extend this result to a more general
+% problem where each job also has a non-negative \emph{weight},
+% and the goal is to minimize the \emph{weighted} sum of completion times.
+
+% \paragraph{Other resources on \prob{Minimizing Total Wait Time}}
+
+% \begin{itemize}
+% \item 
+%   \href{http://jeffe.cs.illinois.edu/teaching/algorithms/book/04-greedy.pdf}{JE Chapter 4} Section 4.1
+%   (As of August 2019,
+%   Erickson's presentation subtly glosses over the issue of equal-length jobs.
+%   In our terminology, his Lemma 4.1 states that
+%   \emph{any permutation that orders the jobs by increasing length is optimal}
+%   (equivalent to the second lemma above).
+%   But what his proof actually shows is the converse:
+%   \emph{any optimal permutation orders the jobs by increasing length},
+%   (equivalent to the first lemma above).
+%   We've filed a bug report!)
+  
+% \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

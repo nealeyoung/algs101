@@ -1,0 +1,271 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+% Local override, kept so this homework's PDF matches its original exactly:
+% the shared macros (src/macros/macros.tex) now define answerBox differently (with an overflow check and a tick at the bottom).
+\renewenvironment{answerBox}[1]{%
+  \def\ANSWERBOXHEIGHT{#1}
+  \begin{adjustbox}{valign=t}
+  \begin{minipage}{\textwidth}
+}{\end{minipage}\end{adjustbox}~~~\adjustbox{valign=t}{\parbox{0pt}{\color{gray}\rule[-\ANSWERBOXHEIGHT]{0.01pt}{\ANSWERBOXHEIGHT}}}}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{9}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\gradescopeInit
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\problem\emph{(Sections 7.5 and 7.6; Lecture Note 2)}
+
+Consider the following problem, \prob{Counting Subset Sums}:
+
+\begin{mylist}
+\item[\bf input:] A pair $I=(v, T)$ where $v=(v_1, v_2, \ldots, v_n)$ is a sequence
+  of positive integers and $T\ge 0$ is an integer.
+
+\item[\bf output:]
+  The number of subsequences of $v$ with total $T$.  That is,
+  \[\Big|\big\{ S\subseteq\{1,2,\ldots,n\} : v(S) = T\big\}\Big|,\]
+  where for notational convenience throughout we define
+  $v(S) = \sum_{i\in S} v_i$.
+\end{mylist}
+
+This problem differs from \prob{Counting Ways to Make Change} (HW 7 Problem 3).
+In this problem each of the given numbers can be used at most once.
+
+\bigskip
+
+Fix an input $(v, T)$.   For each $i\in\{0, 1,\ldots, n\}$ and $t\in\{0,1,\ldots,T\}$,
+define $N(i, t)$ to be the number of subsequences of $(v_1, \ldots, v_i)$ with total $t$.
+That is, 
+\[N(i, t) = \Big|\big\{ S\subseteq\{1,2,\ldots,i\} : v(S) = t\big\}\Big|.\]
+
+The correct output for the given input is $N(n, T)$.
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+  Give a recurrence relation for $N(i, t)$ for all $i\in\{0,1,\ldots,n\}$ and $t\in\{0,1,\ldots, T\}$,
+  including the base cases.
+  State the recurrence relation as a lemma (see the template).
+
+\item
+  Complete the partial long-form proof of the lemma given in the template.
+  You can use a proof structure similar to the one for the long-form proof of correctness for \prob{Knapsack} in Section 7.6.
+
+\end{enumerate}
+
+You don't need to give the resulting algorithm or analyze the running time.
+But you can test your recurrence, by implementing the resulting algorithm,
+at \url{https://www.hackerrank.com/nealeyoung-algs101-subset-sums-and-piles}
+(the ``Counting Subset Sums'' challenge, which asks for the count mod $2^{30}$).
+(This is just for testing. Hacker-Rank submissions won't be graded.)
+
+% \newpage
+
+\vfill
+
+% \setlength{\ITEMHT}{1.9in}
+% {% \injectEnumerate
+\inputAnswer{problem_1_answer}
+% }
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
+
+\problem\emph{(Sections 7.5 and 7.6)} \GradescopeComment{This should be on page 4 (top) of your PDF.}
+
+Design a dynamic-programming algorithm for \prob{Smallest Subset Sum}:
+\begin{mylist}
+\item[\bf input:] A pair $I=(v, T)$ where $v=(v_1,v_2, \ldots, v_n)$ is a sequence
+  of positive integers and $T\ge 0$ is an integer.
+\item[\bf output:]
+  The minimum size of any subsequence of $v$ with total $T$:
+  \[\min \big\{ |S| :\, S\subseteq\{1,2,\ldots,n\},\, v(S) = T\big\},\]
+  where, for notational convenience throughout we define $v(S) = \sum_{i\in S} v_i$.
+\end{mylist}
+Recall that the minimum of the empty set is $\infty$.
+ (So, if no subsequence of $v$ has total $T$, the output should be $\infty$.)
+
+\begin{enumerate}[label=(\alph*)]
+
+\item 
+  Per Section 7.4,
+  define the subproblems that your algorithm solves for a given input $(v=(v_1,\ldots, v_n), T)$.
+
+\item Which subproblem gives the final answer?
+
+\item State an appropriate recurrence relation, including boundary cases. 
+
+\item In terms of $n$ and $T$, what is the big-$\Theta$ running time of the resulting iterative (or recursive and memoized) algorithm?
+
+\end{enumerate}
+
+You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs101-subset-sum-and-lcs}.
+(This is just for testing. Hacker-Rank submissions won't be graded.)
+
+\vfill
+
+\setlength{\ITEMHT}{2in}
+{\injectEnumerate
+  \inputAnswer{problem_2_answer}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3 %%%%%%%%%%%%%%%%%
+
+\newpage
+
+\problem\emph{(Section 7.8)}
+
+Design an $O(\ell m n)$-time dynamic-programming algorithm for the \prob{Three-Way LCS} problem:
+\begin{mylist}
+\item[\bf input:] a triple $I=(A[1..\ell],B[1..m],C[1..n])$ of three sequences.
+\item[\bf output:] the maximum length of any common subsequence of $A[1..\ell]$, of $B[1..m]$, and of $C[1..n]$.
+  \smallskip 
+  (That is, the maximum length of any sequence that is simultaneously a subsequence of $A$, of $B$, and of $C$.)
+\end{mylist}
+
+\begin{enumerate}[label=(\alph*)]
+\item Per Section 7.4, define the subproblems the algorithm solves given input $(A[1..\ell], B[1..m], C[1..n])$.
+\item Which subproblem gives the final answer? 
+\item State the recurrence relation, including boundary cases.
+\item What is the running time of the resulting (iterative, or recursive and memoized) algorithm?
+\end{enumerate}
+
+You can test your algorithm at \url{https://www.hackerrank.com/nealeyoung-algs101-subset-sum-and-lcs}.
+(This is just for testing. Hacker-Rank submissions won't be graded.)
+
+\vfill
+\setlength{\ITEMHT}{2in}
+{\injectEnumerate
+  \inputAnswer{problem_3_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 4 %%%%%%%%%%%%%%%%%
+
+\newpage
+
+\problem 
+
+Consider the flow network $G=(V,E)$ with edge capacities as shown below:
+
+\begin{center}
+  \begin{tikzpicture}[
+    vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+    label/.style={midway, fill=white, inner sep=2pt}, 
+    every path/.style={->}
+    ]
+    \node[vertex] (s) {s}; 
+    \node[vertex] (b) [right =of s] {b}; 
+    \node[vertex] (a) [above =of b] {a}; 
+    \node[vertex] (c) [below =of b] {c}; 
+    \node[vertex] (d) [right =of a, xshift=20pt] {d}; 
+    \node[vertex] (f) [right =of b, xshift=20pt] {f}; 
+    \node[vertex] (g) [right =of c, xshift=20pt] {g}; 
+    \node[vertex] (t) [right =of f] {t}; 
+
+    %% EDGES AND CAPACITIES START HERE
+
+    \path (s) edge node [label] {10} (a); % edge s -> a
+    \path (s) edge node [label] {5}  (b); % edge s -> b
+    \path (s) edge node [label] {15}  (c); % etc.
+
+    \path (a) edge node [label] {4} (b) ;
+    \path (a) edge node [label] {9} (d) ;
+    \path (a) edge node [label] {15} (f); 
+
+    \path (b) edge node [label] {8} (f) ;
+    \path (b) edge node [label] {4} (c) ; 
+
+    \path (c) edge node [label] {30} (g) ; 
+
+    \path (d) edge node [label] {10} (t) ; 
+    \path (d) edge node [label] {15} (f) ; 
+
+    \path (f) edge node [label] {10} (t) ; 
+    \path (f) edge node [label] {15} (g) ; 
+
+    \path (g) edge node [label] {10} (t) ; 
+    \path (g) edge node [label] {6} (b) ; 
+  \end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item 
+  Find a maximum-value $s$-$t$ flow $f$ in the network.
+  Draw the network, labeling each edge $(u, w)$ with the flow $f(u,w)$ on the edge.
+
+\item
+  What is the value of the flow? 
+
+\item
+  Find an $s$-$t$ cut $(S, T=V\setminus S)$ of minimum capacity in the network.
+  For the cut you found, what is $S$?
+
+\item
+  And what is the capacity of the cut?
+
+\end{enumerate}
+
+\vfill
+
+\setlength{\ITEMHT}{1in}
+{\injectEnumerate
+  \inputAnswer{problem_4_answer}
+}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

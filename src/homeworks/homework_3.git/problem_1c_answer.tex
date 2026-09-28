@@ -1,0 +1,81 @@
+\paragraph{Problem 1(c) answer}\GradescopeComment{This should be on page 4 of your PDF.}
+
+\begin{lemma}
+  For all $n\ge 1$,  $T(n) \le \BLUE{
+    \REPLACEME
+  } n$.
+\end{lemma}
+
+\begin{longFormProof}
+
+  \step The proof is by induction on $n$.
+
+  \step\label{step: base case}
+
+  Each base case $n\in\{1,2,3,4\}$ holds because
+  \BLUE{
+    \REPLACEME
+  }
+  \begin{block}\label{block: inductive step}
+    
+    \step Consider any $n\ge 5$, and assume inductively that $T(m)\le \BLUE{
+      \REPLACEME
+    } m$ for $1\le m < n$.
+
+    \step We'll show that $T(n) \le \BLUE{ \REPLACEME } n$.
+
+    \step Recall the recurrence relation, $T(n) = n + T(\lfloor n/4\rfloor) + T(\lfloor 2n/3 \rfloor)$.
+
+    \step By the inductive assumption, \BLUE{
+      \REPLACEME
+    }
+    
+    \step and
+    \BLUE{
+      \REPLACEME
+    }
+
+    \BLUE{
+      \step   \REPLACEME
+    }
+
+    \step That is, $T(n)\le \BLUE{
+      \REPLACEME
+    } n$.
+  \end{block}
+
+  \step By Block~\ref{block: inductive step},
+  for all $n\ge 5$, if $T(m)\le \BLUE{
+    \REPLACEME
+  } m$ for $1\le m < n$,  then $T(n)\le \BLUE{
+    \REPLACEME
+  } n$.
+
+  \step By this, Step~\ref{step: base case}, and induction, $T(n)\le \BLUE{
+    \REPLACEME
+  } n$ for all $n\ge 1$.
+\end{longFormProof}
+
+\newpage
+
+\paragraph{Problem \arabic{problem} collaboration and citations}\GradescopeComment{This should be on page 5 (top) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_2"
+%%% End:

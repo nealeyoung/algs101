@@ -1,0 +1,172 @@
+
+\begin{answerBox}{2in}          % please don't edit this line, doing so will throw off the page layout
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%
+  %% PROBLEM 4 COLLABORATORS AND CITATIONS 
+  %%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment
+  {This should be on page 8 (bottom) of your PDF.}
+
+  I collaborated on this problem with the following people:
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME            % write "none"if none
+    \end{itemize}
+  \end{blue}
+
+  My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME            % write "none"if none
+    \end{itemize}
+  \end{blue}
+
+\end{answerBox}
+
+\newpage
+
+\paragraph{Problem 4 answer}\GradescopeComment{This should be on page 9 (top) of your PDF.}
+
+\begin{enumerate}[label=(\alph*)]
+
+\ITEM 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 4(a) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  % Find a maximum-value $s$-$t$ flow $f$ in the network.
+  % Draw the network, labeling each edge $(u, w)$ with the flow $f(u,w)$ on the edge.
+
+  Here is the flow:
+
+\begin{answerBox}{3in}          % please don't edit this line, doing so will throw off the page layout
+
+  \begin{center}
+    \begin{tikzpicture}[
+        vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+        label/.style={midway, fill=white, inner sep=2pt}, 
+        every path/.style={->}
+        ]
+      \node[vertex] (s) {s}; 
+      \node[vertex] (b) [right =of s] {b}; 
+      \node[vertex] (a) [above =of b] {a}; 
+      \node[vertex] (c) [below =of b] {c}; 
+      \node[vertex] (d) [right =of a, xshift=20pt] {d}; 
+      \node[vertex] (f) [right =of b, xshift=20pt] {f}; 
+      \node[vertex] (g) [right =of c, xshift=20pt] {g}; 
+      \node[vertex] (t) [right =of f] {t}; 
+
+      %% EDGES AND FLOWS START HERE:
+
+      % replace each question mark below by the flow on the edge:
+      \path (s) edge node [label] { ? } (a);  % replace "?" with flow on edge s->a
+      \path (s) edge node [label] { ? } (b);  % replace "?" with flow on edge s->b
+      \path (s) edge node [label] { ? } (c);  % replace "?" with flow on edge s->c
+
+      \path (a) edge node [label] { ? } (b);  % etc...
+      \path (a) edge node [label] { ? } (d);  
+      \path (a) edge node [label] { ? } (f); 
+
+      \path (b) edge node [label] { ? } (f) ;
+      \path (b) edge node [label] { ? } (c) ; 
+
+      \path (c) edge node [label] { ? } (g) ; 
+
+      \path (d) edge node [label] { ? } (t) ; 
+      \path (d) edge node [label] { ? } (f) ; 
+
+      \path (f) edge node [label] { ? } (t); 
+      \path (f) edge node [label] { ? } (g) ; 
+
+      \path (g) edge node [label] { ? } (t) ; 
+      \path (g) edge node [label] { ? } (b) ; 
+    \end{tikzpicture}
+
+    % Or you can delete the block above, and instead use some other method to draw the network,
+    % get it into a PDF, then include the PDF in your LaTeX document using these commands:
+
+    % \begin{center}
+    %   \includegraphics[height=3in]{YOUR_FILE_NAME_HERE}  % (omit the .pdf extension in the name)
+    % \end{center}
+
+    % See https://texblog.org/2012/02/23/crop-figures-with-includegraphics
+    % if you want to crop the included image.
+
+  \end{center}
+\end{answerBox}
+
+
+\item
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 4(b) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  % What is the value of the flow? 
+
+  The value of the flow is
+  \BLUE{\[
+      \REPLACEME.
+    \]}
+
+\item
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 4(c) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  % [review 2026-09-27] fix: N: comment had the complement backwards: 'T=S\setminus V' -> 'T=V\setminus S'
+  % Find an $s$-$t$ cut $(S, T=V\setminus S)$ of minimum capacity in the network.
+  % For the cut you found, what is $S$?
+
+  The $s$-$t$ cut is $(S, T = V\setminus S)$ where
+  \[
+    S = \{ s,
+    \BLUE{
+      \REPLACEME
+    }
+    \}.
+  \]
+
+
+\item
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 4(d) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  % And what is the capacity of the cut?
+
+  The capacity of the cut is \BLUE{\[
+      \REPLACEME.
+      \]}
+  
+\end{enumerate}
+
+
+%%  THE COLLABORATORS AND CITATIONS STATEMENT IS AT THE TOP OF THIS FILE
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_9"
+%%% End:

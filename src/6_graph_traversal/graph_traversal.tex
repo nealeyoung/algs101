@@ -1,0 +1,949 @@
+\documentclass[11pt]{article}
+
+% \usepackage{ifthen}
+
+\input{macros}
+
+
+% \newcommand{\dist}[2]{\ensuremath{\operatorname{\sf dist}(#1, #2)}}
+% \newcommand{\weight}[1]{\ensuremath{\operatorname{\sf wt}(#1)}}
+% \newcommand{\width}[1]{\ensuremath{\operatorname{\sf width}(#1)}}
+% \newcommand{\gap}[1]{\ensuremath{\operatorname{\sf gap}(#1)}}
+% \newcommand{\opt}[1]{\ensuremath{\operatorname{\sf opt}(#1)}}
+% \newcommand{\cost}[1]{\ensuremath{\operatorname{\sf cost}(#1)}}
+% \newcommand{\leaves}[1]{\ensuremath{\operatorname{\sf leaves}(#1)}}
+% \newcommand{\depth}[2]{\ensuremath{\operatorname{\sf depth}_{#1}(#2)}}
+% \newcommand{\Opt}[1]{\ensuremath{\operatorname{\sf Opt}(#1)}}
+% \newcommand{\remark}[1]{\marginpar{\raggedright\small\emph{#1}}}
+
+% \addtolength{\textheight}{-0.51in}
+
+\begin{document}
+
+\doTitle{6}{Graph Traversal}{Graph Traversal}
+\newpage
+
+\section{Graph terminology and data structures}\label{graphs: sec: intro}\doHeader{Graph terminology and data structures}\label{graphs: sec: background}
+
+\paragraph{Definitions and terminology related to graphs.}
+We assume familiarity with graphs and the following graph-related terms:
+\emph{edge}, \emph{vertex}, \emph{node}, \emph{endpoint} of an edge,
+\emph{directed graph}, \emph{path}, \emph{simple path}, \emph{cycle}, \emph{simple cycle},
+\emph{connected graph}, \emph{strongly connected graph}, \emph{distance} between two nodes.
+We also assume familiarity with trees and the following tree-related terms:
+\emph{rooted tree}, \emph{parent}, \emph{child}, \emph{descendant}, \emph{ancestor}.
+Given a graph $G=(V,E)$,  
+vertices $u,w\in V$ are \emph{neighbors} if they are connected by an edge (that is, if $(u,w)\in E$).
+Given a digraph $G=(V,E)$,
+if the directed edge $(u,w)$ is in $E$,
+then $w$ is an \emph{out-neighbor} of $u$
+and $u$ is an \emph{in-neighbor} of $w$.
+
+\paragraph{Data structures for graphs.}
+
+We generally assume that graphs are stored in \emph{adjacency-list} representation.
+For given graph $G=(V,E)$,
+then, $V$ is represented as a collection of vertices (for example, a linked list or array), and associated with each vertex $v\in V$ is a collection (again, a linked list or array) containing the edges leaving $v$.  The space (memory) required for representing $G$ this way is proportional to the \emph{size} of $G$, that is, the number of edges and vertices, $|V|+|E|$.  The representation allows us to enumerate $V$ in time $O(|V|)$, and to enumerate the edges leaving a given vertex $v$ in time proportional to the out-degree of $v$.  
+
+In some cases (for a directed graph), we may also preprocess the graph (in linear time) to compute, for every vertex $v$, a collection containing the edges \emph{entering} $v$.   Then we can enumerate the vertices into a given $v$ in time proportional to the in-degree of $v$.
+
+We don't use the \emph{adjacency matrix} representation (which stores the edge set as a 2-dimensional array $A$ such that $A[i,j]$ is 1 if there is an edge from the $i$th vertex to the $j$th vertex, and 0 otherwise).  It can save some space (a constant factor) for dense graphs (where most pairs of vertices have an edge). But it is much less efficient for sparse graphs.
+
+It can be convenient to store the collection of vertices
+and the collections of edges in a \emph{hash table} (dictionary).
+This allows checking in constant time whether a given edge is present.
+Generally, we store an \emph{undirected} graph $G=(V,E)$ as a directed graph
+that has both directed edges $(u,w)$ and $(w,u)$ for each (undirected) edge $\{u,w\}\in E$.
+
+For detailed background information on graphs and graph representations, see \JE Chapter 5, \KT Chapter 3, \DPV Chapters 3 and 4, and/or \CLRS Chapter 22.  
+
+When designing algorithms that traverse a graph, keep in mind that the algorithm does not have a ``global'' view of the graph.  Given a vertex $v$, all it has access to is the immediate neighbors of $v$.  
+
+
+\section{Breadth-first Search}\label{graphs: sec: BFS}\doHeader{Breadth-first Search}
+
+Given an graph $G=(V,E)$ and a source vertex $s$,
+how can we efficiently find all the vertices reachable from $s$?
+\emph{Breadth-first search} starts at $s$.
+It then discovers all out-neighbors of $s$ (at distance 1 from $s$).
+From those it finds all out-neighbors of those out-neighbors (at distance 2 from $s$), and so on.
+The algorithm uses two data structures:
+an array $d$ and a FIFO queue $Q$.
+The queue holds the vertices that have been discovered,
+but whose out-edges have not yet been explored.
+As the algorithm proceeds, for each vertex $v$ that has been discovered so far,
+the algorithm records the distance from $s$ to $v$ (that is, $\dist s v$)
+in the array entry $d[v]$.  
+
+\begin{myframed}
+\begin{steps}
+  \item[] {\sf BFS}$(G=(V,E), s)$ \comment{$G$ is a directed or undirected graph, in adjacency-list representation}
+  \step initialize FIFO queue $Q=(s)$;  initialize distance array $d$ with $d[s] = 0$; initialize array $\pi$
+  \step while $Q$ is not empty:
+  \begin{block}
+    \step pop the next vertex, say $u$, from the head of the queue $Q$
+    \step for each edge $(u, w)$ out of $u$:
+    \step~~~if $d[w]$ is not set, then set $d[w] \gets d[u]+1$, set $\pi[w]\gets u$, and add $w$ to the tail of $Q$
+  \end{block}
+  \step for each vertex $v$ such that $d[v]$ is not set, set $d[v] = \infty$
+  \step return $d$ and $\pi$
+\end{steps}
+\end{myframed}
+
+\begin{lemma}[run time]
+  Given any directed or undirected graph $G$ and source $s$,
+  \textsf{BFS}$(G=(V,E), s)$ runs in time linear in the size of $G$
+  (that is, in time $O(|V|+|E|)$).
+\end{lemma}
+\begin{proof}
+  Each vertex $w$ is added to the queue at most once,
+  because (by Line 3.3) $d[w]$ is set the first time $w$ is added,
+  so won't be added again.
+  So each vertex $u$ is popped from the queue in line 3.1 at most once,
+  and the total time for the algorithm is 
+  $O(\sum_{u\in V} 1 + \textsf{out-degree}(u)) = O(|V|+|E|)$. 
+\end{proof}
+
+
+Before we sketch the correctness proof,
+we formally prove some intuitive properties of distances.
+Fix an input $G=(V,E)$ with source $s$.
+For each integer $\ell\ge 0$, define \emph{level $\ell$} to be the set of vertices $v$ with $\dist s v = \ell$.
+
+\begin{lemma}[levels]%\label{graphs: lemma: levels}
+  Level 0 contains just the source $s$. 
+  Each level $\ell>0$ consists of the vertices $w$ such that
+  \emph{(a)} $w$ is not in any level less than $\ell$, and
+  \emph{(b)} there is an edge $(u, w)\in E$ from some vertex $u$ in level $\ell-1$.
+  % [review 2026-09-27] fix: the set-builder required dist(s,w) = l-1 together with dist(s,w) >= l (empty set); the second condition is on u, as in (b): dist(s,u) = l-1
+  That is, each level $\ell>0$ is $\{w\in V: \dist s w \ge \ell,~(\exists (u,w)\in E)\,\dist s u = \ell-1\}$.
+\end{lemma}
+A detailed long-form proof (which just requires reasoning carefully about the definitions)
+is in an appendix to this note.
+Using the lemma,
+we can prove that \textsf{BFS} computes distances correctly:
+
+\begin{lemma}[correctness]%\label{graphs: lemma: correctness}
+  Given any directed or undirected graph $G$ and source $s$,
+  the array $d$ returned by \textsf{BFS}$(G=(V,E), s)$
+  satisfies $d[v] = \dist s v$ for all $v\in V$.
+\end{lemma}
+Roughly, the proof shows by induction that
+\textsf{BFS}$(G, s)$
+discovers the vertices level by level.
+It starts with the queue containing just $\{s\}$ (level 0), with $d[s]$ set to 0.
+When it pops $s$ off the queue, it puts the vertices in level 1 in the queue,
+and sets $d[w]$ for each level-1 vertex to $1$.
+Then, as it pops the level-1 vertices off the queue,
+it appends the level-2 vertices to the queue (setting $d[w]$ for each to 2) and so on.
+In general, as it pops the vertices in any given level $\ell-1$ off the queue,
+it appends the vertices in level $\ell$ to the queue
+(and correctly sets $d[w]$ for each such vertex to $\ell$).
+A detailed long-form proof is in an appendix to this note.
+
+Note that the edges $\{(\pi[v], v) : 0 < d[v] <\infty\}$ form
+the so-called \emph{shortest-path tree $T$} --- rooted at $s$, in which neighbors of $s$ in $G$
+are children of $s$, neighbors of those neighbors are grandchildren, etc.
+so that, for each $\ell\ge 0$, the nodes at depth $\ell$ in $T$ are the vertices in level $\ell$ of $G$,
+and the path from $s$ to any node $v$ in $T$ is a shortest path from $s$ to $v$.
+
+\pythonCode{graph_traversal/breadth_first_search.py}
+
+\subsection*{External sources on Breadth-First Search}
+\begin{itemize}
+\item \JE Sections 5.5--5.6; \KT Sections 3.2--3.3; \DPV Section 4.2; \CLRS Section 22.2.
+\end{itemize}
+
+
+\section{Depth-first Search}\label{graphs: sec: DFS}\doHeader{Depth-first Search}
+
+Breadth-first search expands the search along an even frontier,
+postponing the exploration of a newly discovered vertex
+until all vertices closer to $s$ have been explored.
+In contrast, depth-first-search explores each vertex immediately,
+as soon as it is discovered.
+
+Depth-first-search does not solve a specific computational problem.
+Rather, it is used as the basis for designing algorithms for many problems.
+Here is pseudo-code.  No start vertex is given.
+
+\begin{myframed}
+  \begin{steps}
+  \item[] {\sf DFS}$(G=(V,E))$ \comment{$G$ is a directed or undirected graph}
+    \step initialize {\sf visited} $\leftarrow \emptyset$
+    \comment{(vertices visited so far, initially the empty set)}
+    \smallskip 
+    \step \textbf{define} {\sf DFS1}$(u)$:
+    \comment{(definition of internal subroutine {\sf DFS1})}
+    \begin{block}
+      \step add $u$ to {\sf visited}
+      \step for each edge $(u, w)\in E$ out of $u$:
+      \step~~~if $w \not\in$ {\sf visited}:  {\sf DFS1}$(w)$
+    \end{block}
+    \smallskip 
+    \step for each vertex $u\in V$: \comment{(outer loop that actually calls {\sf DFS1})}
+    \step~~~if $u \not\in$ {\sf visited}:  {\sf DFS1}$(u)$
+  \end{steps}
+\end{myframed}
+
+Consider executing \textsf{DFS} on any graph $G=(V,E)$.
+During the execution, when a call to \textsf{DFS1}$(u)$ is made,
+call this \emph{visiting} vertex $u$.
+Each vertex $u\in V$ is visited exactly once,
+and when $u$ is visited,
+the inner loop iterates over the edges out of $u$,
+so the total time for the execution
+is $O(\sum_{u\in V} 1 + \textsf{out-degree}(u)) = O(|V|+|E|)$.
+That is, DFS runs in linear time.
+
+\pythonCode{graph_traversal/depth_first_search.py}
+\smallskip
+
+\tikzset{
+    dot/.style 2 args={fill, circle, inner sep=0pt, label={#1:\scriptsize #2}},
+    vertex/.style={circle, draw, inner sep=0pt, minimum size=17pt},
+    edge/.style={->,> = latex'}
+}
+
+\begin{wrapfigure}[4]{r}{1.5in}
+  % \centering
+  \vspace*{-45pt}
+  \begin{tikzpicture}[scale=1.5]
+    \node[vertex] (a) at (0,1) {a} ;
+    \node[vertex] (b) at (1,1) {b} ;
+    \node[vertex] (c) at (2,1) {c} ;
+    \node[vertex] (d) at (0,0) {d} ;
+    \node[vertex] (e) at (1,0) {e} ;
+    \node[vertex] (f) at (2,0) {f} ;
+    \draw[edge] (a) -- (b); 
+    \draw[edge] (a) -- (d); 
+    \draw[edge] (d) -- (b); 
+    \draw[edge] (b) -- (e); 
+    \draw[edge] (e) -- (d); 
+    \draw[edge] (c) -- (e); 
+    \draw[edge] (c) -- (f); 
+    \draw[edge] (f) -- (e); 
+  \end{tikzpicture}
+
+  \smallskip 
+  
+  ~~~\underline{the \textsf{DFS} forest}
+
+  \smallskip 
+  
+  \begin{tikzpicture}[scale=1]
+    \node[vertex] (a) at (2,4) {a} ;
+    \node[vertex] (b) at (2,3) {b} ;
+    \node[vertex] (e) at (2,2) {e} ; 
+    \node[vertex] (d) at (2,1) {d} ;
+    
+    \node[vertex] (c) at (3.5,4) {c} ;
+    \node[vertex] (f) at (3.5,3) {f} ;
+    
+    \draw[edge,thick] (a) -- (b); 
+    \draw[edge,dashed] (a) to [out=230,in=140] (d); 
+    \draw[edge,dashed] (d) to [out=130,in=220] (b); 
+    \draw[edge,thick] (b) -- (e); 
+    \draw[edge,thick] (e) -- (d); 
+    \draw[edge,dashed] (c) -- (e); 
+    \draw[edge,thick] (c) -- (f); 
+    \draw[edge,dashed] (f) -- (e); 
+  \end{tikzpicture}
+\end{wrapfigure}
+
+\noindent\parbox{4.85in}{
+  \smallskip
+  
+\subsection{The DFS forest: forward, back, cross, and tree edges}
+Executing DFS on a graph implicitly defines a \emph{DFS forest}.
+To explain, consider executing \textsf{DFS} on the graph $G$ shown to the right
+with $V=\{a,b,c,d,e,f\}$.
+Assume that in Lines 3.2 and 4, vertices are chosen in alphabetical order.
+The recursive calls to \textsf{DFS1} are nested as shown below.
+}
+{\footnotesize
+% [review 2026-09-27] fix: the pseudo-code has no Lines 5.1 or 3.3.1; the outer-loop call is Line 5 and the recursive call is Line 3.3 (comment placed here because verbatim cannot contain comments)
+\begin{verbatim}
+     DFS1(a)        --- called in outer loop, Line 5
+       DFS1(b)      --- called from DFS1(a), Line 3.3
+         DFS1(e)    --- called from DFS1(b), Line 3.3
+           DFS1(d)  --- called from DFS1(e), Line 3.3
+     DFS1(c)        --- called in outer loop, Line 5
+       DFS1(f)      --- called from DFS1(c), Line 3.3
+\end{verbatim}
+}
+The resulting DFS forest is shown to the right.
+It consists of two \emph{DFS trees}.
+The vertices of the DFS forest are the vertices $u$ of $G$,
+each representing the single call to \textsf{DFS1}$(u)$
+made during the execution.
+If the call to \textsf{DFS1}$(u)$
+recursively calls \textsf{DFS1}$(w)$  (following the edge $(u,w)$),
+then $w$ is the child of $u$ in the DFS forest.
+Then edge $(u,w)$ is called a \emph{tree edge}.
+In the diagram, the tree edges are the edges drawn with solid lines.
+The remaining (non-tree) edges in $E$ are not part of the forest.
+They are nonetheless shown in the diagram, but with dashed lines.
+Each non-tree edge $(u,w)\in E$ is classified as one of three types,
+depending on how it interacts with the DFS forest:
+\begin{mylist}
+\item If $w$ is a descendant of $u$ in the forest (in the example, $(a,d)$),
+  then $(u,w)$ is a \emph{forward edge}.
+\item If $u$ is a descendant of $w$ (in the example, $(d, b)$),
+  then $(u,w)$ is a \emph{back edge}.
+\item The remaining non-tree edges (in the example,~$(c,e)$ and $(f,e)$), are \emph{cross edges}.
+\end{mylist}
+  
+Cross edges can only go ``right to left''
+--- from a node $u$ to a node $w$ that was visited before $u$
+--- because otherwise the edge $(u,w)$ would have been traversed
+when $u$ was visited.
+
+What about \emph{undirected} graphs?
+For undirected graphs there cannot be any cross edges!
+Also, each forward edge is also a back edge.
+
+\subsection{Finding connected components in undirected graphs in linear time} 
+In an undirected graph $G=(V,E)$,
+the \emph{connected components} are defined as follows.
+Consider two vertices $u$ and $w$ to be \emph{equivalent}
+if there is a path between $u$ and $w$.
+% [review 2026-09-27] fix: an equivalence relation must also be reflexive; added "reflexive"
+This relation is reflexive, transitive and symmetric,
+and partitions the vertex set into equivalence classes
+$C_1, C_2, \ldots, C_k$,
+each called a \emph{connected component}.
+For every two vertices $u$ and $w$,
+there is a path between $u$ and $w$
+if and only if $u$ and $w$ are in the same component $C_i$.
+There are no edges \emph{between} different connected components in $G$.
+
+Given an undirected graph $G=(V,E)$,
+the connected components of $G$ can be found in linear time
+by doing a single DFS on $G$.
+Then (since there are no cross edges)
+each tree in the DFS forest is a single connected component.
+
+\pythonCode{graph_traversal/depth_first_search.py}
+
+\subsection{Finding a cycle in an undirected graph in linear time} 
+Given an undirected graph $G=(V,E)$,
+DFS can be used to detect in linear time whether $G$ has a cycle, as follows.
+% [review 2026-09-27] fix: an undirected edge is stored in both directions (Section 6.1), so the reverse (w,u) of every tree edge (u,w) is itself a back edge, and "G has a cycle iff DFS produces a back edge" was false (a tree produces back edges); the claim now counts only back edges other than reverses of tree edges
+After running DFS on $G$, if there is a back edge $(u,w)$
+other than the reverse of a tree edge (that is, with $w$ not the parent of $u$),
+then that back edge forms a cycle with the path of tree edges between $u$ and $w$.
+Conversely, suppose the DFS produces no such back edge.
+Since $G$ is undirected, any forward edge would also be such a back edge,
+so there are no forward edges either.
+And DFS of an undirected graph cannot produce any cross edges.
+So, if the DFS produces no such back edge, all of the edges in $G$
+are tree edges (or reverses of tree edges).  Since the trees in the DFS forest don't have cycles, $G$ has no cycle.
+It follows that an undirected graph $G$ has a cycle
+if and only if DFS on $G$ produces such a back edge.
+
+\subsection{Discovery times and finish times}
+
+Executing DFS on a graph implicitly defines
+a \emph{discovery time} $d[u]$ and a \emph{finish time} $f[u]$ for each vertex $u\in V$.
+The discovery time is the time when $u$ is first visited,
+that is, when \textsf{DFS1}$(u)$ is called.
+The finish time is the time when \textsf{DFS1}$(u)$ completes.
+To explicitly compute these times, we could augment DFS as follows:
+
+\medskip
+
+\noindent
+\adjustbox{valign=c}{{\setlength{\textwidth}{5in}
+\begin{myframed}
+  \begin{steps}
+  \item[] {\sf DFS}$(G=(V,E))$
+    \step initialize {\sf visited} $\leftarrow \emptyset$; \textbf{initialize $\mathbf{t\leftarrow 1}$}
+    \smallskip 
+    \step define {\sf DFS1}$(u)$:
+    \begin{block}
+      \step add $u$ to {\sf visited};
+      \textbf{set $\mathbf{d[u] = t}$; increment $\mathbf t$}
+      \comment{(set discovery time for $u$)}
+      \step for each edge $(u, w)\in E$ out of $u$:
+      \step~~~if $w \not\in$ {\sf visited}:  {\sf DFS1}$(w)$
+      \step \textbf{set $\mathbf{f[u] = t}$; increment $\mathbf t$}
+      \comment{(set finish time for $u$)}
+    \end{block}
+    \smallskip 
+    \step for each vertex $u\in V$:
+    \step~~~if $u \not\in$ {\sf visited}:  {\sf DFS1}$(u)$
+  \end{steps}
+\end{myframed}
+}}
+\adjustbox{valign=c}{
+\begin{tikzpicture}[scale=1]
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 1},
+  label={[label distance=-2pt]1:\footnotesize 8}
+  ] (a) at (2,4) {a} ;
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 2},
+  label={[label distance=-2pt]1:\footnotesize 7}
+  ] (b) at (2,3) {b} ;
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 3},
+  label={[label distance=-2pt]1:\footnotesize 6}
+  ] (e) at (2,2) {e} ; 
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 4},
+  label={[label distance=-2pt]1:\footnotesize 5}
+  ] (d) at (2,1) {d} ;
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 9},
+  label={[label distance=-2pt]1:\footnotesize 12}
+  ] (c) at (3.5,4) {c} ;
+  \node[vertex,
+  label={[label distance=-3pt]179:\footnotesize 10},
+  label={[label distance=-2pt]1:\footnotesize 11}
+  ] (f) at (3.5,3) {f} ;
+  
+  \draw[edge,thick] (a) -- (b); 
+  \draw[edge,dashed] (a) to [out=230,in=140] (d); 
+  \draw[edge,dashed] (d) to [out=130,in=220] (b); 
+  \draw[edge,thick] (b) -- (e); 
+  \draw[edge,thick] (e) -- (d); 
+  \draw[edge,dashed] (c) -- (e); 
+  \draw[edge,thick] (c) -- (f); 
+  \draw[edge,dashed] (f) -- (e); 
+\end{tikzpicture}
+}
+
+\smallskip
+
+The discovery and finish times for the example are shown above to the right.
+The discovery time for each vertex $v$
+is shown just to the left of $v$;
+the finish time is shown just to the right.
+Discovery and finish times of the endpoints
+of an edge are related, depending on the type of the edge:
+\begin{observation}\label{graphs: df}
+  In any execution of DFS on a graph $G=(V,E)$,
+  for any edge $(u,w)\in E$,
+  \begin{mylist}
+  \item If $(u,w)$ is a tree or forward edge, then $d[u] < d[w] < f[w] < f[u]$. 
+  \item If $(u,w)$ is a back edge, then $d[w] < d[u] < f[u] < f[w]$. 
+  \item If $(u,w)$ is a cross edge, then $d[w] < f[w] < d[u] < f[u]$.  (Happens only if $G$ is a directed graph.)
+  \end{mylist}  
+\end{observation}
+
+\subsection{Topologically sorting a directed graph in linear time}\label{graphs: sec: topological sort}
+A directed graph $G=(V,E)$
+is \emph{topologically ordered}
+if the vertex set $V$ is given as a sequence $V=(v_1,v_2,\ldots,v_n)$
+such that each edge $(v_i,v_j)\in E$ has $i < j$.
+\prob{Topological Ordering} is the following problem:
+\emph{Given a directed graph $G$, reorder $G$'s vertices so that $G$ is topologically ordered.}
+
+\begin{lemma}
+  If digraph $G$ has a cycle, then it cannot be topologically ordered.
+\end{lemma}
+\begin{proof}
+  Suppose for contradiction that $G$ has been topologically ordered,
+  and has a cycle $C$.
+  Let $v_i$ be the vertex in $C$ with largest index $i$,
+  so that the edge out of $(v_i, v_j)$ in $C$ must have $i > j$,
+  contradicting that $G$ is topologically ordered.
+\end{proof}
+
+So let's amend our problem to the following:
+\emph{Given a digraph $G=(V,E)$, determine whether $G$ has a cycle,
+  and, if not, topologically order the vertices of $G$}.
+We will use DFS to solve it in linear time.
+Consider any execution of DFS on $G$.
+We start with the following observation:
+\begin{observation}\label{graphs: back}
+  \begin{mylist}
+  \item[(i)] If digraph $G$ has a back edge $(u,w)$, then $G$ has a cycle. 
+  \item[(ii)] If $G$ has no back edge, then $f[u] > f[w]$ for each edge $(u,w)\in E$.
+  \end{mylist}
+\end{observation}
+
+For Part (i), note that the back edge $(u,w)$ forms a cycle
+with the path from $u$ to its descendant $w$ in the DFS forest.
+For Part (ii), 
+if there are no back edges, each edge $(u,w)$ is either a tree, forward, or cross edge,
+so, by inspection of Observation~\ref{graphs: df}, $f[u] > f[w]$.
+
+This gives us the following linear-time algorithm.
+Run DFS on $G$.
+If there is a back edge, then $G$ has a cycle.
+Otherwise topologically sort $G$ by reordering the vertices by reverse finishing times.
+(E.g.~push each $u$ on the front of a globally maintained list
+when $f[u]$ is set in Line 3.4 of \textsf{DFS1}$(u)$.)
+After reordering, we have $f[v_1] > f[v_2] > \cdots > f[v_n]$.
+By Observation~\ref{graphs: back}(ii) each edge $(v_i, v_j)$ has $f[v_i]  > f[v_j]$, so has $i < j$.
+That is, the graph is now topologically ordered.
+
+\pythonCode{graph_traversal/depth_first_search.py}
+
+\subsection{Strongly connected components in directed graphs} 
+What is the meaning of ``connected component'' in a \emph{directed} graph?
+The situation is more complicated than in undirected graphs,
+because it can be that there is a path from $u$ to $w$,
+but no path from $w$ to $u$.
+Two vertices $u$ and $w$ are said to be \emph{strongly connected}
+if there is both a path from $u$ to $w$ \emph{and} a path from $w$ to $u$.
+% [review 2026-09-27] fix: an equivalence relation must also be reflexive; added "reflexive"
+This relation is reflexive, transitive and symmetric,
+so it partitions the vertex set into equivalence classes
+$C_1, C_2, \ldots, C_k$,
+each called a \emph{strongly connected component}.
+For each pair of vertices $u, w\in V$, the pair is strongly connected
+if and only if they are in the same component $C_i$.
+There can be edges from one strongly connected component to another,
+but any cycle in $G$ must be wholly contained within a single component.
+
+Given a source vertex $s$, an easy way to compute the strongly connected component containing $s$
+is as follows.  Run DFS (or BFS) to find all vertices that $s$ has a path to.
+Then run DFS (or BFS) on the graph \emph{with all edges reversed} to find all vertices that have a path to $s$.
+(These will be the vertices that $s$ has a path to in the reversed graph.)
+Then the strongly connected component containing $s$
+contains those vertices $v$ in both sets --- such that $s$ has a path to $v$, and $v$ has a path to $s$.
+Thus, one can identify the strongly connected component containing $s$ in linear time.
+
+\smallskip
+
+The following DFS-based algorithm finds \emph{all} the strongly connected components in linear time:
+\begin{myframed}
+\begin{steps}
+  % [review 2026-09-27] fix: SCC took an unused parameter s (the algorithm finds all components, no source); dropped it
+  \item[] {\sf SCC}$(G=(V,E))$ \comment{$G$ is any directed graph}
+  \step Run DFS on $G$.  Record the finish time $f[u]$ of each vertex $u$.
+  \step Obtain digraph $G'=(V,E')$ from $G$
+  by reversing each edge ($E'=\{(w,u) : (u,w)\in E\}$).
+  \step Run DFS on $G'$, ordering $V$ in the outer loop (Line 4)
+  by decreasing $f[u]$ (from the first DFS).
+  \step Let $T_1, T_2, \ldots, T_k$ be the DFS trees in the resulting DFS forest.
+  \step Return $(C_1, C_2, \ldots, C_k)$, where $C_i$ contains the vertices in tree $T_i$.
+\end{steps}
+\end{myframed}
+
+\begin{lemma}
+  The above algorithm returns the strongly connected components of $G$.
+\end{lemma}
+For a proof, see \CLRS Chapter 22.5.
+
+\subsection{Exercises}
+
+\paragraph{External exercises with solutions}
+
+\begin{itemize}
+\item \KT Chapter 3: Solved Exercises 1 (topological ordering) and 2
+\end{itemize}
+
+\paragraph{Exercises without solutions}
+
+\exercise\emph{(DFS)}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style={rounded rectangle, draw},
+    every path/.style={->}
+    ]
+    \node (us) [label={180:11}, label={0:16}] {undershorts}; 
+    \node (pants) [below =of us, label={180:14}, label={0:15}] {pants}; 
+    \node (belt) [below =of pants, label={180:3}, label={0:6}] {belt}; 
+
+    \node (ushirt) [left =of us, yshift=20pt, label={180:1}, label={0:10}] {undershirt}; 
+    \node (shirt) [below =of ushirt, label={180:2}, label={0:9}] {shirt}; 
+    \node (tie) [below =of shirt, label={180:7}, label={0:8}] {tie}; 
+    \node (jacket) [below =of tie, label={180:4}, label={0:5}] {jacket}; 
+
+    \node (shoes) [right =of pants, yshift=-20pt, label={180:12}, label={0:13}] {shoes}; 
+    \node (socks) [above =of shoes, label={180:19}, label={0:20}] {socks}; 
+
+    \node (watch) [right =of socks, yshift=20pt, label={180:17}, label={0:18}] {watch}; 
+
+    \draw (us) -- (pants); 
+    \draw (pants) -- (belt); 
+    \draw (ushirt) -- (shirt); 
+    \draw (shirt) -- (tie); 
+    \draw (tie) -- (jacket); 
+    \draw (shirt) -- (belt); 
+    \draw (belt) -- (jacket); 
+    \draw (us) -- (shoes); 
+    \draw (socks) -- (shoes); 
+    \draw (pants) -- (shoes); 
+  \end{tikzpicture}
+\end{center}
+
+The drawing above shows a directed acyclic graph (DAG) $G=(V,E)$,
+on which a depth-first search (DFS) has been run.
+Each node is labeled with  its discovery time and its finish time during the DFS.
+Show the DFS forest for this execution of DFS.
+Draw all the nodes.
+Draw only the tree edges, not the non-tree edges.
+How many forward edges are there?  
+How many cross edges are there? 
+How many back edges are there? 
+
+\exercise \emph{(Cut vertices in undirected graphs.)}
+Fix any connected, undirected graph $G=(V,E)$.
+A vertex $v\in V$ is a \emph{cut vertex}
+if there are vertices
+$u,w\in V\setminus\{v\}$
+such that every $u$-to-$w$ path in $G$ goes through $v$.
+In other words, removing $v$ from $G$ would increase the number of connected components.
+
+Consider any execution of DFS on $G$.
+As observed in Section~\ref{graphs: sec: DFS},
+because $G$ is a connected, undirected graph,
+the DFS forest will consist of just one rooted tree, say $T$,
+and each non-tree edge is both a back edge and a forward edge.
+There are no cross edges.
+In $T$, say that any tree edge $(v, v')$ is \emph{bypassed} 
+by a back edge $(u, w)$ if $u$ is a descendant of both $v$ and $v'$,
+and $w$ is a proper ancestor of both $v$ and $v'$.
+(In $T$, by definition, each vertex is its own descendant and ancestor.
+A \emph{proper} ancestor of $v$ is an ancestor other than $v$.)
+
+
+\begin{theorem}\label{graphs: not root}
+  Let $v$ be a vertex in $V$ other than the root of the DFS tree $T$.
+  Then $v$ is a cut vertex
+  if and only if, for some child $v'$ of $v$ in $T$, no back edge bypasses $(v, v')$.
+\end{theorem}
+
+\begin{theorem}\label{graphs: root}
+  The root of the DFS tree $T$ is a cut vertex if and only the root has at least two children in $T$.
+\end{theorem}
+
+Give a long-form proof of Theorem~\ref{graphs: not root}.
+
+(For context, these theorems are the basis
+of the following linear-time algorithm for finding the cut vertices in $G$.
+Run DFS on $G$.
+For each $v\in V$,
+define $\ell[v]$ (the \emph{low number} of $v$)
+to be the minimum,
+over all back edges $(u,w)$ out of any descendant $u$ of $v$,
+of $d[w]$.
+Define $\ell[v]=\infty$ if there are no such back edges.
+When finishing the visit to vertex $v$,
+the low number of $v$ can be computed via the recurrence
+\[\ell[v] = \min\big(\min\{d[w] : (v,w) \text{ is a back edge}\},
+  ~\min \{ \ell[v'] : v' \text{ is a child of } v\}\big).\]
+By Theorem~\ref{graphs: not root}, (unless $v$ is the root)
+$v$ is a cut vertex iff it has a child $v'$ such that $(v,v')$
+is not bypassed by some back edge $(u,w)$.
+This happens iff $v$ has a child $v'$ with $\ell[v'] \ge d[v]$.
+So, by computing and checking the low numbers
+as described above, and checking the number of children of the root,
+one can find all cut vertices in $G$ in linear time.)
+
+
+\noindent
+\adjustbox{valign=t}{\parbox{4.6in}{
+\bigskip
+\exercise\label{graphs: exercise: BFS}\emph{(BFS)}
+Simulate BFS on the graph to the right, starting from the node $a$.
+In your answer, just draw the resulting BFS tree and label each node with its distance from $a$.}}
+\adjustbox{valign=t}{
+\begin{tikzpicture}[node distance = 0.6 cm and 1.75cm,on grid,
+thick,state/.style ={circle,draw=black,minimum width =.3 cm}]
+\node[state] (a) {a};
+\node[state] (b) [yshift = 30pt, right =of a] {b};
+\node[state] (c) [yshift = -30pt, right =of b] {c};
+\node[state] (d) [below =of a, yshift=-14pt] {d};
+\node[state] (e) [yshift = 20pt, right =of d] {e};
+\node[state] (f) [yshift = -20pt, right =of e] {f};
+\node[state] (g) [below =of e, xshift=-27pt,yshift=-25pt] {g};
+\node[state] (h) [right =of g] {h};
+\path (a) edge [bend left = 0] (b) 
+		edge [bend left = 0] (c) 
+		edge (d);
+\path (b) edge [bend left = 0] (f);
+\path (c) edge [bend left = 0] (e);
+% [review 2026-09-27] fix: the path for node d ended with "edge (d)", a stray self-loop d->d in the Exercise 6.3 figure; removed it
+\path (d) edge [bend right = 30] (c)
+		edge [bend left = 0] (e);
+\path (e) edge [bend left = 0] (h);
+\path (g) edge [bend left = 0] (h);
+\end{tikzpicture}
+}
+
+% \newpage 
+\noindent
+\adjustbox{valign=t}{\parbox{4.6in}{
+\exercise\emph{(DFS)} Simulate DFS (as described in this note) on the graph to the right.
+When there are multiple choices for the next node to visit, break ties alphabetically
+(choose $a$ before $b$, choose $b$ before $c$, etc.).
+
+\begin{enumerate}[label=(\alph*)]
+  \item Draw the DFS forest that results.
+  
+  \item Label every edge as either tree, forward, backward, or cross.
+
+  \item Label each vertex with its post-order number.
+
+  \item Is this graph a directed acyclic graph (DAG)?
+  \end{enumerate}
+}}
+\adjustbox{valign=t}{
+\begin{tikzpicture}[>= latex, node distance = 1 cm and 1.75cm,on grid, thick,state/.style ={circle,draw=black,black,text=black,minimum width =.3 cm}]
+\node[state] (a) {a};
+\node[state] (b) [right =of a] {b};
+\node[state] (c) [right =of b] {c};
+\node[state] (d) [below =of a, yshift=-10] {d};
+\node[state] (e) [right =of d] {e};
+\node[state] (f) [right =of e] {f};
+\node[state] (g) [below =of d, yshift=-10] {g};
+\node[state] (h) [right =of g] {h};
+\node[state] (i) [right =of h] {i};
+\tikzset{every node/.style={fill=white}} 
+\path[->] 	(a) edge  				(b)
+		(a) edge				(e)
+		(b) edge				(c)
+		(c) edge [bend right=35]	(a)
+		(d) edge				(a)
+		(d) edge				(e)
+		(e) edge				(b)
+		(e) edge				(c)
+		(e) edge				(f)
+		(e) edge				(g)
+		(f) edge				(c)
+		(g) edge				(d)
+		(g) edge				(h)
+		(h) edge				(e)
+		(h) edge				(i)
+		(i) edge				(f);
+\end{tikzpicture}
+}
+\begin{enumerate}
+\item[(e)]
+  If so, give the topological ordering that the DFS-based algorithm (from class and this note)
+  would output after doing the DFS that you simulated above.
+
+  If not, how many strongly connected components does the graph have?  List them all.
+\end{enumerate}
+
+\exercise \emph{(Street Sweeper)}
+You have been hired to clean up the streets of Boston using your street sweeper.  In order to do the job for the lowest cost, you want to devise a way to sweep each street once in each direction.  (That is, for each street, you go up the street once and down the street once to sweep each side of the road.)  All roads are two way.  To find a good route,
+you formally define the following problem
+\begin{mylist}
+\item[]\textsc{Street Sweeper} \dotfill
+\item[\bf input:] a connected, undirected graph $G = (V,E)$
+\item[\bf output:] a (not necessarily simple) cycle $C$ that traverses each edge $(u, w)$ once in each direction\footnote{
+    Formally, the cycle $C$ can be specified as a sequence of \emph{directed}
+    edges $(v_1, v_2), (v_2, v_3), \ldots, (v_{\ell-1}, v_\ell), (v_\ell, v_1)$.
+    In any cycle, each edge must start with the vertex that the edge before ends with
+    (except the \emph{first} edge must start with the vertex that the the last edge ends with).
+    Here, $C$ should contain each edge $(u,w)\in E$ exactly twice: once as $(u,w)$ and once as $(w, u)$.
+  }    
+\end{mylist}
+\begin{enumerate}[label=(\alph*)]
+\item Give a correct output for the input which is the graph from Exercise~\ref{graphs: exercise: BFS}.
+
+
+  \item Give a definition for a correct algorithm for \textsc{Street Sweeper}. 
+    For this part, explain clearly in a few English sentences exactly what your algorithm does.
+
+\item Define your algorithm in pseudocode.
+
+% \item Do one of the following:
+
+% \begin{enumerate}[label=(\roman*)]
+\item
+  Prove your algorithm correct (i.e., gives the correct output for every input).
+  You may cite (without reproving them) facts about DFS that we've observed in these notes.
+  We recommend that you use the long-form proof format, as it will help you catch
+  gaps and errors, and make your proof easier to check.
+
+% \item
+%   Implement your algorithm and submit it for the \emph{second} challenge of the Hacker-Rank Contest for Homework 5, at
+%   \url{https://www.hackerrank.com/nealeyoung-algs101-dfs-edges-and-street-sweeper}.
+%   If your algorithm passes all the tests for that challenge, you will get full credit for this part (Part 3d).
+%   (You don't need to do the first challenge in that contest.)
+
+%   If you choose this option, state here the username that you used for your Hacker-Rank submission.
+%   We will use the last Hacker-Rank submission that you submitted there before your Gradescope submission
+%   for Homework 5 Problem 3.
+
+%   Note that
+%   the academic-integrity policy applies to code you submit.
+%   You must write all of the code you submit on your own.
+%   Don't share code, or write code based on a document shared with any collaborator.
+%   You may adapt code from the lecture notes, including street\_sweeper.pdf.
+
+% \end{itemize}
+
+\item Give the best bound you can on the worst-case running time of your algorithm in terms of $n=|V|$ and $m=|E|$.
+  Explain carefully what your reasoning is as to why the bound you give holds for all inputs.
+  You may use (without reproving them) any facts about DFS that we've observed in these notes.
+  Your algorithm should run in linear time.
+
+\item Implement your algorithm and test your implementation on Hackerrank.com, at
+  \url{https://www.hackerrank.com/nealeyoung-algs101-street-sweeper}.
+\end{enumerate}
+
+\exercise\emph{(DFS Edge Count)}
+Fix an undirected graph $G=(V,E)$, run DFS on $G$, and let $F$ be the resulting DFS forest.
+For each vertex $u\in V$, let $E_u$ be the set of edges in $E$
+that have both endpoints among the descendants of $u$ in $F$ (including $u$ itself).
+Give a linear-time algorithm that computes $|E_u|$ for every vertex $u\in V$.
+Implement your algorithm and test your implementation on Hackerrank.com, at
+\url{https://www.hackerrank.com/nealeyoung-algs101-dfs-edges-and-street-sweeper}
+(the ``DFS Edge Count'' challenge, which specifies how the DFS should break ties).
+
+\paragraph{Exercises with solutions}
+
+\exercise\emph{(implementation)}
+Implement the algorithm for topological sorting in Section~\ref{graphs: sec: topological sort}
+and test your implementation on Hackerrank.com, at
+\url{https://www.hackerrank.com/nealeyoung-algs101-dag-paths-and-topological-sort}
+(the ``Topologically sort or find a cycle'' challenge).
+
+\solution
+\pythonCode{graph_traversal/depth_first_search.py}
+
+\paragraph{External exercises without solutions}
+
+\begin{itemize}
+\item \JE Chapter 5: Exercises 1--28
+\item \CLRS Chapter 22: exercises in Sections 22.1 (background), 22.2 (BFS), 22.3 (DFS), 22.4 (topological sort), 22.5, (strongly connected components), and Problems 22--1 through 22--4 (Page 621)
+\item \DPV: exercises in Chapter 3 (DFS) and Chapter 4 Exercise 4.5
+\item \KT Chapter 3: Exercises 1--12
+\end{itemize}
+
+\subsection{External sources on graphs and linear-time graph traversal}
+
+\begin{itemize}
+\item \JE Chapter 5
+\item \CLRS Chapter 22: Sections 22.1 (background), 22.2 (BFS), 22.3 (DFS), 22.4 (topological sort), 22.5, (strongly connected components)
+\item \DPV~Chapters 3 (DFS) and Sections 4.1--4.2 (BFS)
+\item \KT Chapter 3
+  
+\item MIT lecture video
+  
+
+
+\URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-14-depth-first-search-dfs-topological-sort/}
+
+\end{itemize}
+
+\subsection{Appendix: Proof of correctness for Breadth-First Search}
+
+Here is the detailed proof of correctness for \textsf{BFS}.
+Fix any directed or undirected graph $G=(V,E)$ and source $s$.
+Consider executing \textsf{BFS}$(G=(V,E), s)$.
+Recall that \emph{level $\ell$} is $\{v\in V: \dist s v = \ell\}$, the set of vertices that are at distance $\ell$ from $s$.
+To start we prove some properties of distances.
+
+\setcounter{lemma}{1}
+
+\begin{restatement}
+\begin{lemma}[levels]\label{graphs: lemma: levels}
+  Level 0 contains just the source $s$. 
+  Each level $\ell>0$ consists of the vertices $w$ such that
+  \emph{(a)} $w$ is not in any level less than $\ell$, and
+  \emph{(b)} there is an edge $(u, w)\in E$ from some vertex $u$ in level $\ell-1$.
+  % [review 2026-09-27] fix: the set-builder required dist(s,w) = l-1 together with dist(s,w) >= l (empty set); the second condition is on u, as in (b): dist(s,u) = l-1
+  That is, each level $\ell>0$ is $\{w\in V: \dist s w \ge \ell,~(\exists (u,w)\in E)\,\dist s u = \ell-1\}$.
+\end{lemma}
+\end{restatement}
+\begin{longFormProof}%[Proof of Lemma~\ref{graphs: lemma: levels} (long form).]
+  \step Level 0 contains just $s$ because $s$ is the only vertex reachable from $s$ by a path of length 0.
+  \step Consider any level $\ell>0$ and any vertex $w\in V$.
+  \begin{block}
+    \step Assume that Properties (a) and (b) hold for $w$.
+    \step By Property (b), there is an edge $(u,w)$ where $\dist s u = \ell-1$.
+    \step So there is a length-($\ell-1$) path $p$ from $s$ to some vertex $u$ with $(u,w)\in E$.
+    \step Hence, there is a path from $s$ to $w$ of length $\ell$.  That is, $\dist s w \le \ell$.
+    % [review 2026-09-27] fix: dist(s,w) >= l is Property (a), not (b); changed the citation to (a)
+    \step This and (a) ($\dist s w \ge \ell$) imply $\dist s w = \ell$.  That is, $w$ is in level $\ell$.
+  \end{block}
+  \step\label{graphs: step: only}
+  By the preceding block, if Properties (a) and (b) hold, then $w$ is in level $\ell$. 
+
+  \step To finish we show the converse.
+  \begin{block}
+    \step Assume that $w$ is in level $\ell$, that is, that $\dist s w = \ell$.
+    Property (a) clearly holds ($\dist s w \ge \ell$).
+    \step Let $p$ be a shortest path from $s$ to $w$ with length $\ell$.  (Such a path exists because $\dist s w = \ell$.)
+    \step Let $(u,w)\in E$ be the last edge on path $p$.   Let $p'$ be the prefix of $p$ from $s$ to $u$.
+    \step So $p'$ has length $\ell-1$, and no path from $s$ to $u$ has length less than $\ell-1$
+    \\(because otherwise that path and $(u,w)$ would form a path from $s$ to $w$ of length less than $\ell$).
+    \step So $\dist s u = \ell-1$.  That is, Property (b) also holds. 
+  \end{block}
+  \step By the preceding block, if $w$ is in level $\ell$, then Properties (a) and (b) hold.
+  \step By this and Step~\ref{graphs: step: only}, $w$ is in level $\ell$ if and only if Properties (a) and (b) hold.
+\end{longFormProof}
+
+\begin{restatement}
+\begin{lemma}[correctness]\label{graphs: lemma: correctness}
+  \textsf{BFS}$(G=(V,E), s)$ returns an array $d$ with $d[v] = \dist s v$ for all $v\in V$.
+\end{lemma}
+\end{restatement}
+\begin{longFormProof}%[Proof of Lemma~\ref{graphs: lemma: correctness} (long form).]
+  \step Consider any execution of \textsf{BFS} on some input $(G=(V,E), s)$.
+
+  \step We will show, for each level $\ell\ge 0$, by induction on $\ell$, that
+  the following three properties hold at some time $t_{\ell}$ during the execution of the while loop:
+  \begin{mylist}
+  \item[$A_\ell$ ---] The queue $Q$ contains exactly those vertices in level $\ell$.
+  \item[$B_\ell$ ---] The set of vertices $v$ for which $d[v]$ has been set
+    is exactly the union of levels $0, 1, \ldots, \ell$.
+  \item[$C_\ell$ ---] Each array entry $d[v]$ that has been set has been set correctly, to $\dist s v$.
+  \end{mylist}
+  
+  \step For the base case, level $\ell=0$ is $\{s\}$, so $A_0$, $B_0$, and $C_0$ hold just before the first iteration.
+
+  \begin{block}
+    \step Assume inductively that, for some level $\ell\ge 1$,
+    $A_{\ell-1}$, $B_{\ell-1}$, and $C_{\ell-1}$ hold at some time $t_{\ell-1}$. 
+
+    \step At time $t_{\ell-1}$, by property $A_{\ell-1}$, the queue contains exactly the vertices in level $\ell-1$.
+
+    \step
+    And (by $B_{\ell-1}$ and $C_{\ell-1}$) each vertex $u$ in level $\ell-1$ has $d[u]$ set correctly to $\ell-1$.
+
+    % [review 2026-09-27] fix: "level-(i-1)" used an undefined i; the level is l-1
+    \step Let $t_{\ell}$ be the end-time of the last iteration in which any level-$(\ell-1)$  vertex is popped from $Q$,
+    % [review 2026-09-27] fix: the proof silently relied on FIFO order; added the clause stating where it is used (only level-(l-1) vertices are popped before t_l, so Q at time t_l holds exactly the vertices added since t_{l-1}, which gives A_l)
+    so that, between time $t_{\ell-1}$ and time $t_{\ell}$, the alg.~pops every vertex $u$ in level $\ell-1$ from $Q$
+    (and, because $Q$ is FIFO, pops no other vertex before time $t_{\ell}$,
+    so that at time $t_{\ell}$ the queue contains exactly the vertices added between times $t_{\ell-1}$ and $t_{\ell}$).
+
+    \step\label{graphs: step: d} For each such vertex $u$ that it pops from $Q$,
+    it adds each vertex $w$ with an edge $(u, w)$ such that $d[w]$ is not already set,
+    and it sets $d[w]$ to $d[u]+1 = (\ell-1) + 1 = \ell$.
+
+    % [review 2026-09-27] fix: the property describing d at time t_{l-1} is the inductive hypothesis B_{l-1}, not B_l (which is what is being proved); changed the citation
+    \step By $B_{\ell-1}$, $d[w]$ was set at time $t_{\ell-1}$ if and only if $w$ is in level $\ell-1$ or less.
+
+    \step So, between time $t_{\ell-1}$ and $t_{\ell}$,
+    the algorithm adds to $Q$ those vertices $w$ with an edge $(u,w)$ such that $u$ is a vertex in level $\ell-1$
+    and $w$ is not in a level less than $\ell$.
+
+    \step By Lemma~\ref{graphs: lemma: levels} these added vertices are just those in level $\ell$.
+
+    \step So at time $t_\ell$ Property $A_\ell$ and $B_\ell$ hold.  And $d[w] = \ell$ for each added $w$,
+    so Property $C_\ell$ holds.
+  \end{block}
+  \step Inductively, for every level $\ell\ge 0$, Properties $A_\ell$, $B_\ell$, and $C_\ell$ hold at some time $t_\ell$.
+  \step $B_\ell$ and $C_\ell$ hold for every level $\ell$ at some time during the while loop,
+  and each $d[v]$ is only set once, for every vertex $v$ with finite $\dist s v$, the while loop sets $d[v] = \dist s v$.
+  % [review 2026-09-27] fix: only Line 4 sets d[v] = infinity (Line 5 is the return statement); "Lines 4 and 5 ... set" changed to "Line 4 ... sets"
+  \step Line 4 of the algorithm sets $d[v] = \dist s v = \infty$ for each vertex $v$ that is not in any level.
+  \step So, at termination, $d[v] = \dist s v$ for every $v\in V$.
+\end{longFormProof}
+
+
+
+\codeSection{
+  graph_traversal/graph_library.py,
+  graph_traversal/breadth_first_search.py,
+  graph_traversal/depth_first_search.py}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

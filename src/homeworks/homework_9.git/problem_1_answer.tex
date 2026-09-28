@@ -1,0 +1,194 @@
+
+\begin{answerBox}{2in}          % please don't edit this line, doing so will throw off the page layout
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%
+  %% PROBLEM 1 COLLABORATORS AND CITATIONS 
+  %%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment
+  {This should be on page 2 (bottom) of your PDF.}
+
+  I collaborated on this problem with the following people:
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME            % write "none"if none 
+    \end{itemize}
+  \end{blue}
+
+  My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME            % write "none"if none 
+    \end{itemize}
+  \end{blue}
+
+\end{answerBox}
+
+\newpage
+
+\paragraph{Problem 1 answer}\GradescopeComment{This should be on page 3 (top) of your PDF.}
+
+\begin{answerBox}{1.75in}        % please don't edit this line, doing so will throw off the page layout
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 1(a) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  \paragraph{(a)}~{}
+  \begin{lemma}
+    For any $i\in\{0,1,\ldots,n\}$ and $t\in\{0,1,\ldots, T\}$, for $N$ as defined in the problem statement,
+
+    \[
+      N(i, t) =
+      \begin{blue}
+        \begin{cases}
+          \REPLACEME & \text{ if } \REPLACEME, \\
+          \REPLACEME & \text{ if } \REPLACEME, \\
+          \REPLACEME & \text{ if } \REPLACEME, \\
+          \REPLACEME & \text{ if } \REPLACEME. \\
+        \end{cases}
+      \end{blue}
+    \]
+
+    %% For reference, here is the LaTeX source for the recurrence relation for Knapsack from Section 7.6:
+    %
+    % \[
+    %   V(i,\ell) =
+    %   \begin{cases}
+    %     0 & \text{if } i=0,
+    %     \\
+    %     \max(  V(i-1, \ell), V(i-1, \ell-w_i) + v_i) & \text{if } i > 0 \text{ and } w_i \le \ell,
+    %     \\
+    %     V(i-1, \ell) & \text{if } i > 0 \text{ and } w_i > \ell.
+    %   \end{cases}
+    % \]
+
+  \end{lemma}
+\end{answerBox}
+
+\begin{answerBox}{7in}   % please don't edit this line, doing so will throw off the page layout
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %% 
+  %% PROBLEM 1(b) ANSWER 
+  %% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  \paragraph{(b)}
+
+  \begin{longFormProof}%[First long-form proof.]
+
+    \step Consider any $i\in\{0,\ldots,n\}$ and $t\in\{0,1,\ldots,T\}$.
+
+    % [review 2026-09-27] fix: J: summation index i shadowed the outer i of N(i,t); renamed to j
+    \step Recall that $N(i, t) = \big|\big\{ S\subseteq \{1,2,\ldots,i\} : \sum_{j\in S} v_{j} = t\big\}\big|$.
+
+    \medskip 
+
+    \begin{block}
+      \step \underline{Case 1.} Consider the first base case \BLUE{\REPLACEME}.
+
+      \begin{blue}
+        
+        \step \REPLACEME
+
+      \end{blue}
+
+      \step So $N(i, t) = \BLUE{\REPLACEME}$.
+   
+    \end{block}
+
+    \medskip
+
+    \begin{block}
+      \step \underline{Case 2.} Consider the second base case \BLUE{\REPLACEME}.
+
+      \begin{blue}
+        
+        \step \REPLACEME
+
+      \end{blue}
+
+      \step So $N(i, t) = \BLUE{\REPLACEME}$.
+   
+    \end{block}
+
+    \medskip
+
+    \begin{block}
+      \step \underline{Case 3.}  Next consider the case when \BLUE{\REPLACEME}.
+
+      \step Consider the subsets $S\subseteq \{1,2,\ldots,i\}$ such that $v(S) = t$.
+
+      \step Partition these into two types: (A) those that don't include $i$, and (B) those that do.
+
+      \step\label{step: A or B} $N(i, t)$ is the number of subsets of either type.
+
+      \smallskip 
+      
+      \step The type-A subsets are just the subsets of $\{1,\ldots,i-1\}$ with $v(S) = t$.
+
+      \begin{blue}
+        
+        \step\label{step: A}
+        \REPLACEME
+
+        \smallskip
+
+        \step The type-B subsets \REPLACEME
+
+        \step\label{step: B}  \REPLACEME
+        \smallskip 
+
+        \step By Steps~\ref{step: A or B},~\ref{step: A} and~\ref{step: B}, \REPLACEME
+
+      \end{blue}
+
+      \step So the recurrence holds in this case.
+    \end{block}
+
+    \medskip 
+
+    \begin{block}
+      % [review 2026-09-27] fix: N: Case 4 placeholder was not wrapped in \BLUE like Case 3's
+      \step \underline{Case 4.}  Finally consider the remaining case, when \BLUE{\REPLACEME}.
+
+      \begin{blue}
+        
+        \step \REPLACEME
+
+        \step \REPLACEME
+
+        \step \REPLACEME
+
+      \end{blue}
+
+      \step So the recurrence holds in this case. 
+
+    \end{block}
+
+    \medskip 
+
+    \step By the case analysis (Cases 1--4) above, the recurrence holds.
+
+  \end{longFormProof}
+
+\end{answerBox}
+
+%%  THE COLLABORATORS AND CITATIONS STATEMENT IS AT THE TOP OF THIS FILE
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_9"
+%%% End:

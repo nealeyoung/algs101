@@ -1,0 +1,715 @@
+%%%% DON'T EDIT THIS FILE %%%%
+
+\usepackage{xifthen}% \isempty
+\usepackage{etoolbox}% \patchcmd
+% \usepackage{stringstrings}% \substring
+
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{adjustbox}
+\usepackage{xcolor}
+\usepackage{changepage}
+\usepackage{framed}
+\usepackage{multicol}
+\usepackage{enumitem}
+% \usepackage{listings} % lstlistings environment
+
+\usepackage{makecmds}           %\provideenvironment
+
+\usepackage{xparse,environ}
+\usepackage{letltxmacro}       % \LetLtxMacro
+\usepackage{wrapfig}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{arrows}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{claim}{Claim}
+\newtheorem{observation}{Observation}
+\newtheorem{conjecture}{Conjecture}
+
+% A lemma or theorem restated later with its original number (set with
+% \setcounter) goes in a restatement environment, which gives it its own link
+% anchor (otherwise it would duplicate the original's).
+\newenvironment{restatement}
+  {\def\theHlemma{restated.\thelemma}\def\theHtheorem{restated.\thetheorem}}{}
+
+\newenvironment{myframed}
+{\smallskip\par\noindent\begin{minipage}{\textwidth}\begin{framed}\vspace*{-5pt}}{\vspace*{-5pt}\end{framed}\end{minipage}\smallskip}
+
+
+\definecolor{darkblue}{RGB}{0,0,200}
+
+ 
+\let\oldParagraph\paragraph
+\providecommand{\gradescopeColor}{\color{black}}
+\renewcommand{\paragraph}[1]{\oldParagraph{\gradescopeColor #1}}
+\providecommand{\gradescopeInit}{}
+
+\providecommand{\BLUE}[1]{{\color{darkblue} #1}}
+\providecommand{\REPLACEME}{\textcolor{red}{\ensuremath{\star \cdots \star}}\xspace}
+\provideenvironment{blue}{\color{darkblue}}{}
+
+\newcommand{\dist}[2]{\ensuremath{\operatorname{\sf dist}(#1, #2)}}
+\newcommand{\depth}[2]{\ensuremath{\operatorname{\sf depth}_{#1}(#2)}}
+\newcommand{\cost}[1]{\ensuremath{\operatorname{\sf cost}(#1)}}
+\newcommand{\weight}[1]{\ensuremath{\operatorname{\sf wt}(#1)}}
+% \newcommand{\val}[1]{\ensuremath{\operatorname{\sf val}(#1)}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\capac}{\textsf{cap}}
+\newcommand{\capOf}[1]{\ensuremath{\operatorname{\sf cap}(#1)}}
+\newcommand{\rescap}[1]{\ensuremath{\operatorname{\sf cap}_f(#1)}}
+\newcommand{\into}[1]{\ensuremath{\operatorname{\sf in}(#1)}}
+\newcommand{\out}[1]{\ensuremath{\operatorname{\sf out}(#1)}}
+\newenvironment{LP}[1]{
+  \begin{array}[t]{@{}l@{}}
+    \displaystyle #1 \\
+    \begin{aligned}\\[-10pt]}{\end{aligned}\end{array}}
+
+\newcommand{\opt}[1]{\ensuremath{\operatorname{\sf opt}(#1)}}
+\newcommand{\Opt}[1]{\ensuremath{\operatorname{\sf Opt}(#1)}}
+\newcommand{\half}{\frac{1}{2}}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\giv}{\,|\,}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zp}{\mathbb{Z}_{\ge 0}}
+\newcommand{\R}{\mathbb{R}}
+% \newcommand{\Rp}{\mathbb{R}_{\ge 0}}
+\newcommand{\Rp}{\mathbb{R}_{\tiny +}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Np}{\mathbb{N}_{\ge 0}}
+\newcommand{\calS}{{\cal S}}
+
+\newcommand{\OP}[1]{\text{\small\sc #1}\xspace}
+\newcommand{\Insert}{\OP{Insert}}
+\newcommand{\FindMin}{\OP{Find-Min}}
+\newcommand{\DeleteMin}{\OP{Delete-Min}}
+\newcommand{\DecreaseKey}{\OP{Decrease}}
+\newcommand{\Merge}{\OP{Merge}}
+\newcommand{\Cut}{\OP{Cut}}
+% \newcommand{\prob}[1]{\text{\sc #1}}
+% a problem name; in running text, lines may break inside it
+\DeclareRobustCommand{\prob}[1]{\ifmmode\text{#1}\else#1\fi}
+\newcommand{\encode}[1]{\langle #1 \rangle}
+
+\newcommand{\best}[1]{\text{\sf best}(#1)}
+\newcommand{\worst}[1]{\text{\sf worst}(#1)}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+
+\setlength{\parskip}{2pt}
+\setlength{\parindent}{1em}
+
+% \setlength\fboxsep{0pt}
+
+%%% longFormProof, shortFormProof, block environments
+%%% \step
+
+\newlist{steps}{enumerate}{7}
+\setlist[steps]{wide,
+  topsep=1pt,
+  parsep=1pt,
+  partopsep=1pt,
+  itemsep=0pt,
+  align=left,
+  labelindent=0pt,
+  itemindent=0pt, 
+}
+\setlist[steps,1]{
+  label=\arabic*.,
+  ref=\arabic*
+}
+\setlist[steps,2]{
+  label=\arabic{stepsi}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic*
+}
+\setlist[steps,3]{
+  label=\arabic{stepsi}.\arabic{stepsii}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic{stepsii}.\arabic*
+}
+\setlist[steps,4]{
+  label=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic*
+}
+\setlist[steps,5]{
+  label=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}.\arabic*
+}
+\setlist[steps,6]{
+  label=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}.\arabic{stepsv}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}.\arabic{stepsv}.\arabic*
+}
+\setlist[steps,7]{
+  label=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}. \arabic{stepsv}. \arabic{stepsvi}.\arabic*.,
+  ref=\arabic{stepsi}.\arabic{stepsii}.\arabic{stepsiii}.\arabic{stepsiv}.\arabic{stepsv}. \arabic{stepsvi}.\arabic*
+}
+
+\newcommand{\step}[1][]{\item\maybeLabel{#1}}
+
+\makeatletter
+% \skipitem steps the list counter itself (for block labels).  Give each one
+% its own hyperref link target, since step numbers repeat from proof to proof.
+\newcounter{skipitem}
+\newcommand{\skipitem}{\stepcounter{skipitem}\refstepcounter{\@enumctr}}
+\renewcommand{\theHstepsi}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsii}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsiii}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsiv}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsv}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsvi}{skipitem.\arabic{skipitem}}
+\renewcommand{\theHstepsvii}{skipitem.\arabic{skipitem}}
+\makeatother
+
+\newcommand{\maybeLabel}[1]{\ifthenelse{\isempty{#1}}{}{\label{#1}}}
+
+\newenvironment{longFormProof}[1][Proof (long form).]
+{\begin{proof}[#1]~\par\begin{steps}}{\end{steps}\vspace*{-3ex}\end{proof}}
+
+\newenvironment{shortFormProof}[1][Proof (short form).]
+{\begin{proof}[#1]}{\end{proof}}
+
+\newenvironment{longFormSubProof}[1][Proof.]
+{\begin{adjustwidth}{1em}{0em}\begin{proof}[#1]~\par\vspace*{-2pt}\skipitem\begin{steps}}
+{\end{steps}\vspace*{-1ex}\end{proof}\end{adjustwidth}\smallskip}
+
+\newenvironment{shortFormSubProof}[1][Proof.]
+{\begin{proof}[#1]}
+{\end{proof}\vspace*{-3pt}}
+
+\newenvironment{block}[1][]
+{\skipitem\maybeLabel{#1}\item[] \begin{steps}}{\end{steps}}
+
+\newcommand{\comment}[1]{\hfill{\footnotesize\emph{#1}}}
+\newcommand{\lineacross}{\par\vspace*{-0.7\baselineskip}\noindent\hrulefill\par}
+
+%%% problem
+
+% \newcounter{problem}
+% \newcommand{\problem}[1][]{}
+% {\ifthenelse{\isempty{#1}}{\refstepcounter{problem}}{}%
+%   \paragraph{Problem \ifthenelse{\isempty{#1}}
+%     {\bf\arabic{problem}.}
+%     {#1}} }
+
+\newcommand{\problemNumbered}[1]{
+  \setcounter{problem}{#1}%
+  \addtocounter{problem}{-1}%
+  \problem
+}
+\newenvironment{problemTheorem}{%
+  \setcounter{theorem}{\value{problem}}%
+  \addtocounter{theorem}{-1}%
+  \begin{theorem}[Problem \arabic{problem}]
+  }{\end{theorem}}
+
+\newcounter{problem}
+\newcommand{\problem}[1][]
+{\ifthenelse{\isempty{#1}}
+  {\refstepcounter{problem}\paragraph{Problem~\arabic{problem}.}}
+  {\paragraph{Problem~#1.}}\refreshHeader} 
+
+\newcounter{exercise}
+\newcommand{\exercise}[1][]
+{\ifthenelse{\isempty{#1}}
+  {\refstepcounter{exercise}\paragraph{Exercise~\theexercise.}}
+  {\paragraph{Exercise~#1.}}}
+
+\newcommand{\solution}{\paragraph{Solution.}} 
+
+\newenvironment{mylist}[1][]
+{\begin{list}{#1}{
+      \setlength{\itemsep}{-1pt}
+      \setlength{\labelwidth}{0pt}
+      \setlength{\leftmargin}{1.25em}
+    }}
+{\end{list}}
+
+\newcommand{\LNTitle}{\textcolor{red}{UNDEFINED LNTitle}}
+
+% In a standalone lecture note's table of contents, leave room for numbers
+% like 7.10 (in bold) and 7.10.2.
+\makeatletter
+\newcommand{\LNtocWidths}{%
+  \patchcmd{\l@section}{1.5em}{2.8em}{}{\PackageWarning{macros}{Could not widen section numbers in the contents}}%
+  \renewcommand*{\l@subsection}{\@dottedtocline{2}{2.8em}{3.2em}}%
+  \renewcommand*{\l@subsubsection}{\@dottedtocline{3}{6.0em}{4.1em}}}
+\makeatother
+
+\newcommand{\doTitle}[3]{
+  \pagenumbering{roman}
+  \renewcommand{\LNTitle}{Lecture Note #1, #3}
+  \renewcommand{\currentLN}{#1}
+  \codeListingstrue
+  % number sections, theorems etc., exercises, figures, tables and equations
+  % within the lecture note (e.g. Section 8.2, Lemma 8.6), as in the book
+  \renewcommand{\thesection}{#1.\arabic{section}}
+  \renewcommand{\thelemma}{#1.\arabic{lemma}}
+  \renewcommand{\thedefinition}{#1.\arabic{definition}}
+  \renewcommand{\thetheorem}{#1.\arabic{theorem}}
+  \renewcommand{\thecorollary}{#1.\arabic{corollary}}
+  \renewcommand{\theclaim}{#1.\arabic{claim}}
+  \renewcommand{\theobservation}{#1.\arabic{observation}}
+  \renewcommand{\theconjecture}{#1.\arabic{conjecture}}
+  \renewcommand{\theexercise}{#1.\arabic{exercise}}
+  \renewcommand{\thefigure}{#1.\arabic{figure}}
+  \renewcommand{\thetable}{#1.\arabic{table}}
+  \renewcommand{\theequation}{#1.\arabic{equation}}
+  \LNtocWidths
+  \title{Lecture Note #1\\ #2}
+  \date{draft of \today, by N.~Young\\[2ex] {\small\copyrightNotice}}
+  \maketitle
+  {\small
+    \hypertarget{TOC}{}
+    \tableofcontents
+  }
+  \thispagestyle{empty}
+  % the text starts on page 1, after the title and contents (numbered i, ii, ...)
+  \clearpage
+  \pagenumbering{arabic}
+}
+
+\def\clap#1{\hbox to 0pt{\hss#1\hss}}
+
+\newcommand{\refreshHeader}{}
+\newcommand{\header}{}
+
+\newcommand{\doHeader}[1]{      % for lecture notes
+  \renewcommand{\header}{%
+    \clap{\raisebox{0pt}{\protect\hyperlink{TOC}{$\uparrow$\scriptsize\,\textsc{contents}\hspace{1.1in}}}}%
+    {\footnotesize \LNTitle{} / Section \thesection, #1}} %, #1, draft of \today}}
+  \markboth{\header}{\header}
+}
+
+\newcommand{\SID}{}
+\newcommand{\setAuthor}[1]{\renewcommand{\author}{#1}}
+\newcommand{\setSID}[1]{\renewcommand{\SID}{#1}}
+
+\newcommand{\doHwHeader}[1]{                                         % for homeworks
+  \renewcommand{\refreshHeader}{
+    \renewcommand{\header}{%
+      {\footnotesize \classSection #1 / Problem~\arabic{problem} / draft of \today \hfill \author\ifGradescope~(\SID)\fi~~}}
+    \markboth{\header}{\header}
+  }
+  \renewcommand{\header}{%
+    {\footnotesize \classSection #1 / Instructions / draft of \today \hfill \author\ifGradescope~(\SID)\fi~~}}
+  \markboth{\header}{\header}
+}
+
+% Homework settings, for instructors using the homeworks in a course:
+% \classSection is the course name shown in each homework's running head
+% (e.g. \renewcommand{\classSection}{CS 3000\xspace}), and \Gradescopetrue turns on
+% the instructions for submitting to Gradescope (in its fixed-length mode),
+% the hints saying on which page of the PDF each answer should be, and the
+% student ID in the running head.
+\newcommand{\classSection}{}
+\newif\ifGradescope
+\Gradescopefalse
+\newcommand{\GradescopeComment}[1]{\ifGradescope\comment{#1}\fi}
+
+\pagestyle{myheadings}
+\addtolength{\headsep}{0.2in}
+\addtolength{\topmargin}{-0.3in}
+\addtolength{\textheight}{0.4in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\MF}{\href
+  {https://mfleck.cs.illinois.edu/building-blocks/}
+  {MF}\xspace}
+
+\newcommand{\KWSlides}{\href
+  {https://www.cs.princeton.edu/~wayne/kleinberg-tardos/}
+  {KW slides}\xspace}
+
+\newcommand{\LLM}{\href
+  {https://courses.csail.mit.edu/6.042/spring18/mcs.pdf}
+  {LLM}\xspace}
+
+% \DPV, \KT, \CLRS: textbooks listed (without links) in the table of sources in
+% the Preliminaries note; each prints as a link to its entry in that table.
+\DeclareRobustCommand{\DPV}{\noteLink{prelim}{source.DPV}{DPV}\xspace}
+\DeclareRobustCommand{\KT}{\noteLink{prelim}{source.KT}{KT}\xspace}
+\DeclareRobustCommand{\CLRS}{\noteLink{prelim}{source.CLRS}{CLRS}\xspace}
+\AtBeginDocument{\pdfstringdefDisableCommands{\def\DPV{DPV }\def\KT{KT }\def\CLRS{CLRS }}}
+
+\newcommand{\JE}{\href
+  {https://jeffe.cs.illinois.edu/teaching/algorithms/}
+  {JE}\xspace}
+
+\newcommand{\JEGreedy}{\href
+  {https://jeffe.cs.illinois.edu/teaching/algorithms/book/04-greedy.pdf}
+  {JE Chapter 4}\xspace}
+
+\newcommand{\BBCode}{\href
+{https://northeastern.blackboard.com/webapps/cmsmain/webui/courses/CS3000.MERGED.202010/code?action=frameset&subaction=view&uniq=-jj2max&course_id=_2597392_1&mask=\%2Fcourses\%2FCS3000.MERGED.202010}
+  {code}\xspace}
+
+% The Python code (src/code).  Each lecture note that has code ends with a
+% section listing its files: \codeSection{path, path, ...}.  In the text,
+% \pycode{greedy_algorithms/Dijkstra.py} prints the path as a link to its listing
+% (in the homeworks, which have no listings, to the file on GitHub), and
+% \pycode[text]{...} uses the given text instead.  \pythonCode{path, ...} is the
+% standard sentence ending a section whose algorithms have code:
+% "Python code: path, ... (Section N.k)."
+\newcommand{\codeFolder}{https://github.com/nealeyoung/algs101/tree/main/src/code}
+\newcommand{\codeRepo}{https://github.com/nealeyoung/algs101/blob/main/src/code}
+\newif\ifcodeListings   % set by \doTitle: this document has the listings
+\newcommand{\githubCode}[2][]{\href{\codeRepo/#2}{\ifx\relax#1\relax\nolinkurl{#2}\else#1\fi}}
+\newcommand{\pycode}[2][]{%
+  \ifcodeListings\hyperref[code: #2]{\ifx\relax#1\relax\nolinkurl{#2}\else#1\fi}%
+  \else\githubCode[#1]{#2}\fi}
+\makeatletter
+\newcommand{\pythonCode}[1]{%
+  \def\pythonCode@first{}\def\pythonCode@list{}%
+  \forcsvlist{\pythonCode@add}{#1}%
+  Python code: \pythonCode@list\ (Section~\ref{code: \pythonCode@first}).}
+\newcommand{\pythonCode@add}[1]{%
+  \ifx\pythonCode@first\@empty\def\pythonCode@first{#1}\appto\pythonCode@list{\pycode{#1}}%
+  \else\appto\pythonCode@list{, \pycode{#1}}\fi}
+\makeatother
+
+% Code listings that copy and paste exactly (in PDF viewers that honor the
+% ToUnicode maps, e.g. MuPDF-based ones; PDFKit viewers such as Preview and
+% Skim drop leading spaces, so each listing's heading links to the file on
+% GitHub).  Spaces are typeset as white visible-space glyphs that copy as
+% spaces, and hyphens and asterisks as the T1 glyphs, so they copy as themselves.
+\usepackage[T1,OT1]{fontenc}   % T1 for the code listings only; OT1 stays the default
+\usepackage{listings}
+\pdfgentounicode=1
+\input glyphtounicode
+\pdfglyphtounicode{uni2423}{0020}
+\makeatletter
+\def\lst@visiblespace{\textcolor{white}{\char32}}
+% put an invisible space on each blank line, so that blank lines copy too
+% (listings' OnEmptyLine hook runs before the line break, so patch the loop)
+\def\lst@DoNewLines{%
+    \@whilenum\lst@newlines>\@ne \do {\lst@NewLine \lst@visiblespace}%
+    \ifnum\lst@newlines>\z@ \lst@NewLine \fi}
+\makeatother
+\lstset{language=Python,
+  basicstyle=\fontencoding{T1}\fontfamily{lmtt}\selectfont\footnotesize,
+  upquote=true, showstringspaces=false, columns=fullflexible, keepspaces=true,
+  showspaces=true, literate={-}{{\char45}}1 {*}{{\char42}}1,
+  frame=single, framesep=1ex, rulecolor=\color{gray}}
+% the listings' paths are relative to the lecture note's folder (in the book, to src/)
+\ifdefined\BookMode\newcommand{\codeDir}{code/}\else\newcommand{\codeDir}{../code/}\fi
+% \codefile{path}: a listing of src/code/path, headed by a link to it on GitHub
+\newcommand{\codefile}[1]{%
+  \subsection*{\githubCode{#1}}\label{code: #1}%
+  \lstinputlisting{\codeDir#1}}
+% \codeSection{path, path, ...}: the lecture note's last section, listing its code
+\newcommand{\codeSection}[1]{%
+  \newpage
+  \section{Python code}\doHeader{Python code}
+  This section lists the Python code for this lecture note.
+  Click on a file's name to open the file on GitHub.
+  Copying code from GitHub is more reliable than copying it from this PDF,
+  since some PDF viewers drop the leading spaces (the indentation) of copied lines.
+  \forcsvlist{\codefile}{#1}}
+% the copyright notice, for title pages and the homework first pages
+\newcommand{\licenseURL}{https://github.com/nealeyoung/algs101/blob/main/LICENSE}
+\newcommand{\copyrightNotice}{%
+  \copyright\ 2018--2026 Neal E. Young.
+  Text: CC BY-NC-SA 4.0; code: MIT; except where noted.
+  See \url{\licenseURL}.}
+% the published site: PDFs of the notes, and the homework assignments and templates
+\newcommand{\siteURL}{https://nealeyoung.github.io/algs101/}
+
+\newcommand{\blackboard}{\href
+  {https://northeastern.blackboard.com/webapps/blackboard/execute/launcher?type=Course&id=_2597392_1&url=}
+  {Blackboard}\xspace}
+
+\newcommand{\JUSlides}{\href
+  {http://www.khoury.neu.edu/home/jullman/cs3000f18/schedule.html}
+  {Prof.~Ullman's slides}\xspace}
+
+% a URL on its own line, in three layouts
+\newcommand{\URL}[1]{\par-- \parbox[t]{0.8\textwidth}{\url{#1}} \medskip\par}
+\newcommand{\URLsmall}[1]{\par-- \parbox[t]{0.95\textwidth}{\small\url{#1}} \medskip\par}
+\newcommand{\URLplain}[1]{\par\parbox[t]{\textwidth}{\url{#1}}\par}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\continued}{\vfill\centerline{\emph{(continued)}}\vfill\newpage}
+
+% load hyperref last to avoid conflicts; long URLs may also break after hyphens
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\providecommand{\answerDirectory}{.}
+\newcommand{\inputAnswer}[1]{\refreshHeader\input{\answerDirectory/#1}}
+\newcommand{\inputSection}[1]{\input{#1}}
+
+% Refer to a lecture note by its tag (the prefix of its labels), e.g.
+% \LN{proofs} prints "Lecture Note 2" (in the book, a link to that chapter).  The table below is the only place the numbers appear.
+\makeatletter
+\newcommand{\defineLN}[3]{\@namedef{LNnumber@#2}{#1}\@namedef{LNtag@#1}{#2}\@namedef{LNfile@#2}{#3}}
+\newcommand{\LNnumber}[1]{%
+  \ifcsname LNnumber@#1\endcsname\csname LNnumber@#1\endcsname
+  \else\PackageError{macros}{Unknown lecture-note tag `#1'}{}\fi}
+\newcommand{\LNtag}[1]{\csname LNtag@#1\endcsname}
+\newcommand{\LNfile}[1]{\csname LNfile@#1\endcsname}
+\makeatother
+\defineLN{1}{prelim}{1_preliminaries}
+\defineLN{2}{proofs}{2_proofs}
+\defineLN{3}{matching}{3_stable_matching}
+\defineLN{4}{dc}{4_divide_and_conquer}
+\defineLN{5}{greedy}{5_greedy}
+\defineLN{6}{graphs}{6_graph_traversal}
+\defineLN{7}{dp}{7_dynamic_programming}
+\defineLN{8}{flow}{8_flow_reductions_LP}
+\defineLN{9}{np}{9_NP}
+
+% The text is the same in the book and in the standalone lecture notes; only
+% links differ.  In the book, links to other lecture notes stay in the book.
+% In a standalone note, they open the other note's published PDF.
+% \noteLink{tag}{target}{text} links text to \hypertarget{target} in lecture note tag.
+% \LN{proofs} prints "Lecture Note 2", linked to that lecture note.
+\newcommand{\currentLN}{0}   % in a standalone note, its number (set by \doTitle)
+\newcommand{\notePDF}[1]{\siteURL notes/\LNfile{#1}.pdf}
+\newcommand{\noteLink}[3]{%
+  \ifnum\LNnumber{#1}=\currentLN\relax\hyperlink{#2}{#3}%
+  \else\href{\notePDF{#1}\#nameddest=#2}{#3}\fi}
+% \bookLink{target}{text} links text to \hypertarget{target} in the book's
+% appendices (from a standalone note, in the published book).
+\DeclareRobustCommand{\bookLink}[2]{%
+  \ifdefined\BookMode\hyperlink{#1}{#2}%
+  \else\href{\siteURL lecture_notes_on_algorithms.pdf\#nameddest=#1}{#2}\fi}
+\DeclareRobustCommand{\LN}[1]{%
+  \ifnum\LNnumber{#1}=\currentLN\relax Lecture Note~\LNnumber{#1}%
+  \else\href{\notePDF{#1}}{Lecture Note~\LNnumber{#1}}\fi}
+\pdfstringdefDisableCommands{\def\LN#1{Lecture Note \LNnumber{#1}}}
+
+% Book mode: main.tex defines \BookMode before \input{macros} to combine the
+% lecture notes into one report-class document, one chapter per note.
+% Without \BookMode (each lecture note on its own, and the homeworks) none
+% of this applies.
+\ifdefined\BookMode
+  \usepackage{etoc}
+
+  % links to other lecture notes stay in the book
+  \renewcommand{\noteLink}[3]{\hyperlink{#2}{#3}}
+
+  % each chapter is a lecture note, and is called one, as in the standalone notes
+  \renewcommand{\chaptername}{Lecture Note}
+  \setcounter{secnumdepth}{3}   % number subsubsections, as in the standalone notes
+
+  % global table of contents, for main.tex
+  \newcommand{\bookContents}{%
+    \hypertarget{TOC}{}%
+    \etocsetnexttocdepth{section}%
+    \tableofcontents}
+
+  % \doTitle{N}{title}{short title} starts chapter N, with a link to the global
+  % table of contents and the chapter's own table of contents
+  \renewcommand{\doTitle}[3]{%
+    \setcounter{chapter}{\numexpr#1-1\relax}%
+    \chapter{\texorpdfstring{#2}{#3}}%
+    \label{\LNtag{#1}: chapter}%
+    \csgdef{LNshorttitle@#1}{#3}%
+    \csgdef{LNtitle@#1}{#2}%
+    \renewcommand{\LNTitle}{Lecture Note #1, #3}%
+    \codeListingstrue
+    \hyperlink{TOC}{$\uparrow$\scriptsize\,\textsc{contents}}%
+    {\small
+      \hypertarget{TOC-#1}{}%
+      \etocsettocstyle{\section*{\contentsname}}{}%
+      \etocsetnexttocdepth{subsubsection}%
+      \localtableofcontents
+    }}
+
+  % the code: each lecture note's \codeSection just records its files, and
+  % \codeAppendix (in the book's appendix) lists them all, a section per note
+  \makeatletter   % (file names have no spaces, so drop the spaces around them)
+  \renewcommand{\codeSection}[1]{\csxdef{LNcode@\arabic{chapter}}{\zap@space#1 \@empty}}
+  \makeatother
+  % \codeAppendix: first a contents list (each note's topic, then its files,
+  % linked to the listings), then a section per note listing its files
+  \makeatletter
+  \def\LNbasename#1{\LN@base#1/\LN@end}   % a/b/c.py -> c.py
+  \def\LN@base#1/#2\LN@end{\ifx\relax#2\relax#1\else\LN@base#2\LN@end\fi}
+  \makeatother
+  \newcommand{\codeContentsFile}[1]{%
+    \edef\LNfilename{\LNbasename{#1}}%
+    \item \pycode[\texttt{\expandafter\detokenize\expandafter{\LNfilename}}]{#1}}
+  \newcommand{\codeAppendix}{%
+    \begin{itemize}
+    \foreach \n in {1,...,9} {%
+      \ifcsdef{LNcode@\n}{%
+        \item \hyperref[code: note \n]{\csuse{LNtitle@\n}} (\LN{\LNtag{\n}})
+        \begin{itemize}
+        \edef\LNcodelist{\csuse{LNcode@\n}}%
+        \expandafter\forcsvlist\expandafter\codeContentsFile\expandafter{\LNcodelist}%
+        \end{itemize}}{}}
+    \end{itemize}
+    \newpage
+    \foreach \n in {1,...,9} {%
+      \ifcsdef{LNcode@\n}{%
+        \section[Lecture Note \n: \csuse{LNtitle@\n}]{%
+          \texorpdfstring{\LN{\LNtag{\n}}: \csuse{LNtitle@\n}}{Lecture Note \n: \csuse{LNtitle@\n}}}%
+        \label{code: note \n}%
+        \edef\LNcodelist{\csuse{LNcode@\n}}%
+        \expandafter\forcsvlist\expandafter\codefile\expandafter{\LNcodelist}%
+        \newpage}{}}}
+
+  % a lecture note is a chapter: \LN{proofs} prints a link "Lecture Note 2"
+  \DeclareRobustCommand{\LN}[1]{\hyperref[#1: chapter]{Lecture Note~\ref*{#1: chapter}}}
+  \pdfstringdefDisableCommands{\def\LN#1{Lecture Note \LNnumber{#1}}}
+
+  % running head; "contents" links to the current chapter's table of contents
+  \renewcommand{\doHeader}[1]{%
+    \renewcommand{\header}{%
+      \clap{\raisebox{0pt}{\protect\hyperlink{TOC-\arabic{chapter}}{$\uparrow$\scriptsize\,\textsc{contents}\hspace{1.1in}}}}%
+      {\footnotesize \LNTitle{} / Section \thesection, #1}}%
+    \markboth{\header}{\header}}
+
+  % number theorems, lemmas, etc. and exercises within chapters (e.g. Lemma 8.1)
+  \counterwithin{lemma}{chapter}
+  \counterwithin{definition}{chapter}
+  \counterwithin{theorem}{chapter}
+  \counterwithin{corollary}{chapter}
+  \counterwithin{claim}{chapter}
+  \counterwithin{observation}{chapter}
+  \counterwithin{conjecture}{chapter}
+  \counterwithin{exercise}{chapter}
+\fi
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ExplSyntaxOn
+\seq_new:N \l_itemize_seq
+% \NewDocumentEnvironment{REITEMIZE}{ +b }{
+\NewDocumentCommand{\REITEMIZECMD}{ +m }{
+  \regex_split:nnN {\c{item}} {#1} \l_itemize_seq
+  \seq_pop:NN \l_itemize_seq \l_tmpa_tl% remove the (hopefully) empty first item
+  \seq_if_empty:NF \l_itemize_seq {
+    \l_tmpa_tl
+    \seq_map_inline:Nn \l_itemize_seq {
+      \regex_split:nnN {\c{item}} {#1} \l_itemize_seq {
+        \regex_extract_once:nnNTF { ^\[([^]]*)\](.*) } { ##1} \l_foo_seq
+      { \item[\seq_item:Nn \l_foo_seq {2}]\ITEMIZER{\seq_item:Nn \l_foo_seq {3}} } { \item\ITEMIZER{##1}  }
+    }
+  }
+}
+}
+\ExplSyntaxOff
+
+\newlength{\ITEMHT}
+\setlength{\ITEMHT}{1in}
+
+% \setlength{\fboxsep}{1pt}
+\newcommand{\ITEMIZER}[1]{%
+  % \framebox{
+\adjustbox{valign=t}{\parbox{\textwidth}{\linespread{1.15}\selectfont #1}}~~\adjustbox{valign=t}{\parbox{0pt}{\color{gray}\rule[-\ITEMHT]{0.01pt}{\ITEMHT}}}
+% }
+  % \begin{tabular}{@{}p{\textwidth}@{\rule[-\ITEMHT]{0pt}{\ITEMHT}}}
+  %   #1
+  % \end{tabular}
+}
+
+\newsavebox\thesmashminipage
+\newlength{\thesmashminipagelength}
+\newlength{\answerboxlength}
+\newlength{\answerboxoverrun}
+\newenvironment{smashminipage}[2]
+{\setlength\answerboxlength{#2}
+\begin{lrbox}{\thesmashminipage}\begin{minipage}[t]{#1}}
+{\end{minipage}\end{lrbox}%
+\setlength{\thesmashminipagelength}{\dimexpr\ht\thesmashminipage+\dp\thesmashminipage}%
+\setlength{\answerboxoverrun}{\dimexpr\thesmashminipagelength-\answerboxlength}%
+\ifdim\the\thesmashminipagelength>\the\answerboxlength%
+\usebox{\thesmashminipage}%
+\smash{\color{red}\hspace*{-0.98\textwidth}\rule[-\answerboxlength]{0.98\textwidth}{1pt}}
+\errmessage{Answer exceeds allotted length, please shorten it.}
+\else
+\usebox{\thesmashminipage}%
+\fi
+}
+
+
+
+\newenvironment{answerBox}[1]{%
+  \def\ANSWERBOXHEIGHT{#1}
+  \begin{adjustbox}{valign=t}
+  \begin{smashminipage}{\textwidth}{\ANSWERBOXHEIGHT}
+}{\end{smashminipage}\end{adjustbox}~~~\adjustbox{valign=t}{\parbox{0pt}{\color{gray}\rule[-\ANSWERBOXHEIGHT]{0.01pt}{\ANSWERBOXHEIGHT}\rule[-\ANSWERBOXHEIGHT]{10pt}{0.01pt}}}}
+
+% % \setlist[enumerate]{itemsep=0pt,parsep=0pt,topsep=0pt,leftmargin=100pt}
+
+% \makeatletter 
+\LetLtxMacro\SVenumerate\enumerate
+\let\endSVenumerate\endenumerate
+
+\newcommand{\injectEnumerate}{
+  \let\SValph\alph
+  \def\alph{}
+  \renewenvironment{enumerate}[1][]
+  {\let\alph\SValph \SVenumerate[label=(\alph*),itemsep=2pt,parsep=0pt]\REITEMIZE}{\endREITEMIZE\endSVenumerate}
+  % \setlist[enumerate]{before=\Collect@Body\REITEMIZECMD}
+}
+% \makeatother
+\newcommand{\restoreEnumerate}{
+  \renewenvironment{enumerate}[1][]
+  \let\SValph\alph
+  \def\alph{}
+  {\let\alph\SValph \SVenumerate[label=(\alph*)]}{\endSVenumerate}
+  % \setlist[enumerate]{before=,after=}
+}
+\newcommand{\injectBlue}{
+  \let\SVblue\blue
+  \let\endSVblue\endblue
+  \def\blue{\SVblue\REITEMIZE}
+  \def\endblue{\endREITEMIZE\endSVblue}
+}
+\newcommand{\restoreBlue}{
+  \let\blue\SVblue
+  \let\endblue\endSVblue
+}
+\newcommand{\injectEnumerateBlue}{
+  \setlist[enumerate]{before=\injectBlue,after=\restoreBlue,itemsep=2pt,parsep=0pt}
+}
+\newcommand{\restoreEnumerateBlue}{
+  \setlist[enumerate]{before=,after=}
+}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \NewDocumentEnvironment{env}{ }
+% {\Environenv}
+% {\endEnvironenv}
+
+% \NewEnviron{REITEMIZE}{\REITEMIZECMD\BODY}
+
+\makeatletter 
+\newenvironment{REITEMIZE}{\Collect@Body\REITEMIZECMD}{}
+\makeatother 
+
+\newcommand{\NODEone}[1]{\ensuremath{v_{#1}}\xspace}
+\newcommand{\NODE}[2]{{\NODEone {#1,#2}}\xspace}
+\newcommand{\EDGE}[2]{\ensuremath{(\textsf{#1}, \textsf{#2})}}
+\newcommand{\ITEM}{\item}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

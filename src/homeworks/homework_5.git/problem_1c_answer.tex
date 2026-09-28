@@ -1,0 +1,46 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\paragraph{Problem 1(c) answer} \GradescopeComment{This should be on page 5 (top) of your PDF.}
+
+% Using the lemmas from Parts (a) and (b)
+% define a correct recursive algorithm rpuncture for Puncturing Intervals.
+% As much as possible, your algorithm should mimic the structure
+% of the rselect algorithm for Activity Selection
+% in Section 5.3.
+% Define the algorithm precisely in words, then give pseudo-code for it.
+
+% Here is the definition of rselect from Section 5.3 to use as a template.
+% Please modify it (preserving the overall structure) to make your algorithm, rpuncture,
+
+\begin{blue}
+  
+  The algorithm chooses the earliest-ending job $J_1$,
+  then recurses on the set containing those jobs that are disjoint from $J_1$.
+  Here is pseudo-code:
+
+  \begin{myframed}
+
+    \begin{steps}
+
+    \item[{\textsf{rselect}$(I=\{J_1, J_2, \ldots, J_n\})$:}]
+      \comment{--- jobs are ordered by end time}
+
+      \step if $n = 0$: return $\emptyset$.  \comment{--- if $I$ is empty, return the empty set}
+
+      \step Recall that $J_1$ is the earliest-ending job in $I$.
+
+      \step Let $D$ contain the jobs in $I$ that are disjoint from $J_1$.
+
+      \step Recursively compute $R = \textsf{rselect}(D)$, then return $\{J_1\} \cup R$.
+
+    \end{steps}
+
+  \end{myframed}
+
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_5"
+%%% End:

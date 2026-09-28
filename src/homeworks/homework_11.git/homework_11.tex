@@ -1,0 +1,226 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{11}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\gradescopeInit
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+
+\problem\emph{(Sections 8.1 and 8.2)} \GradescopeComment{This should be on page 2 (top) of your PDF.}
+
+Several families are having a dinner party.  To be more social, they would like to arrange seating so that no two members of the same family are at the same table.  There are $p$ families and $q$ tables.
+For each $i\in\{1,2,\ldots,p\}$, family $i$ has $a_i$ members, where $a_i\le q$.
+For each $j\in\{1,2,\ldots,q\}$, table $j$ has $b_j$ seats, where $b_j\le p$.
+The goal is to determine if there exists a seating arrangement
+(assigning each family member to a seat)
+such that no two guests are assigned to the same seat,
+and no two members of the same family sit at the same table.
+Here is the formal definition of the problem, as a decision problem:
+
+\begin{mylist}\em
+\item[]\prob{Family Seating} \dotfill
+\item[\bf input:] positive integers $p$, $q$, $a_1,\dots,a_p$, and $b_1,\dots,b_q$, where $\max_i a_i \le q$ and $\max_j b_j\le p$.
+\item[\bf output:] `\textsf{Yes}' if it is possible to assign each guest to a seat such that (1) no two guests are assigned the same seat and (2) each table has at most one member of each family.
+  If it is not possible, output `\textsf{no}'.
+\end{mylist}
+
+Recall the \prob{Max Flow} decision problem:
+\begin{mylist}\em
+% \item[]\prob{Max Flow} \dotfill
+\item[\bf input:] digraph $G=(V,E)$ with edge capacities, source and sink $s, t\in V$, and a value $k\ge 0$
+\item[\bf output:] `\textsf{Yes}' if $G$ has an $s$-$t$ flow of value at least $k$, otherwise `\textsf{no}'.
+\end{mylist}
+
+Develop a poly-time reduction $r$ from \prob{Family Seating} to \prob{Max Flow}.
+
+\emph{Hint: First study the reduction from \prob{Bipartite Matching} to \prob{Max Flow}.}
+
+\begin{enumerate}[label=(\alph*)]
+\item 
+  Define your reduction $r$
+  by defining, for every possible instance $I=(p, q, a, b)$ of  \prob{Family Seating},
+  what output $(G, s, t, k) = r(I)$ the reduction $r$ gives.
+  Your definition must state precisely how $G$, $s$, $t$, and $k$ are defined for the given $(p, q, a, b)$.
+
+\item
+  Show that your reduction is a \emph{polynomial-time} reduction,
+  by explaining carefully how, given $I$, one can compute the output $r(I)$ in time polynomial in the input size ($p+q$).
+
+\item
+  Consider the example input $I$ with $p=2$, $q=3$, $a=(2,2)$, $b=(1,2,2)$.
+  Given this specific $I$, calculate the output $(G, s, t, k) = r(I)$.
+  Draw the resulting flow network.  What is $k$? 
+
+\item
+For your reduction $r$ to be correct,
+it must be that, \emph{for every  \prob{Family Seating} instance $I$,
+the answer to $I$ is `\textsf{yes}' if and only if the answer to the \prob{Max Flow} decision problem $r(I)$ is `\textsf{yes}'.}
+
+Show the ``if'' direction.
+Given an arbitrary \prob{Family Seating} instance $I$,
+let $G=(V,E)$, $s, t$, and $k$ be the output of your reduction $r$ given $I$.
+Describe carefully how, given any $s$-$t$ flow $f$ in $G$ of value at least $k$,
+one can obtain a valid seating arrangement for $I$.
+(Assume that, if all edge capacities in $G$ are integers, then on each edge $(u,w)\in E$ the flow $f(u,w)$ is an integer.)
+
+\item
+For the input $I$ from Part (c), the answer is \textsf{yes},
+so the flow network $(G, s, t)=r(I)$ should have an (integer) flow of value at least $k$.
+Draw such an flow in your flow network.
+What is the seating arrangement corresponding to that flow?
+
+\item
+Now show the ``only if'' direction.
+Given an arbitrary \prob{Family Seating} instance $I$,
+let $G=(V,E)$, $s, t$, and $k$ be the output of $r$ given $I$.
+Describe carefully how, given any valid seating arrangement for $I$,
+one can obtain an $s$-$t$ flow $f$ in $G$ of value at least $k$.
+\end{enumerate}
+
+
+\newpage
+
+% \vfill
+
+\setlength{\ITEMHT}{1.9in}
+{% \injectEnumerate
+\inputAnswer{problem_1_answer}
+}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
+
+\problem\emph{(Section 8.2; Lecture Note 9)} \GradescopeComment{This should be on page 6 (top) of your PDF.}
+
+\prob{$K$-Path} is the following problem:
+\begin{mylist}\em
+\item[\bf input:] A tuple $(G=(V,E), s, t, k)$,
+  where $G$ is a directed graph with non-negative integer edge weights,
+  $s,t\in V$ are two vertices, and $k$ is a non-negative integer.
+\item[\bf output:]
+  `Yes' if $G$ has an $s$-$t$ path $P$ with $\weight P$ equal to $k$, otherwise `no'.
+\end{mylist}
+
+Recall that \prob{Subset Sum} is the following problem:
+\begin{mylist}\em
+\item[\bf input:]
+  Sequence $x=(x_1, x_2, \ldots, x_n)$ of non-negative integers and a non-negative integer $T$.
+\item[\bf output:]
+  `Yes' if there a subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$, otherwise `no'.
+\end{mylist}
+
+Describe a polynomial-time reduction from \prob{Subset Sum} to \prob{$k$-Path}.
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+  Define your reduction $r$
+  by defining, for every possible instance $(x=(x_1, x_2, \ldots, x_n), T)$ of  \prob{Subset Sum},
+  what output $r(x, T)$ the reduction gives.
+  The output will be a tuple $(G=(V, E), s, t, k)$.
+  Your definition must state precisely how $G$, $s$, $t$, and $k$ are defined for the given $(x, T)$.
+  \emph{Hint: Construct $G$ so its $s$-$t$ paths correspond to the subsets $S\subseteq\{1,\ldots,n\}$.}
+
+\item
+  Show that your reduction is a \emph{polynomial-time} reduction,
+  by explaining carefully how, given $(x, T)$, one can compute the output $r(x, T)=(G, s, t, k)$
+  in time polynomial in the input size $\Theta(n\log T)$.
+
+\item
+  Consider the example input $(x, T)$ with $x=(5, 9, 10, 20)$ and $T=29$.
+  Calculate the output $(G, s, t, k) = r(x, T)$ for this input.
+  What is $k$? 
+  Draw the resulting edge-weighted digraph.  
+
+\item
+  For your reduction $r$ to be correct,
+  it must be that, \emph{for every  \prob{Subset Sum} instance $(x, T)$,
+    the answer to $(x, T)$ is `\textsf{yes}' if and only if the answer to the \prob{$k$-Path} instance $r(x, T)$ is `\textsf{yes}'.}
+
+  Show the ``if'' direction.
+  Given an arbitrary \prob{Subset Sum} instance $(x, T)$,
+  let $G$, $s$, $t$, and $k$ be the output of your reduction $r$ given $(x, T)$.  That is, $(G, s, t, k) = r(x, T)$.
+  Describe carefully how, given any $s$-$t$ path $P$ in $G$ with $\weight P = k$,
+  one could obtain a subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$.
+
+\item
+  For the input $(x, T)$ from Part (c), the answer is `\textsf{yes}',
+  so, for $(G, s, t, k)=r(x, T)$, there should be an $s$-$t$ path in $G$ of weight $k$.
+  What is such a path $P$ in $G$?
+  What is the subset $S\subseteq \{1,2,3,4\}$ corresponding to this path $P$?
+
+\item
+  Now show the ``only if'' direction.
+  Given an arbitrary \prob{Subset Sum} instance $(x, T)$,
+  let $G=(V, E)$, $s$, $t$, and $k$ be the output of your reduction $r$ given $(x, T)$.  That is, $(G, s, t, k) = r(x, T)$.
+  Describe carefully how, given any subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$,
+  one could obtain from $S$ an $s$-$t$ path $P$ in $G$ with $\weight P = k$.
+
+\end{enumerate}
+
+% \setlength{\ITEMHT}{0.6in}
+% {\injectEnumerate
+\inputAnswer{problem_2_answer}
+% }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+
+%%%%%   EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%%   PROBLEM 3 %%%%%%%%%%%%%%%%%
+
+% \newpage 
+
+% \problem \emph{(LN TODO Section TODO)} \GradescopeComment{This should be on page TODO (TODO) of your PDF.}
+
+% \vfill
+% \setlength{\ITEMHT}{2in}
+% {\injectEnumerate
+% \inputAnswer{problem_3_answer}
+% }
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

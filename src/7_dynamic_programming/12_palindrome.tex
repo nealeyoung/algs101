@@ -1,0 +1,352 @@
+
+
+\section{Longest Palindromic Subsequence (with long-form proof)}\label{dp: sec: LPS}\doHeader{Longest Palindrome}
+
+\begin{mylist}
+\item[\bf input:]
+  A string $X[1..n]$ (a sequence of characters).
+  
+\item[\bf output:]
+  The maximum length of any subsequence of $X$ that is a palindrome.
+  (A palindrome is a sequence that is the same as its reverse.
+  The subsequence need not be contiguous.
+  For example, ``yobananaboy'' is a palindromic subsequence
+  of ``your urban cabana bat toy''.)
+
+\end{mylist}
+
+
+\noindent
+Here is the algorithm.  Fix any input instance $X[1..n]$.
+
+\paragraph{subproblems and recurrence.}
+% [review 2026-09-27] fix: M(i,j) was defined only for 1 <= i <= j <= n, but the recurrence uses M(i+1,i) (empty substrings); extended the domain to j >= i-1, with M(i,i-1) = 0
+For each $i$ and $j$ with $1\le i \le n+1$ and $i-1\le j \le n$,
+define $M(i, j)$ to be the maximum length of any palindromic subsequence of $X[i..j]$.
+(When $j = i-1$, $X[i..j]$ is the empty string, so $M(i, i-1) = 0$.)
+The given instance $X$ has solution $M(1, n)$.
+The recurrence relation is
+\[M(i, j)  =
+\begin{cases}
+  0 & \text{if } j < i, \\
+  1 & \text{if } j = i, \\
+  \max\big(M(i, j-1), M(i+1, j), 2 + M(i+1, j-1)\big) & \text{if } j>i \text{ and } X[i] = X[j], \\
+  \max\big(M(i, j-1), M(i+1, j)\big) & \text{if } j>i \text{ and } X[i] \ne X[j].
+\end{cases}
+\]
+(We can simplify this somewhat per the comment at the end below.)
+
+\paragraph{correctness.}
+The base cases hold by inspection.  Here's the intuition for the remaining cases.
+Consider the palindromic subsequences of $X[i..j]$.
+Categorize these into three types:
+(A) those that include $X[i]$ and $X[j]$ (necessarily starting with $X[i]$ and ending with $X[j]$),
+(B) those that don't include $X[i]$,
+(C) those that don't include $X[j]$.
+Every subsequence is of one (or more) of these types.
+So the maximum length of any such subsequence
+is the maximum length of any type-A, type-B, or type-C subsequence.
+
+First consider the case that $X[i] = X[j]$.
+Then those of type A are of the form $X[i], S, X[j]$
+where $S$ is any palindromic subsequence of $X[i+1..j-1]$;
+so the longest of type A has length $2+M(i+1, j-1)$.  
+% [review 2026-09-27] fix: types B and C were swapped relative to their definitions above (B = doesn't include X[i], C = doesn't include X[j]); swapped the substrings and M-terms
+Those of type B are just palindromic subsequences of $X[i+1..j]$;
+the longest of these has length $M(i+1, j)$.
+Those of type C are just palindromic subsequences of $X[i..j-1]$;
+the longest of these has length $M(i, j-1)$.
+So the recurrence holds in this case.
+
+In the remaining case ($X[i] \ne X[j]$),
+there are none of type A, because any palindromic subsequence
+has to start and end with the same character.
+The analysis of the other two types is the same as in the case $X[i] = X[j]$.
+So the recurrence holds in this case.
+A long-form proof of correctness is on the next page.
+
+\paragraph{time.}
+There are $O(n^2)$ subproblems.
+For each, the right-hand side of the recurrence can be evaluated in constant time.
+So the algorithm (iterative, or memoized recursive) takes time $\Theta(n^2)$.
+
+\begin{theorem}
+  % [review 2026-09-27] fix: theorem said O(nm) but there is only one string of length n (time analysis says Theta(n^2)); changed to O(n^2)
+  There is an $O(n^2)$-time algorithm for \prob{Longest Palindromic Subsequence}.
+\end{theorem}
+
+\paragraph{reduction to Longest Path.}
+Consider the DAG with a node for each subproblem
+and a directed edge for each dependency (with appropriate weight 0 or 2),
+% [review 2026-09-27] fix: base-case edges were wrong (M(i,i+1) is not a base case; M(i,i)=1 needs a weight-1 edge; the empty M(i+1,i)=0 need weight-0 edges) and the target M(n,m) should be M(1,n)
+and additional directed edges from the node for $M(0,0)$
+to the nodes for each $M(i, i)$ with $1\le i\le n$ (of weight 1)
+and to the nodes for each $M(i+1, i)$ with $0\le i\le n$ (the empty substrings, of weight 0).
+The problem is equivalent to finding a longest path in this DAG from the node for $M(0,0)$
+to the node for $M(1, n)$.
+
+\paragraph{simplifying the recurrence.}
+In the case that $X[i]=X[j]$,
+for any type-B or type-C subsequence,
+there is always a type-A subsequence that is at least as long.
+(We can use a ``greedy'' exchange argument to prove this; we omit the details.)
+So the maximum in the recurrence for this case is always
+achieved by the third term, $2+M(i+1, j-1)$,
+and the recurrence simplifies to
+\[
+  M(i, j)  =
+  \begin{cases}
+    0 & \text{if } j < i, \\
+    1 & \text{if } j = i, \\
+    2 + M(i+1, j-1) & \text{if } j>i \text{ and } X[i] = X[j], \\
+    \max\big(M(i, j-1), M(i+1, j)\big) & \text{if } j>i \text{ and } X[i] \ne X[j].
+  \end{cases}
+\]
+
+\subsection*{Long-form proof of correctness}
+Here is a long-form proof that the first recurrence is correct.
+
+\begin{longFormProof}%[First long-form proof.]
+  \step Consider any $i$ and $j$ with $1\le i\le j\le n$.  Note that $j-i+1$ is the length of the string $X[i..j]$.
+
+  \smallskip 
+  \begin{block}
+    \step \underline{Case 1.} In the case that $j-i+1\le 1$, the string $X[i..j]$ has length one or zero.
+    \step So it is it's own longest palindromic subsequence, $M(i, j)=j-i+1$, and the recurrence holds.
+  \end{block}
+
+  \smallskip 
+  \begin{block}
+    \step \underline{Case 2.} Next consider the case that $X[i]=X[j]$ (and $j-i+1\ge 2$).
+    \step Consider all possible palindromic subsequences of $X[i..j]$.
+    \step Categorize these into three types:
+    \begin{mylist}
+    \item[(A)] those that include $X[i]$ and $X[j]$,
+    \item[(B)] those that don't include $X[i]$, and
+    \item[(C)] those that don't include $X[j]$.
+    \end{mylist}
+
+    \step Each palindromic subsequence of $X[i..j]$ is of  one (or more!) of these types.
+
+    \step\label{dp: step: A or B or C} So $M(i, j)$ is the maximum length of any type-A, type-B, or type-C subsequence.
+
+    \smallskip 
+    
+    \step The type-A's are of the form $X[i], s, X[j]$,
+    where $s$ is any palindromic subseq.~of $X[i+1..j-1]$.
+
+    \step The length of such a subsequence $X[i], s, X[j]$ is maximized when the length of $s$ is maximized.
+
+    \step By definition of $M(i+1,j-1)$, the maximum length of any such $s$ is $M(i+1, j-1)$.
+
+    \step\label{dp: step: palindrome A}
+    So the maximum length of any type-A subsequence is $2+M(i+1, j-1)$.
+
+    \smallskip
+    
+    \step The type-B subsequences are just palindromic subsequences of $X[i+1..j]$.
+
+    % [review 2026-09-27] fix: cited "definition of M(i-1,j)" but the quantity is M(i+1,j); changed i-1 to i+1
+    \step\label{dp: step: palindrome B}
+    So (by definition of $M(i+1,j)$) the maximum length of any type-B subsequence is $M(i+1, j)$.
+
+    \smallskip
+    
+    \step\label{dp: step: C}
+    Similarly, the maximum length of any type-C subsequence is $M(i, j-1)$.
+    
+    \smallskip 
+
+    \step By Steps~\ref{dp: step: A or B or C},~\ref{dp: step: palindrome A},~\ref{dp: step: palindrome B}, and~\ref{dp: step: C},
+    $M(i, j) = \max\big(2+M(i+1, j-1), M(i+1, j), M(i, j-1)\big)$.
+
+    \step So the recurrence holds in this case.
+  \end{block}
+
+  \smallskip 
+  \begin{block}
+    % [review 2026-09-27] fix: length condition was written i-j+1 >= 2 (never true for i <= j); changed to j-i+1 >= 2 as in Case 2
+    \step \underline{Case 3.}  Finally consider the remaining case, when $X[i] \ne X[j]$ and $j-i+1\ge 2$.
+    \step Since $X[i]\ne X[j]$, no palindromic subsequence of $X[i..j]$ starts with $X[i]$ and ends with $X[j]$.
+    \step So, the reasoning in Case 2 applies, except that there are no type-A subsequences.
+    \step And by that reasoning, $M(i, j) = \max\big(M(i+1, j), M(i, j-1)\big)$.
+    \step So the recurrence holds in this case.
+  \end{block}
+
+  \smallskip
+  \step By the case analysis (Cases 1--3) above, the recurrence holds.
+\end{longFormProof}
+
+\pythonCode{dynamic_programming/longest_palindrome.py}
+
+
+% \vfill\emph{A more detailed long-form proof, using a different approach, is on the next page.}\newpage
+
+% \begin{longFormProof}[Second long-form proof.]
+%   \step Consider any $i$ and $j$ with $1\le i\le j\le n$.  Note that $j-i+1$ is the length of the string $X[i..j]$.
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 1.} In the case that $j-i+1\le 1$, the string $X[i..j]$ has length one or zero.
+%     \step So it is it's own longest palindromic subsequence, $M(i, j)=j-i+1$, and the recurrence holds.
+%   \end{block}
+
+%   \smallskip 
+%   \begin{block}
+%     \step \underline{Case 2.} Next consider the case that $j-i+1\ge 2$.
+
+%     \medskip
+
+%     \step First we show that $M(i, j)$ is \emph{at least} the right-hand side of the recurrence (the RHS).
+
+%     \step Let $s$ be a palindromic subsequence of $X[i+1, j]$ with length $|s|$ equal to $M(i+1, j)$.
+%     \\ (Such an $s$ exists by definition of $M(i+1, j-1)$.)
+
+%     \step Then $s$ is also a palindromic subsequence of $X[i, j]$.
+    
+%     \step $M(i, j)$ is the maximum length of any palindromic subsequence of $X[i..j]$.
+
+%     \step\label{dp: step: 1} So $M(i, j)$ is at least the length of $s$.  That is, $M(i, j) \ge |s| = M(i+1, j)$.
+    
+%     \smallskip
+
+%     \step\label{dp: step: 2} By similar reasoning, $M(i, j) \ge M(i, j-1)$.
+
+%     \smallskip 
+
+%     \begin{block}
+%       \step\underline{Case 2.1}
+%       Now consider the case that $X[i] \ne X[j]$.
+
+%       \step\label{dp: step: 12} By Steps~\ref{dp: step: 1} and~\ref{dp: step: 2}, $M(i, j) \ge \max\big(M(i+1, j), M(i, j-1)\big)$.
+
+%       \step That is (by inspection of the recurrence, using $X[i] \ne X[j]$), $M(i, j)$ is at least the RHS.
+%     \end{block}
+    
+%     \smallskip 
+
+%     \begin{block}
+%       \step\underline{Case 2.2}
+%       In the remaining case $X[i] = X[j]$.
+
+%       \step Let $s$ be a palindromic subsequence of $X[i+1..j-1]$ with length $|s|$ equal to $M(i+1, j-1)$.
+%       \\ (Such an $s$ exists by definition of $M(i+1, j-1)$.)
+
+%       \step Then $X[i], s, X[j]$ is a palindromic subsequence of $X[i..,j]$.
+
+%       \step\label{dp: step: 3} So $M(i, j)$ is at least the length of $X[i], s, X[j]$.
+%       That is, $M(i, j) \ge 2+|s| = 2 + M(i+1, j-1)$.
+
+%       \smallskip 
+
+%       \step\label{dp: step: 123}
+%       By Steps~\ref{dp: step: 1},~\ref{dp: step: 2}, and~\ref{dp: step: 3},
+%       $M(i, j) \ge \max\big(M(i+1, j), M(i, j-1), 2 + M(i+1, j-1)\big)$.
+
+%       \step That is (by inspection of the recurrence, using $X[i]=X[j]$), $M(i, j)$ is at least the RHS.
+%     \end{block}
+    
+%     \smallskip 
+
+%     \step\label{dp: step: 4} By the case analysis in Cases 2.1 and 2.2, $M(i, j)$ is at least the RHS.
+
+%     \smallskip 
+
+%     \step Next we show that $M(i, j)$ is \emph{at most} the right-hand side of the recurrence.
+
+%     \step Let $s$ be a palindromic subsequence of $X[i..j]$ of length $M(i, j)$.
+%     \\(Such an $s$ exists by definition of $M(i, j)$.)
+
+%     \begin{block}
+%       \step \underline{Case 2.A}
+%       First consider the case that $s$ does not start with $X[i]$.
+
+%       \step Then $s$ is a palindromic subsequence of $X[i+1..j]$.
+
+%       \step So $s$ has length at most $M(i+1, j)$.  That is $M(i, j) = |s| \le M(i+1, j)$.
+
+%       \step So, by inspection of the recurrence, $M(i, j)$ is at most the RHS.
+%     \end{block}
+
+%     \smallskip 
+    
+%     \begin{block}
+%       \step \underline{Case 2.B}
+%       Next consider the case that $s$ does not end with $X[j]$.
+
+%       \step By the same reasoning as in Case 2.A, $M(i, j) = |s| \le M(i,j-1)$.
+      
+%       \step Again, by inspection of the recurrence, $M(i, j)$ is at most the RHS.
+%     \end{block}
+
+%     \smallskip 
+    
+%     \begin{block}
+%       \step \underline{Case 2.C}
+%       In the remaining case $s$ starts with $X[i]$ and ends with $X[j]$
+
+%       \step So $X[i]=X[j]$.
+
+%       \step Also, $s$ is of the form $X[i], s', X[j]$ where $s'$
+%       is a palindromic subsequence of $X[i+1..j-1]$.
+
+%       \step So $|s'| \le M(i+1, j-1)$.  It follows that $M(i, j) = |s| = |s'| + 2 \le M(i+1, j-1) + 2$.
+
+%       \step So, by inspection of the recurrence (using $X[i] \ne X[j]$), $M(i, j)$ is at most the RHS.
+%     \end{block}
+
+%     \smallskip 
+
+%     \step By the case analysis (Cases 2.A-C) above,  $M(i, j)$ is at most the RHS. 
+
+%     \step By this and Step~\ref{dp: step: 4},  $M(i, j)$ equals the RHS (in Case 2).
+%   \end{block}
+
+%   \step By the case analysis (Cases 1 and 2) above,  $M(i, j)$ equals the RHS.
+% \end{longFormProof}
+
+% \noindent
+% This algorithm is equivalent to running the \prob{Longest Path} algorithm
+% on an appropriate DAG.
+
+% \paragraph{External resources on \prob{Knapsack}}
+
+% \begin{itemize}
+% % \item CLRS Chapter 15. 
+
+% \item CLRS Chapter 16, Exercise 16.2--2 
+
+% \item Dasgupta et al.~Chapter 6.
+
+% \item Kleinberg \& Tardos Chapter 6.
+
+% % \item Erickson's Lecture 5
+% %
+% %     \url{https://jeffe.cs.illinois.edu/teaching/algorithms/notes/05-dynprog.pdf}
+  
+% % \item MIT lecture videos 
+
+% \item MIT lecture video
+  
+% \newcommand{\URL}[1]{\par-- \parbox[t]{0.8\textwidth}{\url{#1}} \medskip\par}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-19-dynamic-programming-i-fibonacci-shortest-paths/}
+
+
+% \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-20-dynamic-programming-ii-text-justification-blackjack}
+
+    % \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-21-dp-iii-parenthesization-edit-distance-knapsack}
+
+%   \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-22-dp-iv-guitar-fingering-tetris-super-mario-bros}
+  
+% \item \prob{Seam Carving}:
+%   \url{https://en.wikipedia.org/wiki/Seam_carving},
+%   CLRS Problem 15-8.
+
+% \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

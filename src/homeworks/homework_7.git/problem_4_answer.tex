@@ -1,0 +1,176 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% For this problem the collaboration and citations statement comes first.
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}
+\GradescopeComment{This should be on page 6 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+\newpage                      % don't delete this line
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%%   Problem 4 answer.
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Problem 4 answer}\GradescopeComment{This should be on page 7 (top) of your PDF.}
+
+%%
+%% IF YOU TRY TO PROVE CORRECTNESS, GIVE A PROOF THAT IS AS SIMILAR
+%% AS POSSIBLE TO THE ORIGINAL PROOF, BELOW.
+%%
+%% COLOR ALL TEXT YOU ADD BLUE BY USING THE \BLUE{your text here} MACRO,
+%% OR (FOR MULTIPLE LINES) THE \begin{blue} ... \end{blue} ENVIRONMENT
+%%
+
+\begin{lemma}\label{lemma: dijkstra invariant}
+  In any execution on a graph as described in the problem statement,
+  the loop maintains the invariant
+  \emph{$d[v] = \dist s  v < \infty$ for all $v\in K$.}
+\end{lemma}
+
+\begin{longFormProof}
+
+  \step Consider any execution of the algorithm on some input $(G=(V,E), s)$.
+
+  \step The invariant holds at the start of the first iteration,
+  when $K=\{s\}$ and $d[s] = 0 = \dist s s$.
+  \\ (Because $G$ has no negative-weight cycles.)
+
+  \begin{block}\label{loop inv}
+    
+    \step Consider any iteration of the loop such that the invariant holds at the start of the iteration.
+
+    \step Let $K$ and $d$ denote the set $K$ and the array $d$ at the \emph{start} of the iteration.
+    
+    \step Let $(u',w')$ be the edge chosen in the iteration.
+    
+    \step To show that the iteration maintains the invariant,
+    we'll show $\dist s {w'} = d[u'] + \weight {u', w'}$.
+
+    \smallskip
+
+    \step \underline{First} we show $\dist s {w'} \le d[u'] + \weight {u', w'}$.
+    
+    \step Since $u'\in K$, by the invariant, $\dist s {u'} = d[u'] < \infty$.
+
+    \step So there exists a path from $s$ to $u'$ of weight $d[u']$.
+
+    \step This path plus the edge $(u', w')$ form a path from $s$ to $w'$ of weight $d[u'] + \weight {u', w'}$.
+
+    \step So there exists a path from $s$ to $w'$ of weight $d[u'] + \weight {u', w'}$.
+
+    \step\label{lt} So $\dist s {w'} \le d[u'] + \weight {u', w'}$, as desired.
+
+    \smallskip
+    
+    \step \underline{To finish} we'll show $\dist s {w'} \ge d[u'] + \weight {u', w'}$.
+    
+    \begin{block}\label{P}
+
+      \step Let $P$ be any path from $s$ to $w'$.  We'll show $\weight P \ge d[u'] + \weight {u', w'}$.
+
+      \step $P$ starts in $K$, but ends outside of $K$, so some edge on $P$ leaves $K$.
+
+      \step Let $(x,y)$ be an edge on $P$ that leaves $K$ (so $x\in K$, $y\not\in K$).
+
+      \step Separate the path $P$ around the edge $(x,y)$ into
+      the part before, $P_x$, and the part after, $P_y$.
+
+      \step So $P = P_x \cup \{(x,y)\} \cup P_y$ and $P_x$ is a path from $s$ to $x$. Then
+
+      \begin{align*}
+        \weight P~
+        &=~ \weight {P_x} + \weight {x,y} + \weight {P_y}
+        && \comment{(Since $P = P_x \cup \{(x,y)\} \cup P_y$.)}
+        \\
+        &\ge~ \weight {P_x} + \weight {x,y}
+        && \comment{(As all edge weights are non-negative, so $\weight {P_y} \ge 0$.)}
+        \\
+        &\ge~ \dist s x + \weight {x,y}
+        && \comment{(Since $P_x$ is a path from $s$ to $x$.)}
+        \\
+        &=~ d[x] + \weight {x,y}
+        && \comment{(Since $x\in K$ so $d[x] = \dist s x$ by the invariant.)}
+        \\
+        &\ge~ d[u'] + \weight {u',w'}
+        && \comment{(By the alg's choice of $(u', w')$, and $x\in K$, $y\not\in K$)}
+      \end{align*}
+    \end{block}
+
+    \step By Block~\ref{P}, every path from $s$ to $w'$
+    has weight at least $d[u'] + \weight {u',w'}$.
+
+    \step That is, $\dist s {w'} \ge d[u'] + \weight {u',w'}$.
+
+    \smallskip
+
+    \step By this and Step~\ref{lt}, $\dist s {w'} = d[u'] + \weight {u',w'}$.
+
+  \end{block}
+
+  \step The invariant holds initially. By Block~\ref{loop inv}, each iteration maintains it, so it holds throughout.
+
+\end{longFormProof}
+
+\continued
+
+Given that the invariant holds, correctness is easy to verify:  \GradescopeComment{(This should be on Page 8, top.)}
+
+\begin{theorem}
+  Given any graph as described in the problem statement,
+  the array $d$ returned by \textsf{Dijkstra}'s algorithm
+  satisfies $d[v] = \dist s v$ for all $v\in V$.
+\end{theorem}
+\begin{longFormProof}
+
+  \step Consider the execution of the algorithm on an arbitrary input $(G, s)$.
+
+  \step Consider the time just before Line~4 executes.
+
+  \step By Lemma~\ref{lemma: dijkstra invariant}, at that time, $d[v] = \dist s v$ for each $v\in K$.
+
+  \step By the loop condition, no edges leave $K$, so vertices in $V\setminus K$ are not reachable from $s$.
+
+  \step So each remaining vertex $v\in V\setminus K$ has $\dist s v = \infty$.
+
+  \step So, after Line 4 executes, each vertex $v\in V\setminus K$ also has $d[v] = \dist s v$.
+
+  \step So the distances returned by the algorithm are correct.
+
+\end{longFormProof}
+
+
+\vfill
+
+%%% NOTE: The collaboration and citation statement for Problem 4 is at the TOP of this file.
+
+\emph{Note: The citation and collaboration statement for Problem 4 is on Page 6 (bottom).}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_7"
+%%% End:

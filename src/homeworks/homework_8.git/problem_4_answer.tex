@@ -1,0 +1,102 @@
+\paragraph{Problem 4 answer}\GradescopeComment{This should be on page 13 (top) of your PDF.}
+
+\begin{lemma}\label{lemma: invariant}
+  In any execution on a graph as described in the problem statement,
+  \textsf{cycleBreaker} maintains the following invariant: \smallskip
+
+  \centerline{the edge set $E'$ contains some minimum spanning tree of $G$.}
+\end{lemma}
+
+\begin{longFormProof}
+  \step Consider any execution of the algorithm on some connected graph $G=(V,E)$.
+  \step At the start of the first iteration, $E'=E$.
+  \step Since $G$ is connected, it has some MST, so the invariant holds initially.
+  \step Next we show that each iteration maintains the invariant.
+  \begin{block}[iter]
+    \step Consider any iteration such that the invariant holds at the start of the iteration.
+    \step Let $E'$ denote the set $E'$ at the start of the iteration.
+    \step Let $C$ and $(u,w)\in C$ be the cycle and edge chosen in the iteration.
+    \step[rule] So the weight of $(u,w)$ is as large as the weight of any other edge in $C$.
+    \step And $E'\setminus\{(u, w)\}$ is the set of edges remaining after the iteration. 
+    \step The invariant holds at the start of the iteration, so $E'$ contains some MST, say $T$, of $G$.
+    \begin{block}[C1]
+      \step \underline{Case 1.}  Suppose $T$ doesn't contain $(u, w)$.
+      \step Then $T$ is also a subtree of $E'\setminus\{(u, w)\}$, so the invariant holds at the end of the iteration.
+    \end{block}
+    \begin{block}[C2]
+      \step \underline{Case 2.}  Otherwise $T$ contains $(u, w)$.
+      \step Let $P= C\setminus\{(u,w)\}$ be the path from $u$ to $w$ formed by removing $(u,w)$ from the cycle $C$.
+      \step By Step~\ref{rule} the weight of each edge in $P$ is at most the weight of $(u,w)$.
+
+      \begin{blue}
+        \step Let $(x, y)$ be \REPLACEME          % fill in this part.  you are likely to need more than one step
+        \step \REPLACEME
+        \step $\vdots$
+      \end{blue}
+
+      \step So, by Observation~\ref{exchange}, adding $(x, y)$ to $T$
+      and removing $(u, w)$ gives the spanning tree
+      \[T' = \{(x, y)\} \cup T \setminus \{(u, w)\}.\]
+
+      \begin{blue}
+        \step \REPLACEME          % fill in this part.  you are likely to need more than one step
+        \step $\vdots$
+      \end{blue}
+      
+      \step So $\weight{x, y} \le \weight {u, w}$.
+      This implies that $\weight{T'} = \weight{T} +\weight{x, y} - \weight {u,w} \le \weight{T}$.
+      \step So $T'$ is also a minimum-weight spanning tree of $G$.
+      \step Edge $(x, y)$ is in $P$, which is in $E'\setminus\{(u,w)\}$, so $T'$ is in $E'\setminus\{(u,w)\}$.
+      \step So, at the end of the iteration, the new edge set  $E'\setminus\{(u,w)\}$ contains the MST $T'$.
+      \step So the invariant holds at the end of the iteration.
+    \end{block}
+    \step By Cases 1 and 2 above, the invariant holds at the end of the iteration.
+  \end{block}
+  \step As observed previously, the invariant holds at the start of the first iteration.
+  \step By Block~\ref{iter}, each iteration maintains the invariant.  So it holds throughout.
+
+\end{longFormProof}
+
+\continued
+
+Next we use the invariant to prove correctness.  \GradescopeComment{(This should be on page 14 (top) of your PDF.)}
+
+\begin{theorem}
+  Given any graph as described in the problem statement,
+  \textsf{cycleBreaker} returns a minimum spanning tree.
+\end{theorem}
+\begin{longFormProof}
+  \step Consider any execution of the algorithm on any input $G$.
+  \step By Lemma~\ref{lemma: invariant}, the invariant holds after the last
+  iteration of the algorithm.
+  \step So the final edge set $E'$
+  contains some minimum spanning tree $T$ of $G$.
+  \step Since $E'$ contains no cycles, it must contain only the edges of $T$
+  \\(as any edge $(u,w)$ not in $T$ would form a cycle with the $u$-to-$w$ path in $T$).
+  \step That is, the edges of $E'$ form a minimum spanning tree.
+\end{longFormProof}
+
+
+\vfill
+
+\paragraph{Problem \arabic{problem} collaboration and citations}
+\GradescopeComment{This should be on page 14 (bottom) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME                    % write "none" if none
+  \end{itemize}
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_8"
+%%% End:

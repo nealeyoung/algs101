@@ -1,0 +1,431 @@
+\documentclass[11pt]{article}
+
+% \providecommand{\answerDirectory}{solutions}
+
+\input{macros}
+
+% Local override, kept so this homework's PDF matches its original exactly:
+% the shared macros (src/macros/macros.tex) now define answerBox differently (with an overflow check and a tick at the bottom).
+\renewenvironment{answerBox}[1]{%
+  \def\ANSWERBOXHEIGHT{#1}
+  \begin{adjustbox}{valign=t}
+  \begin{minipage}{\textwidth}
+}{\end{minipage}\end{adjustbox}~~~\adjustbox{valign=t}{\parbox{0pt}{\color{gray}\rule[-\ANSWERBOXHEIGHT]{0.01pt}{\ANSWERBOXHEIGHT}}}}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{10}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\gradescopeInit
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\problem\emph{(Section 8.2)}
+In the ruins of Pompeii, the \href{https://en.wikipedia.org/wiki/House_of_the_Tragic_Poet#Vestibule}{House of the Tragic Poet} has a famous mosaic floor proclaiming ``Beware of the Dog.''   In  Boston, a less tragic and wealthier poet has commissioned a mosaic to be built from 1kg bars of solid gold, each 80mm by 40mm.  To know whether her desired mosaic can be built in this way, the poet needs to solve the following problem:
+
+\begin{mylist}
+\item[] \prob{Tiling by Bars} \dotfill \em
+\item[\bf input:] a two-dimensional array $A[1..n, 1..m]$ where each entry $A[i,j]$ is either `\textsf{colored}' or '\textsf{white}', representing an $m\times n$ grid of square cells, each 40mm by 40mm and colored or white.
+\item[\bf output:] `\textsf{yes}' if it is possible to place gold bars (each 80mm by 40mm) on the grid
+  so that each bar covers exactly two colored grid cells, and each colored grid cell is covered by exactly one bar.
+  If it is not possible, then `\textsf{no}'.
+\end{mylist}
+
+\vspace*{-0.2in}
+\adjustbox{valign=b}{\hspace*{-0.1in}
+  \parbox{4.5in}{
+    \noindent\hspace*{-0.25in}
+    \adjustbox{valign=t}{
+      \includegraphics[width=0.5in]{homework_10_gold2.jpeg}
+    }
+    \adjustbox{valign=t}{
+      \parbox{4in}{
+        The gold bars can be rotated 90 degrees, but not split.  As an example, consider the pixel art on the right (not to scale).  Can the leaf be tiled in this way? 
+      }
+    }
+    \medskip
+
+    Develop a poly-time reduction $r$ from this problem to the \prob{Bipartite Matching} decision problem:
+  }}~~\adjustbox{valign=b}{
+  \includegraphics[width=1.75in]{homework_10_aa.png}
+}
+
+\begin{mylist}
+\item[] \prob{Bipartite Matching} \dotfill\em
+\item[\bf input:] bipartite graph $G=(U, W, E)$ and non-negative integer $k$
+\item[\bf output:] `\textsf{yes}' if $G$ has a matching of size at least $k$, otherwise `\textsf{no}'.
+\end{mylist}
+
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+  Define your reduction $r$
+  by defining, for every possible instance $A[1..n, 1..m]$ of  \prob{Tiling by Bars},
+  what output $r(A)$ the reduction gives.
+  The output will be a bipartite graph $G=(U, W, E)$ and integer $k$.
+  Your definition must state precisely how $G$ and $k$ are defined for the given $A$.\footnote
+  {{\bf Hint:} Imagine a checkerboard on the grid.  Any bar must cover exactly one red square and one black square.}
+
+\item
+  Show that your reduction is a \emph{polynomial-time} reduction,
+  by explaining carefully how, given $A$, one can compute the output $r(A)$ in time polynomial in the input size, $n\, m$.
+
+\item
+  For your reduction $r$ to be correct,
+  it must be that, \emph{for every  \prob{Tiling by Bars} instance $A$,
+    the answer to $A$ is `\textsf{yes}' if and only if the answer to the \prob{Bipartite Matching} decision problem $r(A)$ is `\textsf{yes}'.}
+  Show the ``if'' direction.
+  Given an arbitrary \prob{Tiling by Bars} instance $A$,
+  let $G=(U, W, E)$ and $k$ be the output of your reduction $r$ given $A$.  That is, $(G, k) = r(A)$.
+  Describe carefully how, given any bipartite matching $M$ in $G$ of size at least $k$,
+  one could obtain from $M$ a valid covering of $A$ by bars.
+
+\item
+  Now show the ``only if'' direction.
+  Given an arbitrary \prob{Tiling by Bars} instance $A$,
+  let $G=(U, W, E)$ and $k$ be the output of your reduction $r$ given $A$.
+  Describe carefully how, given any valid covering of $A$ by bars,
+  one could obtain a bipartite matching $M$ in $G$ of size at least $k$.
+
+\item
+  Let $R$ be the algorithm from Part (b) above that computes your reduction $r$ in polynomial time.
+  Assume that there is a poly-time algorithm $B$ that solves the  \prob{Bipartite Matching} decision problem.
+  Give pseudo-code for an algorithm that uses $R$ and $B$ to solve the \prob{Tiling by Bars} decision problem
+  in polynomial time.
+  Your algorithm may call $B$ and $R$ as subroutines.  You don't need to define $B$ or define $R$.
+  Your pseudo-code should have just a few short lines.
+  \emph{Hint: Section 8.2.4, Lemma 8.6.}
+
+  You can use notation such as $B(G, k)$ to denote executing $B$ on a given instance $(G, k)$ of Bipartite Matching,
+  and returning the result (`yes' or `no') as the value of the expression $B(G, k)$.
+  You can use notation such as $(G, k) = R(A)$ to denote executing $R$ on input $A$,
+  and storing the result ($r(A)$) in $G$ and $k$.
+
+\end{enumerate}
+
+% \newpage
+
+\vfill
+
+% \setlength{\ITEMHT}{1.9in}
+% {% \injectEnumerate
+\inputAnswer{problem_1_answer}
+% }
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2 %%%%%%%%%%%%%%%%%
+
+\problem\emph{(Section 8.3)} \GradescopeComment{This should be on page 5 (top) of your PDF.}
+
+{\small
+  
+Find the optimal solution for each of the following linear programs:
+
+\begin{enumerate}[label=(\alph*)]
+\item
+  
+  \parbox[t]{3in}{
+    maximize $x_1 + 2x_2$ subject to
+    \begin{eqnarray*}
+      2x_1 + x_2 & \le & 10
+      \\
+      x_1 + 3x_2 & \le & 9
+      \\
+      x_1,x_2 & \ge & 0
+    \end{eqnarray*}
+  }\parbox[t]{3in}{
+    Hint: Since there are only two variables in the linear program, 
+    you can plot the constraints in two dimensions on paper,
+    following the example in Section 8.3, Figure 8.5.
+  }
+
+\item
+
+  \parbox[t]{3in}{
+    minimize $x_1 + 3x_2 + 5 x_3$ subject to
+    \begin{eqnarray*}
+      x_1 + x_2 + x_3 & \ge & 1
+      \\
+      x_1,x_2,x_3 & \ge & 0
+    \end{eqnarray*}
+  }\parbox[t]{3in}{
+    Hint: Consider raising just one $x_i$ to 1.  
+    Which one is cheapest (contributes least to the objective function)?}
+  % As for the dual, it has only one variable!}
+
+\item
+  
+  \adjustbox{valign=t}{
+    \parbox[t]{3in}{
+      maximize $\pi_t-\pi_s$ subject to
+      \begin{eqnarray*}
+        \pi_a - \pi_s & \le & 2 \\
+        \pi_t - \pi_a & \le & 3 \\ 
+        \pi_t - \pi_s & \le & 6 \\
+      \end{eqnarray*}
+    }}{\parbox[t]{3in}{
+      Hint: Apply Section 8.3.3, Lemma 8.12 to the graph below:
+
+      \centerline{
+        \adjustbox{valign=t}{
+          \begin{tikzpicture}[
+              vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+              label/.style={midway, fill=white, inner sep=2pt}, 
+              every path/.style={->}
+              ]
+            \node[vertex] (s) {s}; 
+            \node[vertex] (a) [above =of s] {a}; 
+            \node[vertex] (t) [right =of s] {t}; 
+            \path (s) edge node [label] { 2 } (a);
+            \path (s) edge node [label] { 6 } (t);
+            \path (a) edge node [label] { 3 } (t);
+          \end{tikzpicture}
+        }}
+    }}
+\end{enumerate}
+}
+
+\setlength{\ITEMHT}{0.6in}
+{\injectEnumerate
+\inputAnswer{problem_2_answer}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+
+%%%%%   EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%%   PROBLEM 3 part (i) %%%%%%%%%%%%%%%%%
+
+\newpage 
+
+\refstepcounter{problem}
+\problem[3 part (i)] \emph{(Section 8.1)}
+\textbf{\em Do this OR Problem 3 part (ii), not both.}
+
+Define an edge $(u', w')$ of an $s-t$ flow network $G=(V,E)$ to be \emph{critical} 
+if, for every $\epsilon>0$ (no matter how small)
+decreasing the capacity of $(u', w')$ by $\min(\epsilon, \capac(u', w'))$ would decrease the maximum possible flow.
+That is, for all $\eps>0$, in the flow network $G_\eps=(V, E)$ with edge capacities
+\[
+  \capac_\eps(u, w) = \begin{cases}
+    \capac(u, w) & \text{if } (u, w) \ne (u', w') \\ 
+    \max(\capac(u, w) -\epsilon, 0) & \text{if } (u, w) = (u', w'),
+  \end{cases}
+\]
+the maximum $s$-$t$ flow value is strictly less than the maximum $s$-$t$ flow value in $G$.
+
+\paragraph{(a)}
+List all critical edges in the flow network below (on the left, from Homework 9 Problem 4).
+For convenience, to the right is one possible max flow.
+  
+  \begin{center}
+    \begin{tikzpicture}[
+        vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+        label/.style={midway, fill=white, inner sep=2pt}, 
+        every path/.style={->}
+        ]
+      \node[vertex] (s) {s}; 
+      \node[vertex] (b) [right =of s] {b}; 
+      \node[vertex] (a) [above =of b] {a}; 
+      \node[vertex] (c) [below =of b] {c}; 
+      \node[vertex] (d) [right =of a, xshift=20pt] {d}; 
+      \node[vertex] (f) [right =of b, xshift=20pt] {f}; 
+      \node[vertex] (g) [right =of c, xshift=20pt] {g}; 
+      \node[vertex] (t) [right =of f] {t}; 
+
+      %% EDGES AND CAPACITIES START HERE
+
+      \path (s) edge node [label] {10} (a); % edge s -> a
+      \path (s) edge node [label] {5}  (b); % edge s -> b
+      \path (s) edge node [label] {15}  (c); % etc.
+
+      \path (a) edge node [label] {4} (b) ;
+      \path (a) edge node [label] {9} (d) ;
+      \path (a) edge node [label] {15} (f); 
+
+      \path (b) edge node [label] {8} (f) ;
+      \path (b) edge node [label] {4} (c) ; 
+
+      \path (c) edge node [label] {30} (g) ; 
+
+      \path (d) edge node [label] {10} (t) ; 
+      \path (d) edge node [label] {15} (f) ; 
+
+      \path (f) edge node [label] {10} (t) ; 
+      \path (f) edge node [label] {15} (g) ; 
+
+      \path (g) edge node [label] {10} (t) ; 
+      \path (g) edge node [label] {6} (b) ; 
+    \end{tikzpicture}
+    ~~~
+    \begin{tikzpicture}[
+        vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+        label/.style={midway, fill=white, inner sep=2pt}, 
+        every path/.style={->}
+        ]\footnotesize
+      \node[vertex] (s) {s}; 
+      \node[vertex] (b) [right =of s] {b}; 
+      \node[vertex] (a) [above =of b] {a}; 
+      \node[vertex] (c) [below =of b] {c}; 
+      \node[vertex] (d) [right =of a, xshift=20pt] {d}; 
+      \node[vertex] (f) [right =of b, xshift=20pt] {f}; 
+      \node[vertex] (g) [right =of c, xshift=20pt] {g}; 
+      \node[vertex] (t) [right =of f] {t}; 
+
+      %% EDGES AND CAPACITIES START HERE
+
+      \path (s) edge node [label] {10/\scriptsize 10} (a); % edge s -> a
+      \path (s) edge node [label] {5/\scriptsize 5}  (b); % edge s -> b
+      \path (s) edge node [label] {13/\scriptsize 15}  (c); % etc.
+
+      \path (a) edge node [label] {0/\scriptsize 4} (b) ;
+      \path (a) edge node [label] {8/\scriptsize 9} (d) ;
+      \path (a) edge node [label] {2/\scriptsize 15} (f); 
+
+      \path (b) edge node [label] {8/\scriptsize 8} (f) ;
+      \path (b) edge node [label] {0/\scriptsize 4} (c) ; 
+
+      \path (c) edge node [label] {13/\scriptsize 30} (g) ; 
+
+      \path (d) edge node [label] {8/\scriptsize 10} (t) ; 
+      \path (d) edge node [label] {0/\scriptsize 15} (f) ; 
+
+      \path (f) edge node [label] {10/\scriptsize 10} (t) ; 
+      \path (f) edge node [label] {0/\scriptsize 15} (g) ; 
+
+      \path (g) edge node [label] {10/\scriptsize 10} (t) ; 
+      \path (g) edge node [label] {3/\scriptsize 6} (b) ; 
+    \end{tikzpicture}
+
+  \end{center}
+
+
+\paragraph{(b)} Give a long-form proof of the following lemma. 
+
+\begin{lemma}
+  Let $(u, w)$ be any edge in any $s$-$t$ flow network $G$ with positive capacities.
+  Then $(u, w)$ is critical if and only if $(u, w)$ crosses some minimum-capacity $s$-$t$ cut $(S, T)$
+  (that is, $u\in S$ and $w\in T$).
+\end{lemma}
+\addtocounter{lemma}{-1}
+
+You may use any lemmas or theorems from the lecture notes, such as the Max-Flow/Min-Cut Theorem.
+Please cite them clearly when you do.
+
+\bigskip
+
+\lineacross
+
+\vfill
+% \setlength{\ITEMHT}{2in}
+% {\injectEnumerate
+\inputAnswer{problem_3_i_answer}
+% }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+
+%%%%%   EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%%   PROBLEM 3 Part (ii) %%%%%%%%%%%%%%%%%
+
+\newpage
+
+\problem[3 part (ii)] \emph{(Section 8.1)}
+\textbf{\em Do this OR Problem 3 part (i), not both.}
+
+Give a long-form proof of the conjecture below,
+suggested by a student in Tuesday's class:
+
+\begin{conjecture}\label{conjecture: problem 3 ii}
+  Let $f$ be any maximum flow in any $s-t$ flow network $G$.
+  Let $R$ be the set of vertices reachable from $s$ in the residual graph $G_f$.
+  Let $(S, T)$ be \textbf{any} minimum-capacity $s$-$t$ cut. 
+  Then $R\subseteq S$. 
+  That is, every vertex reachable from $s$ in $G_f$ is in $S$.
+\end{conjecture}
+
+Recall that $(R, V\setminus R)$ is itself a min-capacity $s$-$t$ cut.
+(See e.g.~the proof of Theorem 8.2 in Section 8.1.4.)
+One interesting consequence of the conjecture is that,
+for any two max flows $f$ and $f'$,
+the set of vertices reachable from $s$ in $G_f$
+is the same as the set of vertices reachable from $s$ in $G_{f'}$,
+even if $f$ and $f'$ are different flows.
+
+In your proof, use the following notation, as defined in Section 8.1:
+\begin{mylist}
+\item[$|f|$:] The value of a given flow $f$.
+\item[$G_f$:] The residual graph for a given flow $f$.
+% [review 2026-09-27] fix: L: set B written lowercase: 'w\in b' -> 'w\in B'
+\item[$E(A, B)$:] The edges in $E$ from $A$ to $B$ ($E(A,B) = \{(u,w) \in E: u\in A, w\in B\}$).
+\item[$f(A, B)$:] The flow from $A$ to $B$ (that is, the total flow on edges in $E(A, B)$).
+\item[$\capac(S, T)$:] The capacity of an $s$-$t$ cut $(S, T)$ (that is, the total capacity on edges in $E(S, T)$).
+\end{mylist}
+
+And use the following observation, from the proof of Lemma 8.2:
+\begin{observation}\label{obs: lemma 2}
+  For any $s$-$t$ flow $f$ and $s$-$t$ cut $(S, T)$,
+  $f(S, T) \le \capac(S, T)$ and $f(T, S) \ge 0$.  
+\end{observation}
+
+\hrulefill
+
+\vfill 
+
+% %   \setlength{\ITEMHT}{1in}
+% %   {\injectEnumerate
+\inputAnswer{problem_3_ii_answer}
+% % }
+
+\vfill 
+
+\newpage
+
+% %   \setlength{\ITEMHT}{1in}
+% %   {\injectEnumerate
+\inputAnswer{problem_3_collaborators_citations}
+% % }
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

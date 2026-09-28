@@ -1,0 +1,329 @@
+\documentclass[11pt]{article}
+
+\usepackage{xparse,environ}
+\usepackage{adjustbox}
+
+% \newcommand{\answerDirectory}{solutions}
+
+% Local override, kept so this homework's PDF matches its original exactly:
+% the shared macros (src/macros/macros.tex) now define \REPLACEME differently (without the leading space, plus \xspace).
+% Defined before \input{macros} with \providecommand so a gradescope wrapper's version still wins.
+\providecommand{\REPLACEME}{ \textcolor{red}{\ensuremath{\star \cdots \star}}}
+
+\input{macros}
+
+\inputAnswer{problem_0_answer}
+
+\doHwHeader{Homework \BLUE{3}}
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document}
+
+\input{first_page}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 1  %%%%%%%%%%%%%%%%%
+
+\setcounter{problem}{1}
+
+\newpage 
+\problem[1\,(a)] \emph{(Sections 4.1--4.4)}
+{\small
+  Some recursive algorithm, given any input of size $n$,
+  does $\Theta(n\log n)$ work and then recurses on two subproblems of size $n/2$.
+  The base case is when $n=1$.
+  Suppose the run time $C(n)$ satisfies the following recurrence relation:
+  $C(1) = 0$ and $C(n) = 2 C(n/2) + n\log_2 n$ for $n\ge 2$.
+  Use the recursion-tree method to find a closed-form $\Theta$ value for $C(n)$,
+  then describe your calculations as requested below.
+  Assume $n$ is a power of two.
+}
+
+\setlength{\ITEMHT}{0.8in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_1a_answer}
+}
+
+\newpage
+\problem[1\,(b)]
+{\small
+  Professor Bo Zo proposes a variant of Karatsuba's algorithm,
+  \textsf{BozoMult}, 
+  for multiplying large integers.
+  Given any two $n$-bit integers $A$ and $B$ (where $n$ is a power of three)
+  \textsf{BozoMult}$(A, B)$
+  makes eight recursive calls,
+  each computing the product of two $n/3$-bit integers.
+  In addition to the recursive calls, it takes linear time, $\Theta(n)$
+  (just as Karatsuba's algorithm does, outside of its three recursive calls).
+  Define $M(n)$ to be the time that  \textsf{BozoMult} takes to multiply two $n$-bit integers.
+  State a recurrence relation for $M(n)$,
+  then use the recursion-tree method
+  to obtain a closed-form $\Theta$ value for $M(n)$.
+  Describe your calculations as requested below.
+  Assume $n$ is a power of three.
+}
+
+\setlength{\ITEMHT}{0.8in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_1b_answer}
+}
+
+\newpage
+\problem[1\,(c)]
+{\small
+  Consider the following ``lopsided'' recurrence relation:
+  $T(n) = 1$ for $n\in\{1,2,3,4\}$ and $T(n) = n + T(\lfloor n/4\rfloor) + T(\lfloor 2n/3 \rfloor)$.
+  Choose some constant $c$ (as small as you can easily make work)
+  then prove by induction that
+  $T(n)$ is at most $c n$ for all $n\ge 1$.
+  \emph{Hint: Read Section 4.6 through Lemma 4.4.}
+}
+% \setlength{\ITEMHT}{0.95in}
+% {
+  % \injectEnumerate 
+
+  \inputAnswer{problem_1c_answer}
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 2  %%%%%%%%%%%%%%%%%
+
+\newpage
+
+{\small
+  \problem \emph{(Section 4.7, Exercise 4.10)}
+  Read the definition of the \prob{2D Local Maximum} problem in Section 4.7.2.
+  Consider the following algorithm (from that section):
+  \begin{myframed}
+    \begin{steps}
+    \item[] {\sf local-max}$(A[1..n, 1..n])$ \comment{We assume $n\ge 1$.}
+
+      \step Let $X$ be the set consisting of the $2n-1$ cells lying in column $(n+1)/2$ or row $(n+1)/2$ of $A$.
+
+      \step Check each cell in $X$ to see if it is a local maximum in $A$.  If so, return such a cell.  Otherwise:
+
+      \step Let $A[i, j]$ be any cell in $X$ with maximum value (among cells in $X$).
+
+      \step Let $A[i', j']$ be a neighbor of $A[i,j]$ in $A$ with $A[i', j'] > A[i,j]$.  (It exists, as $A[i,j]$ is not a local max.)
+
+      \step Partition $A \setminus X$ (the array $A$, minus the cells in $X$) around $X$ into its four
+      $(n-1)/2 \times (n-1)/2$ quadrants --- the upper left, upper right, lower left, and lower right --- in the natural way.
+
+      \step Among those, let $A'$ be the quadrant containing the cell $A[i', j']$.
+
+      \step Recursively compute a local maximum of the subarray $A'$, and return that cell.
+    \end{steps}
+  \end{myframed}
+
+  Here is an attempted proof of correctness.
+  First we prove a utility lemma:
+  \begin{lemma}\label{lemma: utility}
+    During any execution of the algorithm that reaches Line 7,
+    the quadrant $A'$ (as defined in the algorithm Line 6) contains a local maximum of $A$.
+  \end{lemma}
+  \begin{longFormProof}
+    \step Let $i$, $j$, $i'$ and $j'$ be as defined in the algorithm for that execution.  Consider the following process.
+    
+    \begin{myframed}
+      \begin{steps}
+      \item[~(i)] Put a token on the cell $A[i', j']$.
+
+      \item[\,(ii)] While the token's cell is not a local maximum in $A$ do:
+
+      \item[(iii)]~~~~Move the token to a neighboring cell with larger value.
+      \end{steps}
+    \end{myframed}
+
+    \step Each cell in $X$ is no larger than $A[i,j]$ (by Line 4 of the algorithm), and $A[i, j] < A[i',j']$.
+
+    \step So each cell in $X$ is smaller than $A[i', j']$.
+
+    \step So by inspection of the process it never moves the token into $X$.  So the token stays in $A'$.
+
+    \step The process must stop, because each move increases the value of the cell with the token.
+
+    \step So the token ends on a cell in $A'$ that is also a local maximum of $A$.
+  \end{longFormProof}
+
+  Here is the rest of the purported proof:
+
+  \begin{lemma}\label{lemma: local max}
+    Given any input where $n=2^k-1$ for some integer $k\ge 1$,
+    the algorithm gives a correct output.
+  \end{lemma}
+  \begin{longFormProof}
+    \step The proof is by induction on $k$.
+    \step Let $P(k)$ be the predicate ``for any input with $n=2^k-1$, the algorithm gives a correct output.''
+    \step For any input with $n=1=2^1-1$, the cross $X$ is the entire array, so Line 2 returns a local max.
+    \step So $P(1)$ holds.
+
+    \begin{block}[ind hyp]
+      \step\label{step: ind} Consider any $k\ge 2$, 
+      and any execution of the algorithm on an input $A$ with $n=2^k-1$.
+      Assume $P(k-1)$.
+
+      \begin{block}
+        \step \underline{Case 1.} Suppose the algorithm returns in Line 2.
+        \step By inspection of Line 2, it returns a local max of $A$.
+      \end{block}
+      \begin{block}
+        \step \underline{Case 2.} Otherwise the algorithm returns in Line 7.
+        \step The quadrant $A'$ contains a local max of $A$ (by Lemma~\ref{lemma: utility}).
+        Note $(n-1)/2 = (2^k-2)/2 = 2^{k-1}-1$.
+        \step By Step~\ref{step: ind}, $P(k-1)$ holds, so the recursive call on $A'$ returns a local max of $A'$.
+        \step By the previous two steps, the algorithm (Line 7) returns a local max of $A$.
+      \end{block}
+      \step So, in either case, the algorithm returns a local max of $A$.  That is, it is correct on input $A$.
+    \end{block}
+
+    \step By Block~\ref{ind hyp}, for any $k\ge 2$, if $P(k-1)$ holds, then $P(k)$ holds.
+    
+    \step By Step 4, $P(1)$ holds.
+
+    \step By the previous two steps and induction, $P(k)$ holds for all $k\ge 1$.
+
+    \step That is, the algorithm gives the correct output on any input where $n=2^k-1$ for some integer $k\ge 1$.
+  \end{longFormProof}
+
+  \newpage
+  {\small
+  % \begin{enumerate}[label=(\alph*)]
+  % \item
+    In the proof of correctness (the two lemmas),
+    what is the \emph{first} step in the long-form proof of either lemma
+    that asserts a statement that is not necessarily true?
+  % \item
+    What, precisely, is the mistake in the reasoning in that line?
+  % \item
+    Give an input with $n=7$ on which the \prob{2D Local Max} algorithm given above fails.
+    Describe the execution of the algorithm on that input.
+    We encourage you to verify your answer using the Python implementation
+    \pycode{divide_and_conquer/local_maximum.py}
+    (listed in Section 4.9 of Lecture Note 4).
+  % \end{enumerate}
+  }
+}
+
+\setlength{\ITEMHT}{1.15in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_2_answer}
+}
+% \restoreEnumerate
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+%%%%%%%%%%%%%%%% PROBLEM 3  %%%%%%%%%%%%%%%%%
+
+\newpage
+\newcommand{\segment}[2]{#1\!\to\! #2}
+\problem \emph{(Exercise 4.11)}
+You have been commissioned to design a new bus system that will run along Huntington Avenue.  The bus system must provide service to $N$ stops (numbered $1,2,\ldots,N$) along the eastbound route.  Commuters may begin their trip at any stop $i$ and end at any stop $j$ where $1\le i < j \le N$.  
+Here are two naive ways to design the system:
+\begin{itemize}
+\item You could have a bus run from stop 1 to stop $N$, stopping at every stop in between. The system would be cheap because it would only require $N-1$ route segments, $\{\segment 1 2, \segment 2 3, \ldots, \segment{(N-1)}N\}$, for the entire system. However, a person traveling from stop $1$ to stop $N$ would have to wait while the bus makes $N-1$ stops.
+
+\item You could have, for every pair of stops $i, j$ with $i < j$, a special express bus from $i$ to $j$.
+  No commuter would ever have to make more than one stop.
+  However, this system would be expensive as it requires ${N \choose 2} = \Theta(N^2)$ route segments,
+  $\{\segment i j : 1\le i < j \le N\}$.
+  
+\end{itemize}
+
+Using divide and conquer, you will find a compromise --- a set of at most $N \log_2 N$ route segments, with the property that for any stops $i$ and $j > i$, the \emph{hop length} from $i$ to $j$ in the set is at most 2.
+That is, either the (direct) route segment $\segment i j$ is in the set (so the hop length is 1),
+or, for some $m$ with $i<m<j$, the set contains the two segments $\segment i m$ and  $\segment m j$
+(so the hop length is 2).
+
+Consider any sequence $(\ell, \ell+1, \ldots, u)$ of consecutive stops (where $1\le \ell \le u \le N$).
+Let $n = u-\ell+1$ be the number of stops.
+We will recursively define a set $S(\ell, u)$ of segments that handles trips from any stop $i$ to any stop $j$
+such that $\ell \le i < j \le u$.
+
+For the base case $n=1$, for every stop $\ell$,
+define $S(\ell, \ell)$ to be the empty set.
+For the base case $n=2$, for every stop $\ell$,
+define $S(\ell, \ell+1)$ to be $\{ \segment{\ell}{\ell+1} \}$.
+(Then any commuter can get from stop $\ell$ to $\ell+1$ using just the one segment in $S(\ell, \ell+1)$,
+so the hop length from $\ell$ to $\ell+1$ in  $S(\ell, \ell+1)$ is 1.)
+
+Now consider any sequence $(\ell, \ell+1, \ldots, u)$ of stops where the number of stops $n=u-\ell+1$ is more than two.
+Let $m=\lfloor (\ell+u)/2\rfloor$ be the middle stop.
+\begin{enumerate}[label=(\alph*)]
+\item 
+  Give a definition for a set $Q(\ell, u)$ of segments such that,
+  for every pair of stops $(i, j)$ where $i$ is in the first half of the stops ($\ell\le i \le m$)
+  and $j$ is in the second half of the stops ($m <j\le u$),
+  the hop length from $i$ to $j$ in $Q(\ell, u)$ is at most 2.
+  Your set $Q(\ell,  u)$ should contain at most $n-1$ segments (the number of stops minus one).
+  This definition should not be recursive.
+
+\item Now give a recursive definition for a set $S(\ell, u)$ of segments such that
+  \begin{description}
+  \item[(P1)] For \emph{any} pair of stops $(i, j)$ with $\ell\le i < j \le u$,
+    the hop length from $i$ to $j$ in $S(\ell, u)$ is at most two.
+  \item[(P2)] $S(\ell, u)$ contains at most $n\log_2 n$ segments. 
+  \end{description}
+  \emph{Hint: Divide the stops into the first and second halves,
+    recurse on each half, then add $Q(\ell, u)$.}
+
+\item Let $N(n)$ be the maximum number of segments in any set $S(\ell, u)$ such that $u-\ell+1=n$
+  (the set covers $n$ consecutive stops).  State a recurrence relation for $N(n)$.
+  Use the recurrence to prove by induction that $N(n) \le n\log_2 n$ for every $n\ge 1$.
+
+\item Prove by induction that, for all $n\ge 1$,
+  for any sequence $(\ell,\ell+1, \ldots, u)$ of $n$ consecutive stops (so $u-\ell+1=n$),
+  the set $S(\ell, u)$ as you defined it has property (P1) above.
+\end{enumerate}
+
+\continued
+
+\setlength{\ITEMHT}{3in}
+{
+  \injectEnumerate 
+
+  \inputAnswer{problem_3_answer}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%% EDIT THE FILES NAMED problem_X_answer.tex.  DON'T EDIT THIS FILE 
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,219 @@
+\paragraph{Problem 3 answer} \GradescopeComment{This should be on page 10 (top) of your PDF.}
+
+Consider any sequence $(\ell, \ell+1, \ldots, u)$ of more than two stops,
+with middle stop $m=\lfloor (\ell+u)/2\rfloor$.
+
+\begin{enumerate}[label=(\alph*)]
+
+\item % (2a)
+  Define $Q(\ell, u)$ as follows:
+  \begin{blue}
+    \[
+      Q(\ell, u)
+      =
+      \REPLACEME
+    \]
+
+    % USEFUL LATEX MACROS (USE IN MATH MODE):
+    % 
+    % Use \segment{X}{Y} to represent a segment from X to Y.
+    % 
+    % Use A \cup B for set union.
+    % 
+    % Use \{ .. \} to make curly braces to define a set.  For example
+    % 
+    % \{ \segment i j : 1\le i < j \le N \} 
+    % 
+    % is the set of all $N \choose 2$ possible segments.
+  \end{blue}
+
+  % [review 2026-09-27] fix: number of segments is n-1 = u-l, not l-u
+  Then $Q(\ell, u)$ has at most $n-1 = u-\ell$ segments,
+  % [review 2026-09-27] fix: j is in the second half of the stops, so m < j (was m <= j), as in the problem statement
+  and for any $(i, j)$ with $\ell \le i \le m < j \le u$
+  the hop length from $i$ to $j$ in $Q(\ell, u)$ is at most two.
+
+\item % (2b)
+  Define $S(\ell, u)$ as follows:
+  \BLUE{
+    \[
+      S(\ell, u) = \REPLACEME
+    \]
+  }
+\end{enumerate}
+
+\continued 
+\setlength{\ITEMHT}{1in}
+
+\paragraph{Problem 3(c) answer} \GradescopeComment{This should be on page 11 (top) of your PDF.}
+
+% [review 2026-09-27] fix: the recursive definition of S applies for n > 2 (n = 2 is a base case), so the recurrence is for n >= 3 (n >= 2 would need N(0))
+Here is the recurrence:  $N(1) = 0$, $N(2) = 1$, and, for any $n\ge 3$,
+
+\begin{blue}
+  \[
+    N(n) = \REPLACEME
+  \]
+\end{blue}
+
+\begin{lemma}
+  $N(n) \le n\log_2 n$ for every $n\ge 1$.
+\end{lemma}
+
+\begin{longFormProof}
+
+  \step The proof is by induction on $n$.
+
+  \step\label{step: bus base 1}
+  The base case $n=1$ holds because each set $S(\ell, \ell)$ has no segments, and $n\log_2 n$ is zero.
+  
+  \step\label{step: bus base 2}
+  % [review 2026-09-27] fix: for n = 2, n log_2 n = 2, not one
+  The base case $n=2$ holds because each set $S(\ell, \ell+1)$ has one segment, and $n\log_2 n$ is two.
+  
+  \begin{block}\label{block: bus induction}
+
+    \step\label{step: bus ind assumption}
+    Consider any $n\ge 3$ and assume the lemma holds for smaller values.  We show it holds for $n$.
+
+    \step Recall the recurrence relation,  $N(n)$ is \BLUE{
+      \(
+      \REPLACEME
+      \)
+    }
+
+    \step Applying the inductive assumption in Step~\ref{step: bus ind assumption}
+    \BLUE{
+      \[
+        N(n)
+        \le
+        \REPLACEME
+      \]
+    }
+    
+    \step \BLUE{
+      \REPLACEME
+    }
+  \end{block}
+
+  \step By Block~\ref{block: bus induction}, for any $n\ge 3$, the lemma holds for that $n$ if it holds for smaller values.
+
+  \step By this, Steps~\ref{step: bus base 1} and~\ref{step: bus base 2}, and induction, the lemma holds for all $n\ge 1$.
+
+\end{longFormProof}
+
+\continued 
+
+\paragraph{Problem 3(d) answer}\GradescopeComment{This should be on page 12 (top) of your PDF.}
+
+\begin{lemma}
+  For any $n\ge 1$, for any $n$ consecutive stops $(\ell, \ell+1, \ldots, u)$,
+  for every pair of stops $(i, j)$ with $\ell \le i < j \le u$,
+  the hop length from $i$ to $j$ in $S(\ell, u)$ is at most 2.
+\end{lemma}
+\begin{longFormProof}
+  \step The proof is by induction on $n$.
+
+  \step\label{step: bus 2 base 1}
+  For the base case $n=1$, there is no such pair $(i, j)$ so the lemma holds trivially. 
+
+  \step\label{step: bus 2 base 2}
+  For the base case $n=2$,
+  there is one such pair $(\ell, \ell+1)$.
+  \BLUE{
+    \REPLACEME
+  }
+
+  \smallskip
+  
+  \begin{block}\label{block: bus 2 induction}
+    \step\label{step: assumption}
+    Consider any $n\ge 3$ and $(\ell, u)$ as in the lemma, and assume the lemma holds for smaller values.
+    
+    \step Let $m=\lfloor (\ell+u)/2 \rfloor$ be the middle stop.
+    
+    \step Recall that by definition $S(\ell, u)$ is \BLUE{
+      \REPLACEME
+    }
+    
+    \smallskip
+    
+    \begin{block}\label{block: bus ij}
+      \step Consider any pair of stops $(i, j)$ with $\ell \le i < j \le u$.
+
+      \begin{block}
+        \step \underline{Case 1.} First consider the case that \BLUE{
+          \(
+          \REPLACEME
+          \)
+        }
+
+        \step By the definition of $Q(\ell, u)$, the hop length from $i$ to $j$ is at most two in $Q(\ell, u)$.
+
+        \step So the hop length from $i$ to $j$ is at most two in $S(\ell, u)$.
+      \end{block}
+
+      \begin{block}
+        \step \underline{Case 2.} Next consider the case that \BLUE{
+          \REPLACEME
+        }
+
+        \step \BLUE{
+          \REPLACEME
+        }
+
+        \step So the hop length from $i$ to $j$ is at most two in $S(\ell, u)$. 
+      \end{block}
+
+      \begin{block}
+        \step \underline{Case 3.} In the remaining case \BLUE{
+          \REPLACEME
+        }
+
+        \step \BLUE{
+          \REPLACEME
+        }
+        \step So the hop length from $i$ to $j$ is at most two in $S(\ell, u)$. 
+      \end{block}
+
+      \step In any case, the hop length from $i$ to $j$ in $S(\ell, u)$ is at most two.
+
+    \end{block}
+
+    \smallskip
+    
+    \step By Block~\ref{block: bus ij}, for all $(i, j)$ with $\ell\le i < j \le u$,
+    the $i$-to-$j$ hop length in $S(\ell, u)$ is at most two.
+
+  \end{block}
+
+  \step By Block~\ref{block: bus 2 induction}, for any $n\ge 3$, the lemma holds for $n$ if it holds for smaller values.
+
+  \step By this, Steps~\ref{step: bus 2 base 1} and~\ref{step: bus 2 base 2},
+  and induction, the lemma holds for all $n\ge 1$.
+\end{longFormProof}
+
+
+\continued 
+
+
+\paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment{This should be on page 13 (top) of your PDF.}
+
+I collaborated on this problem with the following people:
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME          % write "none" if none
+  \end{itemize}
+\end{blue}
+
+My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+\begin{blue}
+  \begin{itemize}
+  \item \REPLACEME         % write "none" if none
+  \end{itemize}
+\end{blue}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_2"
+%%% End:

@@ -1,0 +1,492 @@
+
+\section{Bounding sums}\doHeader{Bounding sums}
+
+Recall that, for example, $\sum_{i=1}^n i^2$ denotes the sum $1^2 + 2^2 + \cdots + n^2$.
+You may have previously learned \emph{closed forms} for some sums,
+such as $\sum_{i=1}^n i = n(n+1)/2$.
+Unfortunately, for most sums of interest, closed forms
+are difficult to find or simply don't exist.
+Fortunately, when we are analyzing asymptotic running times,
+we don't care about lower-order terms or constant factors,
+so we don't usually need exact closed forms for the sums that arise.
+Instead, for example, we only need to know that $\sum_{i=1}^n i = \Theta(n^2)$.
+Here are three rules for quickly estimating the big-$\Theta$ values of sums.
+
+\subsection{Naive upper and lower bounds}
+Here are two rules that work well for sums whose terms grow polynomially (or less) with the index.
+
+\begin{observation}[Naive upper bound]
+  Any sum is at most the number of terms times the max.~term.
+\end{observation}
+\paragraph{Three examples:}
+\begin{align*}
+  \textstyle \sum_{i=1}^n i ~\le~ {}
+  & n \cdot \max_{i=1}^n i ~=~ n\cdot n ~=~ O(n^2)
+  \\
+  \textstyle \sum_{i=1}^n i^2 ~\le~ {}
+  & n \cdot \max_{i=1}^n i^2 ~=~ n\cdot n^2 ~=~ O(n^3)
+  \\
+  \textstyle \sum_{i=1}^n \log i ~\le~ {}
+  & n \cdot \max_{i=1}^n \log i ~=~ n \log n ~=~ O(n \log n)
+\end{align*}
+
+\begin{observation}[Naive lower bound]
+  Any sum with non-negative terms
+  is at least half the number of terms times the median term.
+\end{observation}
+\paragraph{Three examples:}
+\begin{align*}
+  \textstyle \sum_{i=1}^n i ~\ge~ {}
+  & (n/2) \cdot (n/2) ~=~ \Omega(n^2)
+  \\
+  \textstyle \sum_{i=1}^n i^2 ~\ge~ {}
+  & (n/2) \cdot (n/2)^2 ~=~ \Omega(n^3)
+  \\
+  \textstyle \sum_{i=1}^n \log i ~\ge~ {}
+  & (n/2) \cdot \log (n/2) ~=~ \Omega(n \log n)
+\end{align*}
+ 
+For the three examples above, the naive upper and lower bounds match (up to constant factors).
+So together they are enough to determine the value of the sum, up to constant factors (the big-$\Theta$ value).
+For example, $\sum_{i=1}^n \log i = \Theta(n\log n)$.
+
+The bounds will match for any sum whose terms don't increase (or decrease) too fast ---
+specifically, for any sum where the median term is within a constant factor
+of the maximum term.
+For example, it will work for sums whose terms grow only polynomially with the index.
+
+
+\subsection{Geometric sums}
+However, it won't work for all sums.
+For example, try $\sum_{i=1}^n 2^i$.
+The naive upper bound gives $\sum_{i=1}^n 2^i = O(n 2^n)$.
+The naive lower bound gives $\sum_{i=1}^n 2^i = \Omega(n 2^{n/2})$.
+But these upper and lower bounds are far apart!
+Indeed their ratio $2^n / 2^{n/2} = 2^{n/2}$ is quite large.
+The answer is actually $\sum_{i=1}^n 2^i = \Theta(2^n)$.
+Neither the naive upper or lower bound is tight in this case.
+
+We have another rule for such sums.  First we 
+formally define the type of sums it applies to:
+\begin{definition}
+  A sum $\sum_{i=1}^n \alpha_i$ is \emph{geometric} if,
+  for some constants $c>1$ and $i_0$ (indep.~of $n$)
+  either\\ (i) for each $i\ge i_0$ the $i$th term
+  is at least $c$ times the previous term
+  (that is, $\alpha_{i} \ge c \cdot \alpha_{i-1}$), or \\
+  (ii) for each $i\ge i_0$ the $i$th term
+  is at most the previous term divided by $c$
+  (that is, $\alpha_{i} \le \alpha_{i-1}/c$).
+\end{definition}
+
+\emph{Rule of thumb:} if the sum has an exponential term in the summand, it is probably geometric.
+
+\paragraph{Three examples}
+\begin{itemize}
+\item $\sum_{i=1}^n 2^i$ is geometric:
+  the ratio of successive terms $2^{i}/ 2^{i-1}$ is at least two.
+\item $\sum_{i=1}^n 2^i/i$ is also geometric:
+  for $i\ge 3$ the ratio of successive terms is $(2^i/i)/(2^{i-1}/(i-1))$ $=2(i-1)/i\ge 4/3$.
+\item $\sum_{i=1}^n i^2+1$ is not geometric:
+  the ratio of successive terms $((i+1)^2+1) / (i^2 +1)$
+  gets arbitrarily close to 1 for large $i$.
+\end{itemize}
+
+
+Here's our third rule.  It handles any geometric sum:
+
+\begin{observation}[geometric sums]
+  Any geometric sum is proportional to its largest term.
+\end{observation}
+\paragraph{Three examples}~{}
+
+\[
+\begin{array}{rr@{~}l}
+  & \sum_{i=0}^n 2^i &= \Theta(\max_{i=0}^n 2^i) = \Theta(2^n). \\[2ex]
+  & \sum_{i=1}^n 2^i/i &= \Theta(\max_{i=1}^n 2^i/i) = \Theta(2^n/n).   \\[2ex]
+  & \sum_{i=0}^\infty i^2/2^i&  = \Theta(\max_{i=0}^\infty i^2/2^i) = \Theta(1).
+\end{array}
+\]
+
+\subsection{Exercises}
+
+\exercise \emph{(Bounding sums)}
+Use the so-called naive upper and lower bounds, and the rule for geometric sums,
+to determine the big-$\Theta$ value of each of the following sums.
+% You don't have to show your work,
+% but you can if you want feedback on it
+% (and it may help you get partial credit if your answer is wrong). 
+
+
+\begin{enumerate}[label=(\alph*)]
+\item $\displaystyle\sum_{i=1}^n 1.1^i/i^2$
+
+\item $\displaystyle\sum_{i=1}^{\log_2 n} i^2\log_3 i$
+
+\item $\displaystyle\sum_{i=1}^{2^n} (\log_3 i)^2$
+  
+\item $\displaystyle\sum_{i=0}^{n} i^3/2^i$
+\end{enumerate}
+
+\subsection{External sources on bounding sums}
+\begin{mylist}
+\item \CLRS Appendices A-1 and A-2
+\end{mylist}
+  
+\newpage
+
+\section{Recursion trees for recursive algorithms}\doHeader{Recursion trees}\label{dc: sec: recursion trees}
+Next we discuss how to analyze the run times of recursive algorithms,
+using \textsf{mergesort} (shown in Figure~\ref{dc: fig: mergesort}) as an example.
+Let $T(n)$ denote the worst-case running time of \textsf{mergesort} on any array of size $n$.
+Then $T(1) = \Theta(1)$.
+% [review 2026-09-27] fix: the recurrence holds for n >= 2 (n = 1 is the base case T(1) = Theta(1) stated just above); was n >= 1
+For $n\ge 2$, by inspection of \textsf{mergesort} and
+using that \textsf{merge} takes linear time, we have the recurrence relation
+\[
+  T(n) = 2\, T(n/2) + n.
+\]
+(For now, we assume $n$ is a power of 2, so $n/2$ is an integer.)
+\begin{figure}
+\begin{myframed}
+\begin{steps}
+  \item[] {\sf mergesort}$(A[1..n])$
+  \step if $n = 1$, return
+  \step set $m= \lfloor n/2\rfloor$
+  \step \textsf{mergesort}$(A[1..m])$ \comment{(sort the first $n/2$ elements)}
+  \step \textsf{mergesort}$(A[m+1..n])$ \comment{(sort the last $n/2$ elements)}
+  \step \textsf{merge}$(A[1..n], m)$ \comment{(merge the two sorted halves, in time $\Theta(n)$)}
+\end{steps}
+\end{myframed}
+\caption{Mergesort. The \textsf{merge} procedure runs in linear time.  We don't give its code.}\label{dc: fig: mergesort}
+\end{figure}
+
+\paragraph{Using a \emph{recursion tree} to count the work.}
+A \emph{recursion tree} represents the recursive structure of an execution of a recursive algorithm.
+The root node represents the top-level call.
+Each non-root node represents one recursive call.
+Each node is labeled by the size of the subarray that the corresponding call sorts.
+The children of each node for a given call
+represent the two recursive calls that that call makes.
+Figure~\ref{dc: fig: recursion tree} shows the recursion tree for \textsf{mergesort} on an array of size $n=16$.
+\begin{figure}
+\begin{myframed}
+\tikzset{
+    vertex/.style={inner sep=0pt, minimum size=17pt},
+    edge/.style={> = latex'}
+}
+\noindent\adjustbox{valign=c, raise=-5pt}{
+\begin{tikzpicture}[scale=0.5]
+  \node[vertex] (1) at (7.5,4) {16} ;
+
+  \node[vertex] (2) at (3.5,3) {8} ;
+  \node[vertex] (3) at (11.5,3) {8} ;
+  \draw[edge] (2) -- (1); 
+  \draw[edge] (3) -- (1); 
+
+  \node[vertex] (4) at (1.5,2) {4} ;
+  \node[vertex] (5) at (5.5,2) {4} ;
+  \node[vertex] (6) at (9.5,2) {4} ;
+  \node[vertex] (7) at (13.5,2) {4} ;
+  \draw[edge] (4) -- (2); 
+  \draw[edge] (5) -- (2); 
+  \draw[edge] (6) -- (3); 
+  \draw[edge] (7) -- (3); 
+
+  \node[vertex] (8) at (0.5,1) {2} ;
+  \node[vertex] (9) at (2.5,1) {2} ;
+  \node[vertex] (10) at (4.5,1) {2} ;
+  \node[vertex] (11) at (6.5,1) {2} ;
+  \node[vertex] (12) at (8.5,1) {2} ; 
+  \node[vertex] (13) at (10.5,1) {2} ; 
+  \node[vertex] (14) at (12.5,1) {2} ; 
+  \node[vertex] (15) at (14.5,1) {2} ;
+  \draw[edge] (8) -- (4);
+  \draw[edge] (9) -- (4);
+  \draw[edge] (10) -- (5);
+  \draw[edge] (11) -- (5);
+  \draw[edge] (12) -- (6);
+  \draw[edge] (13) -- (6);
+  \draw[edge] (14) -- (7);
+  \draw[edge] (15) -- (7);
+  
+  \node[vertex] (16) at (0,0) {1} ;
+  \node[vertex] (17) at (1,0) {1} ;
+  \node[vertex] (18) at (2,0) {1} ;
+  \node[vertex] (19) at (3,0) {1} ;
+  \node[vertex] (20) at (4,0) {1} ;
+  \node[vertex] (21) at (5,0) {1} ;
+  \node[vertex] (22) at (6,0) {1} ;
+  \node[vertex] (23) at (7,0) {1} ;
+  \node[vertex] (24) at (8,0) {1} ;
+  \node[vertex] (25) at (9,0) {1} ;
+  \node[vertex] (26) at (10,0) {1} ;
+  \node[vertex] (27) at (11,0) {1} ; 
+  \node[vertex] (28) at (12,0) {1} ; 
+  \node[vertex] (29) at (13,0) {1} ; 
+  \node[vertex] (30) at (14,0) {1} ; 
+  \node[vertex] (31) at (15,0) {1} ;
+  \draw[edge] (16) -- (8);
+  \draw[edge] (17) -- (8);
+  \draw[edge] (18) -- (9);
+  \draw[edge] (19) -- (9);
+  \draw[edge] (20) -- (10);
+  \draw[edge] (21) -- (10);
+  \draw[edge] (22) -- (11);
+  \draw[edge] (23) -- (11);
+  \draw[edge] (24) -- (12);
+  \draw[edge] (25) -- (12);
+  \draw[edge] (26) -- (13);
+  \draw[edge] (27) -- (13);
+  \draw[edge] (28) -- (14);
+  \draw[edge] (29) -- (14);
+  \draw[edge] (30) -- (15);
+  \draw[edge] (31) -- (15);
+  % \draw[edge] (a) -- (b); 
+\end{tikzpicture}
+}
+\adjustbox{valign=c}{\small
+  \begin{tabular}{@{}c|ccc|c@{}}
+    & \# of & subprob. & work per & work in \\
+    level & subprobs & size  & subprob & level \\ \hline 
+    0 & 1 & 16 & 16 & 16 \\[2pt]
+    1 & 2 & 8 & 8 & 16 \\[2pt]
+    2 & 4 & 4 & 4 & 16 \\[2pt]
+    3 & 8 & 2 & 2 & 16 \\[2pt]
+    4 & 16 & 1 & 1 & 16 \\ \hline
+    \multicolumn{4}{r}{total:} & $5\times 16$
+  \end{tabular}
+}
+\end{myframed}
+\caption{On the left, the recursion tree for \textsf{mergesort} on an array of size 16.
+  On the right,  a table of the work done in each level of the recursion tree.}\label{dc: fig: recursion tree}
+\end{figure}
+
+As illustrated in the table to the right in the figure, if the input array size $n$ is a power of 2,
+there are $1+\log_2 n$ levels.
+For each $i\in\{0,\ldots, \log_2 n\}$,
+level $i$ has $2^i$ subproblems, each of size $n/2^i$.
+The work associated with a subproblem of size $n/2^i$ is $\Theta(n/2^i)$,
+so the total work at level $i$ is $\Theta(2^i \times n/2^i) = \Theta(n)$.
+Summing over the $\log n$ levels, the total work is $\Theta(n\log n)$.
+Hence, $T(n) = \Theta(n\log n)$.
+Note that the work is balanced evenly across the levels.
+
+If $n$ is not a power of 2, then there are $1+\lceil \log_2 n \rceil$ levels.
+In each level $i$ except the last, there are $2^i$ subproblems,
+% [review 2026-09-27] fix: subproblem sizes can exceed n/2^i because of ceilings; replaced "between n/2^{i+1} and n/2^i" by the correct bound "at most ceil(n/2^i) <= 2n/2^i"
+each of size at most $\lceil n/2^i\rceil \le 2n/2^i$.
+So, by a similar calculation, the total work $T(n)$ is also $\Theta(n\log n)$ in this case.
+
+\begin{theorem}
+  \textsf{Mergesort} runs in $O(n \log n)$ time.
+\end{theorem}
+
+\paragraph{Variation with heavy leaves.}
+
+Consider the recurrence relation $T(n) = \mathbf{3}\cdot T(n/2) + n$.
+The same approach applies, but now each non-leaf node has \textbf{three} children.
+As before we have
+\begin{align*}
+  T(n) & {}= \sum_{i=0}^{\text{max level}} (\text{\# subprobs on level } i) \times (\text{work per subprob.~on level } i)
+\end{align*}
+but now the number of subproblems on level $i$ is $3^i$, so the calculation proceeds as follows:
+\begin{align*}
+  T(n) & {}= \sum_{i=0}^{\log_2 n} 3^i (n/2^i) ~=~ n \sum_{i=0}^{\log_2 n}\, (3/2)^i
+    = \Theta(n\, (3/2)^{\log_2 n})  \text{~~~~(because the sum is geometric)} \\
+  & {}= \Theta(n\cdot n^{\log_2 3/2}) = \Theta(n^{\log_2 3}) = \Theta(n^{1.58\ldots})
+    \text{~~~~(using $b^{\log n} = n^{\log b}$ and $\log_2 3/2 = \log_2(3) -1$).}
+\end{align*}
+
+For \textsf{mergesort}, the work was balanced across the levels.
+But here we get a qualitatively different behavior:
+\emph{the total work is dominated by the work done at the leaves.}
+
+\paragraph{Variation with heavy root.}
+Consider the recurrence relation $T(n) = 3\, T(n/2) + \mathbf{n^2}$.
+Then
+\begin{align*}
+  T(n) & {} = \sum_{i=0}^{\log_2 n} 3^i (n/2^i)^{\mathbf 2} = n^2 \sum_{i=0}^{\log_2 n}\, (3/4)^i
+           = \Theta(n^2).
+\end{align*}
+In this case \emph{the total work is dominated by the work at the root.}
+
+\medskip
+
+These are the three common cases:
+either (a) the work is balanced across the levels,
+or the sum is geometric, so either (b) the work at the leaves dominates,
+or (c) the work at the root dominates.
+A particularly important special case of the latter case
+(when the work at the root dominates)
+is when \emph{the algorithm does linear work,
+then recurses on subproblems whose combined size
+is a constant factor less than the size of the given problem}.
+
+For example,
+consider the recurrence relation $T(n) = a T(n/b) + n$,
+for some $a < b$.  That is, the algorithm does linear work,
+then recurses on $a$ problems, each of size $n/b$,
+so having total size $an/b = (a/b) n$ where $a/b < 1$.
+Then we get
+\begin{align*}
+  T(n) & {} = \sum_{i=0}^{\log_b n} a^i (n/b^i) = n \sum_{i=0}^{\log_b n}\, (a/b)^i
+           = \Theta(n).
+\end{align*}
+The last step follows because $a < b$, so the sum is geometric
+and dominated by the first term.
+See also the Selection algorithm in Section~\ref{dc: sec: selection}.
+
+% Here's a more general case, which arises in the algorithm for \prob{Selection}.
+% \begin{lemma} Suppose $T(1) = 1$ and for $n\ge 2$
+%   \[\displaystyle T(n) \le n + \sum_{i=1}^k a_i\, T(n/b_i) \]
+%   where $a_i > 0$ and $b_i > 1$ for each $i$, and $\sum_{i=1}^k a_i/b_i < 1$.
+%   Then $T(n) = O(n)$.
+% \end{lemma}
+% \begin{proof}[Proof sketch.]
+%   We sketch a proof, by induction on $n$, that $T(n) \le c\, n$ for some constant $c$.
+%   We choose (to make the proof below work) $c = 1+1/(1- \sum_{i=1}^k a_i/b_i )$.
+%   The base case $n=1$ holds because $c\ge 1$.
+%   For the inductive step, consider $n\ge 2$, then
+%   \begin{align*}
+%     T(n)
+%     & \le  n +\textstyle\sum_{i=1}^k a_i\, T(n/b_i)   && \comment{(by assumption)} \\
+%     & \le n + \textstyle\sum_{i=1}^k a_i\, c\, n/b_i   && \comment{(by induction, using $b_i>1$)} \\
+%     & = c\, n (1/c +\textstyle\sum_{i=1}^k a_i/b_i) \\
+%     & \le c\, n && \comment{(by the choice of $c$)}.
+%   \end{align*}
+%   The last step because by the choice of $c$,
+%   $c \ge 1/(1- \sum_{i=1}^k a_i/b_i )$,
+%   so $1/c + \sum_{i=1}^k a_i/b_i \le 1$.
+
+%   This is only a proof sketch because it ignores the details
+%   re WORKING
+% \end{proof}
+
+\pythonCode{divide_and_conquer/mergesort.py}
+
+\subsection{Exercises}
+
+\paragraph{With solution}
+
+\exercise\label{dc: exercise: recursion tree with solution}\emph{(Recursion-tree method)}
+For the algorithm below,
+use the recursion-tree method to find the asymptotic value (using the $\Theta$-notation)
+for the number of letters printed by the algorithm as a function of $n$.
+
+\newcommand{\ALG}[4]{
+  \vbox{                        % keep on one page
+    \begin{steps}
+    \item[] def \textsf{Print{#1}s}$(n)$:  \comment{Assume $n$ is a power of $#4$.}
+      \step for $i = 1$ to $#2$: print(``{#1}'') \comment{\ldots print $#2$ #1's}
+      \step if $n > 1$:
+      \step~~~for $j=1$ to $#3$: \textsf{Print{#1}s}$(\floor{n/#4})$
+      \comment{\ldots make $#3$ recursive calls, each with input $\floor{n/#4}$}
+    \end{steps}
+  }
+}
+
+\begin{myframed}
+\ALG{Y}{n\log_2 n}{3}{3}
+\end{myframed}
+
+\newpage
+
+The solution should give
+\begin{enumerate}[label=(\roman*)]
+\item an appropriate recurrence relation,  
+\item as a function of the level $i$ in the recursion tree:
+the number of nodes (that is, calls) in level $i$,
+the problem size (the argument to each call) at each node in level $i$,
+and the number of letters printed by each call in level $i$,
+\item the number of levels in the recursion tree,
+\item the sum, over all levels, of the number of letters printed by calls in that level,
+  and finally,
+\item a big-$\Theta$ estimate of the value of the sum
+(as a function of $n$), obtained by using either the rule for geometric
+sums or the naive upper and lower bounds
+(show your work for (v) if you want feedback).
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[label=(\roman*)]
+\item Define $Y(n)$ to be the number of letters printed by {\sc PrintYs} given input $n\ge 1$.
+
+  Then $Y(1) = 0$ and, for $n>1$, $Y(n) = n \log_2 n + 3 Y(n/3)$.
+\item In level $i$, there are $3^i$ nodes.
+  Each call has input $n/3^i$ and prints $(n/3^i)\log_2(n/3^i)$ letters.
+% [review 2026-09-27] fix: the levels are 0, ..., log_3 n (as in the sum in (iv) and the bound in (v)), so there are 1 + log_3 n levels (was log_3 n)
+\item There are $1 + \log_3 n$ levels.
+\item The total number of letters printed is 
+\( Y(n)
+~=~ 
+\sum_{i=0}^{\log_3 n} 3^i (n/3^i)\log_2 (n/3^i)
+~=~
+\sum_{i=0}^{\log_3 n} n\log_2(n/3^i)\).
+\item By the naive upper bound, the sum is at most $(1+\log_3 n) n\log_2 n = O(n\log^2 n)$.
+
+By the naive lower bound, the sum is at least $\frac{1}{2}(1+\log_3 n)$ times the median term,
+which is $n\log_2(n/3^i)$ where $i = (1+\log_3 n)/2$.  For this $i$, $3^i$ simplifies to $\Theta(\sqrt n)$,
+so the median term simplifies to $n\log_2 (n/\Theta(\sqrt n)) = n\log_2 \Theta(\sqrt n) = \Theta(n\log n)$.
+So the sum is $\Omega(n\log^2 n)$.
+
+Thus, the sum, which equals $Y(n)$, is $\Theta(n\log^2 n)$.
+\end{enumerate}
+
+\paragraph{Exercise without solutions}
+
+\exercise\label{dc: exercise: mergesort}\emph{(Mergesort variation)} % CS 5800 HWK 7
+Consider a variant of Mergesort that, given an array of size $N$,
+recurses as usual just until the subproblems are of size $\sqrt N$,
+then solves each subproblem of size $\sqrt N$ directly using insertion sort
+(a quadratic-time algorithm).
+Use a recursion-tree analysis to determine
+the asymptotic worst-case running time of this algorithm on arrays of size $n$.
+% [review 2026-09-27] fix: cross-reference pointed to Exercise 4.4 (dc: exercise: recursion), which only refers back; the work to show, (i)-(v), is described in Exercise 4.2 (dc: exercise: recursion tree with solution)
+Show your work as described for Exercise~\ref{dc: exercise: recursion tree with solution}.
+
+\exercise\label{dc: exercise: recursion}\emph{(Recursion-tree method)}
+Repeat Exercise~\ref{dc: exercise: recursion tree with solution} for each of the algorithms below.
+Give your answers in the same format as the solution given for that exercise.
+To make the calculations easier, ignore floors in your calculations.
+(That is, for (a), (c), and (e) assume $n$ is a power of 3.
+For (b) assume $n$ is a power of 4. 
+For (d) assume $n$ is a power of 2.)
+
+\begin{enumerate}[label=(\alph*)]
+\item \ALG{A}{3n}{4}{3}
+  
+\item \ALG{B}{n^2}{16}{4}
+
+\item \ALG{C}{5n}{2}{3}
+
+\item \ALG{D}{11}{2}{2}
+
+\item \ALG{E}{2n^3}{9}{3}
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\subsection{External sources on recursion trees and recursive algorithms}\label{dc: sec: refs}
+
+\begin{itemize}
+
+\item \DPV Chapter 2.2; \KT Chapter 5; \CLRS Chapter 4 (especially 4.4); \LLM Chapter 22;
+
+\item \JE Chapter 1, and Appendix II Section 3 (\& exercises starting on Page 20), at
+  
+  {\small \url{https://jeffe.cs.illinois.edu/teaching/algorithms/notes/99-recurrences.pdf}}
+
+\item An MIT lecture video
+  
+
+\URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-3-insertion-sort-merge-sort/}
+
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "divide_and_conquer"
+%%% End:

@@ -1,0 +1,70 @@
+
+\section{Additional Exercises}\doHeader{Exercises}\label{greedy: sec: exercises}
+
+Each previous section also contains its own exercises.
+
+\subsection{External exercises with solutions}
+
+% \paragraph{External exercises with solutions}
+
+\begin{mylist}[-]
+\item \KT Solved Exercises 1--3
+\end{mylist}
+
+\subsection{Exercises without solutions}
+
+\exercise\label{greedy: exercise: puncturing intervals example}\emph{(Algorithm for \prob{Puncturing Intervals})}
+
+The \prob{Puncturing Intervals} problem is defined as follows: 
+
+\begin{mylist}
+\item[\bf input:] Set $I=\{B_1, B_2, \ldots, B_n\}$ of real intervals, where $B_i = [s_i, e_i]$.
+\item[\bf output:] A minimum-size finite set $P\subset \R$ of real values,
+  such that $B_i \cap P \ne \emptyset$ for each $B_i\in I$.
+\end{mylist}
+
+% We call each interval $B_i\in I$ a \emph{balloon},
+% with start $s_i$ and end $f_i$, so $B_i=[s_i, f_i]$.
+% We say a point $p\in P$ \emph{punctures} balloon $B_i$ if $p\in B_i$.
+% A set $P\subseteq\R$ of points is \emph{feasible}
+% if every balloon in $I$ is punctured by some point $p_i\in P$.
+% A feasible set is \emph{optimal} if it is finite and has minimum possible size (cardinality).
+% The problem is to find an optimal set of points.
+
+For example, for the set $I$ of intervals in Exercise~\ref{greedy: exercise: activity selection}
+in Section~\ref{greedy: sec: activity selection}
+the set $P=\{1, 5, 9, 14\}$ of points has the property that
+it contains at least one point in each interval in $I$.
+However, this set is not a correct solution, because it doesn't have minimum possible size.
+
+\begin{enumerate}[label=\alph*]
+\item
+  Give a correct solution $P$ for the % \prob{Minimum Interval Pinner}
+  instance defined by that set $I$ of intervals.
+\item
+  Define a correct greedy algorithm for this problem.
+  Your algorithm should make one greedy choice for the first point,
+  then recurse.
+  It should be clear that the run time is polynomial.
+\item
+  Prove that your algorithm is correct.
+  The structure of your proof should be as similar as possible
+  to the proof of correctness for the \prob{Activity Selection}
+  algorithm in Section~\ref{greedy: sec: activity selection}.
+\end{enumerate}
+
+
+\paragraph{External exercises without solutions}\!\!\!\!\!\footnote
+{As mentioned in \LN{prelim}, solutions for exercises in \KT and some in \CLRS can be found online.}
+
+\begin{mylist}[-]
+\item \JE Chapter 4, Exercises 15--25 (Page 176)
+\item \DPV 5.1--5.33 (Page 161)
+\item \KT Chapter 4 Exercises 1--33 (Page 188)
+\item \CLRS: Exercises in Section 16.2 (Page 427) and Problems 16--1 through 16--5 (Page 446)
+ \end{mylist}
+ 
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

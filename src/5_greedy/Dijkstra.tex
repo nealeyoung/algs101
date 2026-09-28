@@ -1,0 +1,566 @@
+ \section{Dijkstra's algorithm for Single-Source Shortest Paths}\label{greedy: sec: dijkstra}\doHeader{Dijkstra's Algorithm}
+
+\paragraph{Distances in edge-weighted graphs.}
+Given an edge-weighted graph $G=(V,E)$ (directed or undirected)
+the \emph{(shortest-path) distance} from vertex $v$ to vertex $w$
+is the minimum weight of any path from $v$ to $w$:
+\[\dist v w = \min\{ \weight P : P \text{ is a path from $v$ to $w$ in $G$} \}.\]
+We think of a path $P$ as a set of edges,
+and use $\weight P$ to denote the sum of the edges' weights,
+so $\weight P = \sum_{e\in P} \weight e$.
+If there is no path from $v$ to $w$, then $\dist v w = \infty$.
+
+\emph{[Consider examples to get intuition.]}
+
+\begin{observation}\label{greedy: simple}\hypertarget{greedy.simple}{}
+  Let $G=(V,E)$ be any edge-weighted graph (directed or undirected).
+  Suppose $G$ has no negative-weight cycles
+  (the weight of each cycle $C$ in $G$ is non-negative,
+  so $\sum_{e\in C} \weight e \ge 0$).  Then:
+  \begin{mylist}
+  \item[(a)]
+    For every two vertices $v,w\in V$,
+    the shortest-path distance from $v$ to $w$ is well-defined.
+  \item[(b)]
+    If there is a path from $v$ to $w$,
+    then there is a shortest path that is \emph{simple} (has no cycles).
+  \end{mylist}
+\end{observation}
+
+% The next lemma gives a recurrence relation for shortest-path distances
+% from a given source vertex.  
+
+% \begin{lemma}\label{greedy: eq}
+%   Let $G=(V,E)$ be any edge-weighted directed graph.
+%   Let $s\in V$ be any vertex.
+%   Assume the weight of each cycle in $G$ is non-negative.
+%   Then $\dist s s = 0$, and, for every vertex $w\in V\setminus \{s\}$,
+%   \[\dist s w =
+%     \min\{ \dist s u + \weight {u, w} : (u,w) \in E\}.
+%   \]
+% \end{lemma}
+
+% The relation above holds even if the graph has cycles.
+% The proof is similar to proofs that we've seen for dynamic programming.
+% (It uses Observation~\ref{greedy: simple} to deal with cycles.)
+% A detailed proof is at the end of these notes. 
+
+The rest of the note focuses on finding shortest paths from a given source vertex $s$,
+\emph{assuming that the graph has no negative-weight edges}.
+
+\paragraph{Problem Definition.}
+
+The \prob{Single-Source Shortest Paths} problem is defined as follows:
+
+\begin{mylist}
+\item[\bf input:]
+  Directed graph $G=(V,E)$ with \emph{non-negative} edge weights
+  and source vertex $s\in V$.
+
+\item[\bf output:]
+  For each vertex $v\in V$,
+  the shortest-path distance from $s$ to $v$.
+\end{mylist}
+(For computing shortest paths, any undirected graph $G$ can be considered as a directed graph
+--- just replace each undirected edge $(u,v)$ by the two directed edges $(u,v)$ and $(v,u)$.)
+
+\paragraph{Algorithm.}
+Since we are looking for a greedy algorithm,
+let's start by finding a rule for determining some \emph{first part}
+of a correct solution.
+In this case, we note that by Observation~\ref{greedy: simple}\,(b), $\dist s s = 0$.
+So the algorithm can go ahead and set $d[s] = 0$.
+That step is easy, but what's next?
+Let's consider the out-neighbors of $s$.
+Is there always an out-neighbor $w$ of $s$
+whose shortest-path distance $\dist s w$
+we can easily determine?
+
+Suppose you know that there are three edges out of $s$, weighted as follows:
+
+\tikzset{% >= latex,
+  vertex/.style ={circle, draw=black, minimum width = 20pt, inner sep=0pt},
+  subtree/.style={
+    draw,dotted,shape border uses incircle, yshift=30pt, % fill=lightgray,
+    isosceles triangle,shape border rotate=90, % yshift=-1.45cm
+    minimum height=40pt,
+    minimum width=60pt,
+    isosceles triangle stretches,
+  }
+}
+
+\begin{center}
+\begin{tikzpicture}
+  \node[vertex, ultra thick] (v) {$s$}; 
+  \node[vertex] (w1) [below =of v, xshift=-1.5cm]{$a$}; 
+  \node[vertex] (w2) [below =of v, xshift=0cm]{$b$}; 
+  \node[vertex] (w3) [below =of v, xshift=1.5cm]{$c$}; 
+  \node[subtree] (t1) [below =of w1]{}; 
+  \node[subtree] (t2) [below =of w2]{}; 
+  \node[subtree] (t3) [below =of w3]{}; 
+
+  % (r) edge[treeEdge, dotted] (u)
+  \draw [->] (v) -- (w1) node[midway, left] {\footnotesize 3}; 
+  \draw [->] (v) -- (w2) node[midway, left] {\footnotesize 2}; 
+  \draw [->] (v) -- (w3) node[midway, left] {\footnotesize 4}; 
+\end{tikzpicture}
+\end{center}
+
+You don't know anything else about the rest of the graph.
+Is there an edge among these three that you know \emph{must} be a shortest path?
+It seems plausible that the cheapest edge $(s, b)$ should be.  Why?
+Can there be a shorter path from $s$ to $b$?
+No, because any path from $s$ to $b$ has to leave $s$
+along one of the three edges.
+% [review 2026-09-27] fix: the edges out of $s$ weigh 3, 2, 4 and the argument needs every path to cost at least $\weight{s,b} = 2$; "at least 1" changed to "at least 2"
+That edge has weight at least 2, and after that (because edge weights are non-negative)
+the path can only get longer.
+
+This reasoning works in general, giving us a rule for determining the first greedy step:
+
+\begin{lemma}\label{greedy: first}
+  Among edges leaving $s$,
+  let $(s,w')$ be one of minimum weight.
+  % $\weight {s,w'} = \min\{ \weight {s,w} : (s,w)\in E\}$.
+  Then the edge $(s,w')$ is a shortest path from $s$ to $w'$.
+  That is, $\dist s {w'} = \weight {s, w'}$. 
+\end{lemma}
+\begin{shortFormProof}
+  We first show $\dist s {w'} \le \weight {s, w'}$,
+  then show $\dist s {w'} \ge \weight {s, w'}$.
+  
+  \smallskip\noindent
+  \emph{Part (i).}
+  The edge $(s, w')$ is one possible path from $s$ to $w'$.
+  So by definition, $\dist s {w'} \le \weight {s, w'}$.
+
+  \smallskip\noindent
+  \emph{Part (ii).}
+  To show $\dist s {w'} \ge \weight {s, w'}$,
+  we show that every path from $s$ to $w'$
+  must have weight at least $\weight {s, w'}$.
+  The idea is that any path from $s$ to $w'$
+  must leave $s$, and leaving $s$ (on any edge)
+  costs at least $\weight {s, w'}$.
+  And all remaining edges on the path have non-negative weight.
+    
+  Consider an arbitrary path $P_{w'}$ from $s$ to $w'$.
+  Let $(s,x)$ be the first edge on $P_{w'}$.
+  Let $P_x = P_{w'}\setminus \{(s,x)\}$ be the remaining path from $x$ to $w'$.
+  Then
+  \begin{align*}
+    \weight {P_{w'}}~&=~\weight {s,x} + \weight {P_x}
+    && \comment{(since $P_{w'} = \{(s,x)\} \cup P_{x}$)}
+    \\
+              & \ge~\weight {s,x} + 0
+    && \comment{(since $\weight {P_x} \ge 0$)}
+    \\
+              & \ge~\weight {s,w'}
+    && \comment{(by the choice of $w'$).}
+  \end{align*}
+  So $\weight {P_{w'}} \ge \weight {s, w'}$.
+  This holds for an arbitrary $s\leadsto w'$ path $P_{w'}$,
+  so every $s\leadsto w'$ path has weight at least $\weight {s, w'}$.
+  That is, $\dist s {w'} \ge  \weight {s, w'}$.
+
+  By Parts (i) and (ii) above, $\dist s {w'} = \weight {s, w'}$.
+\end{shortFormProof}
+
+
+\paragraph{Extending the first step.}
+The next step in the greedy-algorithm design pattern
+is to generalize the first step.  We want a rule that lets us determine the distance $\dist s w$
+from $s$ to some vertex $w$ that is not yet in $K$.
+If we had such a rule, the algorithm could apply it repeatedly,
+building up the set $K$ of known vertices one at a time.
+It would stop when the distance to each vertex is known.
+Such an algorithm would have the following general form:
+
+\newcommand{\Dijkstra}{{\sf Dijkstra}\xspace}
+
+\begin{samepage}
+  \begin{myframed}
+    \begin{steps}
+    \item[\textsf{greedyShortestPaths}$\big(G=(V,E), s\big)$:]
+      \step initialize $K \leftarrow \{s\}$ and $d[s] = 0$
+      \comment{\ldots $K$ will be the set of vertices whose distances are known}
+      \step until the distance from $s$ to every vertex is known:
+      \begin{block}
+        \step somehow select a vertex $w' \in V\setminus K$
+        \comment{note: $V\setminus K$ is the set of vertices in $V$ but not $K$}
+        \step somehow compute $d[w'] = \dist s {w'}$
+        \step add $w'$ to $K$
+      \end{block}
+      \step return the array $d$
+    \end{steps}
+  \end{myframed}
+\end{samepage}
+
+As long as it can somehow correctly set $d[w'] = \dist s {w'}$ in Step 3.2,
+it will maintain the greedy invariant ---
+that the partial solution so far is correct:
+
+\smallskip
+
+\centerline{{\sf greedy invariant:}
+  \emph{Each vertex $v\in K$ satisfies $d[v] = \dist s v$.}}
+
+\medskip
+So, in each iteration, how can we find a suitable vertex $w' \in V\setminus K$,
+one for which the algorithm can easily compute $\dist s {w'}$?
+
+Returning to the previous example,
+after determining that the edge $(s, b)$ is a shortest path,
+suppose you find that there are three edges out of $b$, as follows:
+
+\tikzset{% >= latex,
+  vertex/.style ={circle, draw=black, minimum width = 20pt, inner sep=0pt, node distance=10pt},
+  subtree/.style={
+    draw,dotted,shape border uses incircle, yshift=30pt, % fill=lightgray,
+    isosceles triangle,shape border rotate=90, % yshift=-1.45cm
+    minimum height=40pt,
+    minimum width=80pt,
+    isosceles triangle stretches,
+  },
+  cloud/.style={
+    draw,dashed,shape border uses incircle, yshift=30pt, % fill=lightgray,
+    ellipse,shape border rotate=90, % yshift=-1.45cm
+    minimum height=60pt,
+    minimum width=50pt,
+  }
+}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+  \node[vertex, ultra thick] (v) {$s$}; 
+  \node[vertex] (w1) [below =of v, xshift=-3cm]{$a$}; 
+  \node[vertex, ultra thick] (w2) [below =of v, xshift=0cm]{$b$}; 
+  \node[vertex] (w3) [below =of v, xshift=3cm]{$c$}; 
+  \node[subtree] (t1) [below =of w1]{}; 
+  % \node[subtree] (t2) [below =of w2]{}; 
+  \node[subtree] (t3) [below =of w3]{}; 
+  \node[vertex] (x1) [below =of w2, xshift=-1.5cm]{$d$}; 
+  \node[vertex] (x2) [below =of w2, xshift=0cm]{$f$}; 
+  \node[vertex] (x3) [below =of w2, xshift=1.5cm]{$g$}; 
+  \node[subtree] (t4) [below =of x1]{}; 
+  \node[subtree] (t5) [below =of x2]{}; 
+  \node[subtree] (t6) [below =of x3]{}; 
+
+  \node[cloud, yshift=-1.55cm] (c) {}; 
+
+  % (r) edge[treeEdge, dotted] (u)
+  \draw [->] (v) -- (w1) node[midway, left] {\footnotesize 3}; 
+  \draw [ultra thick, ->] (v) -- (w2) node[midway, left] {\footnotesize 2}; 
+  \draw [->] (v) -- (w3) node[midway, left] {\footnotesize 4}; 
+  \draw [->] (w2) -- (x1) node[midway, left] {\footnotesize 4}; 
+  \draw [->] (w2) -- (x2) node[midway, left] {\footnotesize 2}; 
+  % [review 2026-09-27] fix: figure had a fourth edge (b,c) of weight 1.5 that the text never mentions, contradicting "three edges out of b" and "five edges that leave the set"; removed it (was: \draw [->] (w2) -- (w3) node[midway, left] {\footnotesize 1.5};)
+  \draw [->] (w2) -- (x3) node[midway, left] {\footnotesize 3}; 
+\end{tikzpicture}
+\end{center}
+
+You know that $\dist s s=0$ and $\dist s b=2$.
+Can you determine the distance from $s$ to a third vertex?
+
+What about vertex $f$? Do you know that the distance from $s$ to $f$ is 4?
+No, because there could (for example) be a path from $a$ to $f$ of weight 0.
+
+What about $a$?  Does the edge $(s, a)$ have to be a shortest path?
+Can there be a path from $s$ to $a$ of weight less than 3?
+No, because any other path to $a$ would have to leave the set $\{s, b\}$
+via one of the five edges that leaves the set.
+By checking each edge, we can see that any path that leaves through that edge would cost 3 or more.
+For example, a path that leaves through the edge $(b, f)$ incurs weight at least 2 to get to $b$,
+and then another 2 for $(b, f)$.
+
+Let's try to generalize this reasoning.
+Returning to the general case,
+say that \emph{a path out of $K$}
+is a path $P$ from $s$ to any vertex $w$ not in $K$.
+Among all paths out of $K$, let $P^*$ be one of minimum total weight.
+Let $w'$ be the destination vertex of $P^*$.
+Then $P^*$ must be a shortest path from $s$ to $w'$.
+Every path from $s$ to $w'$ must have weight at least $w(P^*)$,
+because it must start with some path out of $K$.
+So, if we could find such a path $P^*$, we would know that $\dist s {w'} = \weight {P^*}$.
+
+The algorithm will find such a path $P^*$ as follows.
+Consider just the edges leaving $K$,
+that is, $(u,w)\in E$ such that $u\in K$ and $w\not\in K$.
+Among these edges,
+choose an edge $(u',w')$ that minimizes
+\[d[u'] + \weight {u',w'} = \dist s {u'} + \weight {u',w'}.\]
+Take $P^*$ to be a path consisting
+of a shortest path from $s$ to $u'$, followed by the edge $(u', w')$.
+We'll show later that this path is indeed a minimum-weight path out of $K$.
+Here is the algorithm:
+
+\begin{samepage}
+  \begin{myframed}
+    \begin{steps}
+    \item[$\Dijkstra\big(G=(V,E), s\big)$:]
+      \comment{\normalsize --- Dijkstra's algorithm for \prob{Single-Source Shortest Paths} ---} 
+      \step initialize $K \leftarrow \{s\}$ and $d[s] = 0$
+      \step[greedy: loop] while some edge in $E$ leaves $K$
+      (that is, $\exists (u,w) \in E: u\in K,~w\not\in K$):
+      \begin{block}
+        \step among edges leaving $K$,
+        choose edge $(u',w')$ that minimizes $d[u'] + \weight {u', w'}$
+        \step set $d[w'] = d[u'] + \weight {u', w'}$
+        \step add $w'$ to $K$
+      \end{block}
+      \step[greedy: unreachable] set $d[w] = \infty$ for all $w\in V\setminus K$
+      \step return $d$
+    \end{steps}
+  \end{myframed}
+\end{samepage}
+
+We explain Steps~\ref{greedy: loop} and Step~\ref{greedy: unreachable}, later.
+First we show that the loop maintains the invariant:
+
+\begin{lemma}\label{greedy: lemma: dijkstra invariant}
+  The loop maintains the invariant
+  \emph{$d[v] = \dist s  v < \infty$ for all $v\in K$.}
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any execution of the algorithm on some input $(G=(V,E), s)$.
+  \step The invariant holds at the start of the first iteration,
+  when $K=\{s\}$ and $d[s] = 0 = \dist s s$.
+  (Because $G$ has no negative-weight cycles.)
+
+  \begin{block}[greedy: loop inv]
+    \step Consider any iteration of the loop such that the invariant holds at the start of the iteration.
+
+    \step Let $K$ and $d$ denote the set $K$ and the array $d$ at the \emph{start} of the iteration.
+    \step Let $(u',w')$ be the edge chosen in the iteration.
+    \step To show that the iteration maintains the invariant,
+    we show $\dist s {w'} = d[u'] + \weight {u', w'}$.
+
+    \smallskip
+    \step \underline{First} we show $\dist s {w'} \le d[u'] + \weight {u', w'}$.
+    \step Since $u'\in K$, by the invariant, $\dist s {u'} = d[u'] < \infty$.
+    \step So there exists a path from $s$ to $u'$ of weight $d[u']$.
+    \step This path plus the edge $(u', w')$ form a path from $s$ to $w'$ of weight $d[u'] + \weight {u', w'}$.
+    \step So there exists a path from $s$ to $w'$ of weight $d[u'] + \weight {u', w'}$.
+    \step[greedy: lt] So $\dist s {w'} \le d[u'] + \weight {u', w'}$, as desired.
+
+    \smallskip
+    \step \underline{To finish} we'll show $\dist s {w'} \ge d[u'] + \weight {u', w'}$.
+    \begin{block}[greedy: P]
+      \step Let $P$ be any path from $s$ to $w'$.  We'll show $\weight P \ge d[u'] + \weight {u', w'}$.
+      \step $P$ starts in $K$, but ends outside of $K$, so some edge on $P$ leaves $K$.
+      \step Let $(x,y)$ be an edge on $P$ that leaves $K$ (so $x\in K$, $y\not\in K$).
+      \step Separate the path $P$ around the edge $(x,y)$ into
+      the part before, $P_x$, and the part after, $P_y$.
+      \step So $P = P_x \cup \{(x,y)\} \cup P_y$ and $P_x$ is a path from $s$ to $x$. Then
+      \begin{align*}
+        \weight P~
+        &=~ \weight {P_x} + \weight {x,y} + \weight {P_y}
+        && \comment{(Since $P = P_x \cup \{(x,y)\} \cup P_y$.)}
+        \\
+        &\ge~ \weight {P_x} + \weight {x,y}
+        && \comment{(As all edge weights are non-negative, so $\weight {P_y} \ge 0$.)}
+        \\
+        &\ge~ \dist s x + \weight {x,y}
+        && \comment{(Since $P_x$ is a path from $s$ to $x$.)}
+        \\
+        &=~ d[x] + \weight {x,y}
+        && \comment{(Since $x\in K$ so $d[x] = \dist s x$ by the invariant.)}
+        \\
+        &\ge~ d[u'] + \weight {u',w'}
+        && \comment{(By the alg's choice of $(u', w')$, and $x\in K$, $y\not\in K$)}
+      \end{align*}
+    \end{block}
+    \step By Block~\ref{greedy: P}, every path from $s$ to $w'$
+    has weight at least $d[u'] + \weight {u',w'}$.
+    \step That is, $\dist s {w'} \ge d[u'] + \weight {u',w'}$.
+    \smallskip
+    \step By this and Step~\ref{greedy: lt}, $\dist s {w'} = d[u'] + \weight {u',w'}$.
+  \end{block}
+  \step The invariant holds initially. By Block~\ref{greedy: loop inv}, each iteration maintains it, so it holds throughout.
+  \vspace*{-0.5ex}
+\end{longFormProof}
+
+Given that the invariant holds, correctness is easy to verify:
+
+\begin{theorem}
+  \Dijkstra is correct.
+\end{theorem}
+\begin{longFormProof}
+  \step Consider the execution of the algorithm on an arbitrary input $(G, s)$.
+  \step Consider the time just before Line~\ref{greedy: unreachable} executes.
+  \step By Lemma~\ref{greedy: lemma: dijkstra invariant}, at that time, $d[v] = \dist s v$ for each $v\in K$.
+  \step By the loop condition, no edges leave $K$, so vertices in $V\setminus K$ are not reachable from $s$.
+\step So each remaining vertex $v\in V\setminus K$ has $\dist s v = \infty$.
+\step So, after Line 4 executes, each vertex $v\in V\setminus K$ also has $d[v] = \dist s v$.
+\step So the distances returned by the algorithm are correct.
+\end{longFormProof}
+
+\paragraph{Shortest-path trees.}
+Given an instance $(G, s)$,
+a \emph{shortest-path tree $T$}
+is a (directed) tree, rooted at $s$,
+whose vertices are the vertices in $G$ that are reachable from $s$,
+such that, for each reachable vertex $v$,
+the path from $s$ to $v$ in $T$
+is a shortest path from $s$ to $v$.
+
+For any execution of the algorithm,
+each iteration selects some edge $(u',w')$.
+The collection of these edges (over all iterations)
+form such a tree $T$
+(where the parent of $w'$ in $T$ is $u'$).
+So the algorithm can easily be augmented to compute a shortest-path tree $T$, if desired.
+
+\paragraph{Efficient implementation.}
+Let $n=|V|$ and $m=|E|$ denote the number of edges of a given instance.
+The algorithm has at most $n$ iterations, as each iteration adds a vertex to $K$.
+A naive implementation will take linear time per iteration,
+giving overall run time of $O(n(m+n))$.
+But it is easy to improve this.
+
+\begin{lemma}
+  Dijkstra's algorithm can be implemented to run in time $O((m+n)\log n)$.
+\end{lemma}
+\begin{proof}[Proof sketch.]
+  Maintain the edges leaving $K$
+  (that is, $(u,w)\in E\cap (K\times (V\setminus K))$) in a heap\footnote
+  {a.k.a.~a priority queue, see \KT 2.5}
+  keyed by $d[u] + \weight {u,w}$.
+  % [review 2026-09-27] fix: "removing all the edges that lead into $w'$" is not an $O(\log n)$ heap operation; reworded to leave stale edges in the heap and discard them when popped (lazy deletion), with the run-time bound restated accordingly
+  Then implement each iteration as follows:
+  to find the edge $(u', w')$, use a \textsf{delete-min} operation on the heap
+  (if the edge returned no longer leaves $K$, discard it and repeat).
+  Then, when adding $w'$ to $K$, maintain the heap
+  by adding all edges from $w'$ into $V\setminus K$ to the heap.
+  (Edges that lead into $w'$ are left in the heap;
+  they are discarded when \textsf{delete-min} later returns them.)
+
+  Each heap operation takes time $O(\log n)$.
+  Each edge is added to the heap at most once and removed from it at most once,
+  so the total time is $O((m+n)\log n)$.
+\end{proof}
+
+Be aware that most texts describe the algorithm and its implementation differently.
+Instead of considering $d[u] + \weight {u, w}$ for each edge $(u, w)$ leaving $K$,
+they present the algorithm as considering, for each vertex $w\not\in K$,
+the quantity
+\[ \delta(w) = \min \{ d[u] + \weight {u, w} : u\in K, (u, w)\in E\}. \]
+That is, for each $w\not\in K$,
+the algorithm groups all edges into $w$ into a single group,
+and considers only the best edge $(u, w)$ into $w$.
+Then, the implementation maintains a heap of the \emph{vertices} in $V\setminus K$,
+where each vertex $w\in V\setminus K$ is keyed by $\delta (w)$.
+In each iteration, it chooses vertex $w\not\in K$ minimizing $\delta(w)$,
+and sets $d[w] = \delta(w)$.
+
+This algorithm can be viewed as a particular way of implementing the algorithm we presented earlier,
+and in that sense the proof of correctness applies to this implementation too.
+
+\pythonCode{greedy_algorithms/Dijkstra.py}
+
+\subsection{Exercises}
+
+\exercise\emph{(Simulate Dijkstra)} % from CS 3000 F18 HWK 7 or 6?
+Manually simulate Dijkstra's algorithm (from the lecture notes) on the directed graph $G$ below with source $s$.
+\begin{center}
+  \begin{tikzpicture}[
+    vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw},
+    every path/.style={->}
+    ]
+    \node[vertex] (s) {s}; 
+    \node[vertex] (a) [right =of s, yshift=30pt] {a}; 
+    \node[vertex] (b) [right =of a] {b}; 
+    \node[vertex] (c) [right =of s, yshift=-30pt] {c}; 
+    \node[vertex] (x) [right =of c] {x}; 
+
+    \path (s) edge [bend left=0] node [pos=0.3, above] {10} (a); 
+    \path (s) edge [bend left=0] node [pos=0.3, below] {5} (c); 
+    \path (a) edge [bend left=0] node [pos=0.5, above] {1} (b); 
+    \path (c) edge [bend left=0] node [pos=0.8, left] {9} (b); 
+    \path (c) edge [bend left=0] node [pos=0.5, below] {2} (x); 
+    \path (x) edge [bend left=-8] node [pos=0.1, above] {7} (s); 
+    \path (a) edge [bend left=15] node [pos=0.3, right] {2} (c); 
+    \path (c) edge [bend left=15] node [pos=0.7, left] {3} (a); 
+    \path (b) edge [bend left=20] node [pos=0.5, right] {4} (x); 
+    \path (x) edge [bend left=0] node [pos=0.5, left] {6} (b); 
+  \end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+\item For each of the first four iterations,
+  what is the state of the algorithm at the start of iteration?
+  (The state consists of the value of the variable $K$,
+  and the values of $d[v]$ for $v\in V$.)
+  What edge $(u', w')$ does the algorithm choose in the iteration?
+
+\item
+What shortest-path tree (from $s$) is computed by the algorithm on this input?
+(This is the tree formed by edges chosen by the algorithm in each iteration.)
+
+\item  
+  Let $G'$ be the graph obtained from $G$ (shown above) by reducing the weight of edge $(a, c)$ to -10.
+What is the array $d$ of distances returned by Dijkstra's algorithm given input $G'$ with source $s$?
+Show $d[s]$, $d[a]$, $d[b]$, $d[c]$, and $d[x]$.
+\end{enumerate}
+
+\exercise\emph{(Dijkstra counter-example)} % from CS 3000 F18 HWK 6
+\begin{enumerate}[label=(\alph*)]
+  \item Describe an edge-weighted digraph $G$ and source $s$
+    on which Dijkstra's algorithm \emph{fails}.
+    That is, it returns an array $d$ such that $\exists v\in V : d[v] \ne \dist s v$.
+    Your instance must have three vertices, no cycles,
+    and three (directed) edges.
+    \emph{All but one} of the edge-weights must be non-negative.
+    (The third must be negative.)
+
+  \item
+Explain clearly what the two iterations of the algorithm
+do when it executes on the instance you give in Part (a).
+\end{enumerate}
+
+\exercise\emph{(Dijkstra proof)} % from CS 3000 F18 HWK 6
+Is the following conjecture true or false?
+Either give a long-form proof of the conjecture (as a theorem),
+or prove that it is false by giving a counter-example,
+and explaining clearly how the algorithm fails on your counter-example.
+
+\begin{conjecture}\label{greedy: dijkstra 2}
+  Let $G=(V,E)$ be any edge-weighted digraph, and $s\in V$ any vertex.
+  Suppose that every edge that doesn't touch $s$ has non-negative weight.
+  (That is, for every edge $(u,w)\in E$, if $s\not\in \{u,w\}$, then $\weight {u,w} \ge 0$.
+  Edges entering or leaving $s$ can have negative weight.)
+  Suppose also that $G$ has no negative-weight cycles. 
+  Then Dijkstra's algorithm, if run on input $(G,s)$,
+  correctly computes the shortest-path distance from $s$ to each vertex $v\in V$.
+\end{conjecture}
+
+\paragraph{External exercises without solutions}
+
+\begin{itemize}
+\item \DPV 4.1, 4.6--4.9, 4.14, 4.15.  \JE: some of the exercises in Chapter 8.
+\item \CLRS: ten exercises in Chapter 24 Section 24.3.
+\end{itemize}
+
+
+\subsection{External sources on Dijkstra's algorithm}
+
+\begin{itemize}
+
+\item \KT Chapter 4, Section 4.4.  \DPV Chapter 4, Section 4.4.
+\item \CLRS Chapter 24, Section 24.3. \JE Chapter 8, Section 8.6.
+
+\item MIT lecture (video): 
+
+  \parbox{5in}{  
+\url{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/lecture-15-single-source-shortest-paths-problem/}}
+
+\end{itemize}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:
+

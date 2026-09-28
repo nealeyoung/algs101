@@ -1,0 +1,111 @@
+\documentclass[11pt]{article}
+
+\input{macros}
+
+% for sums_recursion_trees.tex
+% \usepackage{wrapfig}
+% \usetikzlibrary{matrix,arrows}
+
+% \usepackage{ifthen}
+
+% \usepackage{pdfx}
+
+% \newcommand{\first}[1]{\ensuremath{\operatorname{\sf e}({#1})}}
+% \newcommand{\remark}[1]{\marginpar{\raggedright\small\emph{#1}}}
+
+\begin{document}
+
+% \setcounter{section}{1}
+
+\doTitle{5}{Greedy Algorithms}{Greedy Algorithms}
+\newpage
+
+
+\section{Introduction}\label{greedy: sec: intro}\doHeader{Introduction}
+
+An algorithm is \emph{greedy} if it builds a solution piece by piece.
+Once all the pieces have been added, and the solution is complete, the algorithm returns the solution.
+A guiding principle is that the algorithm must maintain the following ``greedy'' invariant at all times:
+
+\medskip
+\centerline
+{\textsf{greedy invariant}: \em The current (partial) solution can be extended to a correct (full) solution.}
+\medskip
+
+To design the algorithm, a good strategy is to start by finding a rule for the \emph{first} greedy step,
+and a proof that the first piece chosen by the rule is part of some correct solution.
+Doing this helps build intuition.
+Furthermore, in many cases, after the first step, the problem that remains to be solved
+is a smaller instance of the same problem,
+so the algorithm can simply recurse to solve that problem.
+Or, if that doesn't work, we can take a different approach:
+try to generalize the rule for the first step,
+to find a rule for extending the partial solution by one piece at every step,
+and a proof that the generalized rule maintains the greedy invariant.
+
+We will also see an example that doesn't fit either of these patterns.
+
+\inputSection{making_change}
+\newpage
+
+\inputSection{activity_selection}
+\newpage
+
+\inputSection{covering_by_intervals}
+\newpage
+
+\inputSection{Huffman}
+\newpage
+
+\inputSection{interval_partitioning}
+\newpage
+
+ \inputSection{minimum_wait_time}  % TODO: CHECK FOR CORRECTNESS
+\newpage
+
+\inputSection{Dijkstra}
+\newpage
+
+\inputSection{MST}
+\newpage
+
+\inputSection{90_exercises}
+
+\codeSection{
+  greedy_algorithms/library.py,
+  greedy_algorithms/activity_selection.py,
+  greedy_algorithms/Huffman.py,
+  greedy_algorithms/Dijkstra.py,
+  greedy_algorithms/min_spanning_tree.py}
+
+\end{document}
+
+
+% We use the following standard terms.
+% Given an instance $I$,
+% define a set $S$ to be a \emph{feasible solution (for $I$)}
+% if it meets the constraint of being a pairwise-disjoint subset of $I$.
+% A feasible solution is a correct solution if it has maximum size.
+% Let $\opt I $ be the maximum size of any feasible solution:
+% \[\opt I  ~=~\max\{ |S| : S\subseteq I \emph{ and $I$ is pairwise disjoint}\}
+%   ~=~\max\{ |S| : S \emph{ is feasible for } I\}.\]
+% Given any feasible solution $S$,
+% say that $S$ is \emph{optimal (for $I$)} if $|S|=\opt I $.
+% So, given $I$, the problem is to find a feasible solution of maximum size,
+% that is, an optimal solution.
+
+
+% To prove that a greedy algorithm is correct, we will always
+% prove that \emph{the algorithm never makes a mistake}.
+% That is, it never adds a piece that makes it impossible to reach a correct solution.
+% In other words, we always prove that the algorithm maintains an invariant of the following form:
+
+% \medskip 
+% \centerline{\textsf{greedy invariant}:
+%   \emph{The current partial solution can be extended (somehow) to a full, correct solution.}}
+% \medskip 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

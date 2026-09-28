@@ -1,0 +1,786 @@
+
+\section{Exercises}\doHeader{Exercises}\label{proofs: sec: exercises}
+
+\subsection{Exercises with solutions}\label{proofs: sec: exercises with solutions}
+
+\exercise \emph{(Long-form proof)} Convert the following short-form proof into long form.
+
+\begin{theorem}\label{proofs: thm: primes}
+  There are infinitely many primes.
+\end{theorem}
+
+\noindent
+The proof will use that, if $a$ is a common factor of integers $b$ and $c$,
+then $a$ is a factor of $c-b$.
+
+\begin{shortFormProof}
+  Suppose for contradiction that there are only finitely many primes:
+  $p_1, p_2, \ldots, p_n$.
+  Consider the product $P$ of all the primes.
+  Let $p_i>1$ be some particular prime in the prime factorization of $P+1$.
+  Then $p_i$ is a factor of both $P$ and $P+1$,
+  so it is a factor of $(P+1)-P = 1$,
+  which is impossible.
+\end{shortFormProof}
+
+\paragraph{Solution.}  Here's the proof in long form.
+
+\begin{longFormProof}
+  \step Suppose for contradiction that there are only finitely many primes.
+  % \comment{block: contradiction}
+  \step Let $p_1, p_2, \ldots, p_n$ be a list of all the primes (larger than 1).
+  \step Let $P=\prod_{i=1}^n p_i$ be their product.  (Note $P>1$ so $n\ge 1$.)
+  \step\label{proofs: step: pi} Fix $p_i$ to be any particular prime in the prime factorization of $P+1$.
+  \step Then $p_i$ evenly divides $P$, and also evenly divides $P+1$.
+  \step So $p_i$ evenly divides their difference, $(P+1) - P$, which equals 1.
+  \step But this is a contradiction, as $1$ has no factor other than 1.
+\end{longFormProof}
+Step~\ref{proofs: step: pi} 
+defines $p_i$ to be a specific number (one that we know exists at that point)
+for use later in the proof.
+Step~\ref{proofs: step: pi}  does not open a new ``for all'' block---we would only use a ``for all'' block there
+to prove something about \emph{all} primes in the prime factorization of $P+1$.
+
+\exercise \emph{(Long-form proof)} In the kingdom of Platonia:
+\begin{mylist}
+\item[(P1)] Every native is either a knight or a knave (and nobody is both).
+\item[(P2)] Every statement a knight makes is true.
+\item[(P3)] Every statement a knave makes is false.
+\end{mylist}
+
+Convert the short-form proof of the following theorem into long form:
+\begin{theorem}
+  Given P1--P3, any person who states ``I am a knave'' is not a native of Platonia.
+\end{theorem}
+\begin{shortFormProof}
+  Assume for contradiction that $X$ is a native of Platonia.
+  If $X$ is a knight, then (by P2) $X$'s statement ``I am a knave''
+  must be true, so $X$ is a knight and a knave, contradicting P1.
+  Otherwise (by P2) $X$ is a knave, so (by P3)
+  $X$'s statement is false, so $X$ is not a knave
+  (contradicting that $X$ is a knave).
+\end{shortFormProof}
+
+\paragraph{Solution.}  Here is the long-form proof.
+\begin{longFormProof}
+  \step Let $X$ be an arbitrary person who states ``I am a knave''.
+  % \comment{block: $\forall$}
+  \begin{block}\label{proofs: block: knave}
+    \step Suppose for contradiction that $X$ is a native of Platonia.
+    % \comment{block: contradiction}
+
+    \step By P1, $X$ is either a knight or a knave.
+      We consider each case separately.
+    \begin{block}
+      \step \underline{Case 1.}  First consider the case that $X$ is a knight.
+      % \comment{block: cases}
+
+      \step By P2, $X$'s statement ``I am a knave'' is true,  so $X$ is a knave.
+      \step By this and P1, $X$ is not a knight.
+      \step This is a contradiction (as $X$ is a knight).
+    \end{block}
+    \begin{block}
+      \step \underline{Case 2.}  Otherwise, by P1,  $X$ is a knave.
+      % \comment{block: cases}
+
+      \step By P3, $X$'s statement ``I am a knave'' is false.
+      \step That is, $X$ is not a knave.
+      \step This is a contradiction (as $X$ is a knave).
+    \end{block}
+    \step By P1, Case 1 or 2 must hold, and each cases leads to a contradiction, so we have a contradiction.
+  \end{block}
+  \step By Block 2, $X$ is not a native of Platonia. \vspace*{-1ex}
+\end{longFormProof}
+\vspace*{-1ex}
+\emph{Bonus problem:} Could we replace (P1) by  \emph{``(P1) Every native is a knight, a knave, \underline{or both}''}?
+
+\exercise\emph{(Big-O definition)}
+Give a long-form proof of the following theorem:
+\begin{theorem}[\KT Chapter 2 Fact 2.4, Page 39]
+  Suppose $f(n)$, $g(n)$, and $h(n)$ are non-decreasing, non-negative functions
+  and that $f(n) = O(h(n))$ and $g(n) = O(h(n))$.
+  Then $f(n)+g(n) = O(h(n))$.
+\end{theorem}
+
+\solution
+\begin{longFormProof}
+
+  \step Consider any such functions $f$, $g$, and $h$.
+  
+  \step Let constants $c_1, n_1>0$ be such that
+  $(\forall n \ge n_1)~ f(n) \le c_1\, h(n)$.
+  (These exist by def'n of big-O.)
+  
+  \step Likewise, let constants $c_2, n_2>0$ be such that
+  $(\forall n \ge n_2)~ g(n) \le c_2\, h(n)$.
+
+  \step Fix $n_3 = \max\{n_1, n_2\}$ and $c_3 = c_1 + c_2$.
+
+  \step By algebra and the previous steps, then, $(\forall n \ge n_3)~ f(n) + g(n) \le c_3 \,h(n)$.
+  
+  \step Therefore, by the definition of big-O, $f(n) + g(n) = O(h(n))$. 
+
+\end{longFormProof}
+
+% \paragraph{To note}
+% \begin{mylist}[--]
+% \item In these proofs, each named object ($p_i$, $P$, $x$, $X$, \ldots)
+%   is defined.  Each definition holds just within its block.
+  
+% \item Note the use of the four types of blocks (though only three are used so far).
+%   Note the numbering of steps.
+
+% \item Each proof assumes the reader understands basic properties of the objects
+%   it works with (graphs, numbers, \ldots), and uses those basic properties without
+%   further proof.
+% \end{mylist}
+
+% \begin{theorem}\label{proofs: thm: 1 0}
+%   $1 = 0$
+% \end{theorem}
+% \begin{longFormProof}[Proof (long form).  Where is the error?]
+%   \step\label{proofs: step: x y}
+%   Fix two arbitrary positive real numbers $x$ and $y$ such that $x=y$.
+%   \comment{block: $\forall$}
+
+%   \step We use algebra to show that this implies $1=0$:
+%   \begin{align*}
+%     x &{} = y && \comment{(by Step~\ref{proofs: step: x y})}\\
+%     x^2 &{} = xy &&
+%                    \comment{(multiplying both sides by $x$)} \\
+%     x^2 - y^2 &{} = xy - y^2 &&
+%                                \comment{(subtracting $y^2$ from both sides)} \\
+%     (x-y)(x+y) &{} = y(x-y) &&
+%                               \comment{(factoring each side)} \\
+%     x + y &{} = y &&
+%                     \comment{(canceling the factor $(x-y)$)} \\
+%     x &{} = 0 &&
+%                     \comment{(subtracting $y$ from each side)} \\
+%     1 &{} = 0 &&
+%                 \comment{(dividing each side by $x$)}
+%   \end{align*}
+% \end{longFormProof}
+
+% \vfill \centerline{(continued)}
+
+% \pagebreak
+
+
+\exercise\label{proofs: prob: elizabeth hides from john}\emph{(Invariants)}
+Here's a puzzle to illustrate the first three points from Section~\ref{proofs: sec: algorithms},
+including the use of an invariant.
+
+\begin{quote}\em
+  Elizabeth has a secret hiding place where she presently has 35 coins, 38 baseball cards, and 39 pieces of candy. Her younger brother John has his own secret hiding place, but that does not prevent him from taking things from Elizabeth's (her place isn't as secret as she thinks). John always takes two items at a time, each of a different kind so that the number won't decrease too quickly, and he always adds one item of the third kind. On day, some time later, Elizabeth is shocked to find that all the items in her hiding place were of the same kind. Is it possible that it is all candy?
+\end{quote}
+
+\paragraph{Solution.}
+\begin{theorem}
+  It is not possible that it is all candy.
+\end{theorem}
+\begin{longFormProof}
+  \step Consider an arbitrary finite sequence, $X$, of such actions by John.
+  \step We will prove that, that throughout the sequence, the following invariant holds:
+  \begin{quote}
+    invariant: \emph{the number of coins plus the number of cards is odd.}
+  \end{quote}
+  \step\label{proofs: step: start}
+  At the start, the invariant is true because the number of coins plus the number of cards is 35+38.
+  \step We will show that each action that John takes preserves the invariant:
+  \begin{block}\label{proofs: block: action}
+    \step Consider any action in the sequence, where the invariant holds just before the action.
+    \step That is, just before the action the number of coins plus the number of cards is odd.
+    \begin{block}
+      \step \underline{Case 1.}  Suppose John takes a coin and a card, and puts back a candy.
+      \step Then the number of coins plus cards decreases by two, so remains odd.
+    \end{block}
+    \begin{block}
+      \step \underline{Case 2.}  Suppose John takes a coin and a candy, and puts back a card.
+      \step Then the number of coins plus cards doesn't change, so remains odd.
+    \end{block}
+    \begin{block}
+      \step \underline{Case 3.}  Otherwise John takes a card and a candy, and puts back a coin.
+      \step Then the number of coins plus cards doesn't change, so remains odd.
+    \end{block}
+    \step One of the cases holds, and in each case the number of coins plus cards remains odd.
+    \step So the invariant holds just after the action.
+  \end{block}
+  \step By Block~\ref{proofs: block: action}, for each action in $X$,
+  if the invariant holds just before it, then it holds just after it.
+  \step As observed in Step~\ref{proofs: step: start}, the invariant holds initially.
+  \step So by induction the invariant holds throughout the sequence.
+  \step In particular, it holds at the end, so at the end the number of coins plus cards is odd.
+  \step So at the end, the number of coins plus cards is not zero.
+\end{longFormProof}
+
+% \continued
+
+\exercise\label{proofs: prob: with lemma}\emph{(Complex long-form proof)}
+Let $G=(V,E)$ be any graph, where each vertex $v\in V$ has a numeric weight $w(v)\in\R$.
+Consider the following two properties:
+
+\begin{quote}\em
+  Property A: For every vertex $v$ in the graph,
+  if $v$ has neighbors,
+  then the weight $w(v)$ of $v$
+  equals the average of $v$'s neighbor's weights.
+
+  Property B: All vertices in $G$ have the same weight.
+\end{quote}
+Give a long-form proof of the following theorem:
+
+\begin{theorem}
+  Any finite, connected graph $G$ that has Property $A$ also has Property $B$.
+\end{theorem}
+
+
+\paragraph{Solution.}  We give two correct long-form proofs.
+Exercise~\ref{proofs: exercise: bad graph induction} gives an incorrect proof by induction.
+
+\begin{longFormProof}[First long-form proof.]
+  \step
+  Let $G$ be an arbitrary finite, connected graph having Property $A$.
+  % \comment{to prove $\forall$}
+
+  \step  Before we give the proof, we prove the following utility lemma:
+
+  \begin{lemma}\label{proofs: lemma: high low}
+    Let $v$ be any vertex in $G$ that has a neighbor $x$ with larger weight ($w(x) > w(v)$).
+    Then $v$ has a neighbor $y$ with a smaller weight ($w(y) < w(v)$).
+  \end{lemma}
+  \begin{longFormSubProof}[Proof of lemma.]
+
+  \step Let $v$ be an arbitrary vertex as in the lemma
+  (so $G$ has a neighbor $x$ with larger weight).
+
+  \begin{block}[proofs: AA]
+    \step Assume for contradiction that $v$'s neighbors all have weight at least $w(v)$.
+    % \comment{proof by contr.}
+    \step[proofs: REALS] Then, since $v$ also has at least one neighbor whose weight is strictly larger,
+    the average of $v$'s neighbors' weights is strictly larger than $w(v)$.
+    \step This is a contradiction (as $G$ has Property $A$.)
+  \end{block}
+
+  \step By Block~\ref{proofs: AA}, vertex $v$ has some neighbor with weight less than $w(v)$,
+  proving the lemma.
+  \vspace*{-1em}
+\end{longFormSubProof}
+
+
+  \begin{block}[proofs: A]
+    \step Now assume for contradiction that $G$ does not have Property $B$.
+    % \comment{proof by contradiction}
+    
+    \step Let $u$ and $v$ be two vertices of different weight (they exist because $G$ doesn't have Property $B$).
+
+    \step Consider any path from $u$ to $v$ in $G$ (it exists as $G$ is connected).
+
+    \step The path must have two adjacent vertices with different weights.
+    (Otherwise, by transitivity, all vertices along the path would have the same weight,
+    but $u$ and $v$ have different weights.)
+
+    \step Of these two adjacent vertices with different weights, let $v_1$ be the one with smaller weight.
+
+    \step Then $v_1$ has a neighbor with larger weight.
+
+    \step So, by Lemma~\ref{proofs: lemma: high low} applied to $v_1$,
+    $v_1$ has some neighbor $v_2$ with smaller weight ($w(v_1) > w(v_2)$).
+
+    \step So, by Lemma~\ref{proofs: lemma: high low} applied to $v_2$,
+    $v_2$ has some neighbor $v_3$ with smaller weight ($w(v_2) > w(v_3)$).
+
+    \step Inductively, there is an infinite path
+    $v_1, v_2, v_3, \ldots$ with strictly decreasing vertex weights.
+
+    \step Since the weights strictly decrease along the path, no vertex in $G$ occurs twice on the path.
+
+    \step So $G$ has infinitely many vertices.
+
+    \step This is a contradiction (as $G$ is finite).  
+  \end{block}
+  \step By Block~\ref{proofs: A}, $G$ must have Property $B$.
+\end{longFormProof}
+
+Here's the same proof in short form.
+
+\begin{shortFormProof}[Same proof, short form.]
+  Let $G$ be any finite connected graph with Property $A$.
+  We use the following observation:
+  \emph{If a vertex $v$ in $G$ has a neighbor $x$ with larger weight ($w(x) > w(v)$)
+    then $v$ also has a neighbor $y$ with smaller weight ($w(y) < w(v)$).}
+  (Otherwise the weight of $v$ would not equal the average of its neighbors' weights.)
+  Suppose for contradiction that $G$ doesn't have Property $B$.
+  So it has two vertices with different weights.
+  There is a path between these two vertices,
+  along which there must be two neighbors whose weights differ.
+  The smaller-weight neighbor, say $v_1$
+  (having a larger-weight neighbor)
+  must also (by the observation) have a smaller-weight neighbor, say $v_2$.
+  In turn, $v_2$ (with larger-weight neighbor $v_1$)
+  has a smaller-weight neighbor $v_3$.
+  Inductively,
+  $G$ contains an infinite path
+  along which the vertex-weights strictly decrease,
+  contradicting that $G$ is finite.
+\end{shortFormProof}
+
+
+Here's the second long-form proof.
+
+\begin{longFormProof}[Second long-form proof.]
+  \step Let $G$ be an arbitrary finite, connected graph having Property $A$.
+
+  \step Let $W = \min_{v\in V} w(v)$ be the minimum vertex weight.  ($W$ is well-defined as $G$ is finite.)
+
+  \smallskip
+  
+  We will use the following utility lemma:
+  
+  \begin{lemma}\label{proofs: lemma: all}
+    If $v$ is any vertex of weight $W$,
+    then each of $v$'s neighbors has weight $W$.
+  \end{lemma}
+  \begin{longFormSubProof}[Proof of lemma.]
+    \step Let $v$ be an arbitrary vertex with weight $W$.
+    \step[proofs: L1] Each of $v$'s neighbors has weight \emph{at least} $W$ (by definition of $W$).
+    \begin{block}[proofs: B]
+      \step Assume for contradiction that $v$ has a neighbor of weight strictly more than $W$.
+      \step Then the average of the neighbors' weights is strictly more than $W$.
+
+      \step This is a contradiction (as $v$ has weight $W$ and $G$ has Property $A$).
+    \end{block}
+    \step By Block~\ref{proofs: B}, each of $v$'s neighbors has weight at most $W$.
+
+    \step By this and Line~\ref{proofs: L1}, each of $v$'s neighbors has weight $W$.
+    \vspace*{-1em}
+  \end{longFormSubProof}
+  
+  \step Let $v_1$ be any vertex of weight $W$.  (Vertex $v_1$ exists by definition of $W$.)
+
+  \step By the lemma, all neighbors of $v_1$ have weight $W$.
+
+  \step Applying the lemma to each neighbor of $v_1$,
+  all of the neighbors' neighbors also have weight $W$.
+
+  \step Continuing inductively, all vertices reachable from $v_1$ have weight $W$.
+
+  \step Since $G$ is connected, all vertices are reachable from $v_1$,
+  so all vertices have weight $W$.
+
+  \step So $G$ has Property $B$.
+\end{longFormProof}
+
+% \vfill\vfill \centerline{\emph{(continued)}} \vfill \newpage 
+
+\exercise\label{proofs: exercise: bad graph induction}\emph{(Incorrect induction)}
+Here's a third proof for the theorem in Problem~\ref{proofs: prob: with lemma}.
+This one has an error.  Find the error.
+% [review 2026-09-27] fix: the erroneous step's assertion is actually true for finite graphs (as a consequence of the theorem itself), so asking for a step "that is not necessarily true" had no answer; the error is an unjustified step
+Specifically, identify the first step of the proof that asserts a statement
+that does not follow from the previous steps and the definitions.
+Explain why the statement does not follow.
+
+\addtocounter{theorem}{-1}
+\begin{restatement}
+\begin{theorem}
+  Any finite, connected graph $G$ that has Property $A$ also has Property $B$.
+\end{theorem}
+\end{restatement}
+\begin{longFormProof}[Third long-form proof (INCORRECT! FIND THE ERROR!)]
+  \step The proof is by induction on the size of $G$.
+
+  \step[proofs: base] Base case: $G$ has two vertices.  Then it is easy to verify that Property A implies Property B.
+
+  \begin{block}[proofs: C]
+    \step For the induction step, for any $n\ge 2$,
+    assume the theorem holds for all graphs with $n$ vertices.
+
+    \begin{block}[proofs: D]
+      % [review 2026-09-27] fix: "connected" was missing (the theorem is about connected graphs; without it a later step is literally false for a different reason)
+      \step Let $G$ be an arbitrary connected $(n+1)$-vertex graph having property $A$.
+
+      \step Let $v_1$ be any vertex in $G$, and let $G'$ be obtained from $G$ by deleting $v_1$ and its edges.
+
+      \step[proofs: WRONG] $G'$ has Property A, because $G$ does.
+      
+      \step So, by the inductive assumption, $G'$ has Property B.
+
+      \step That is, all vertices in $G'$ have equal weight, say $W$.
+      
+      \step Now consider $v_1$ in $G$.  Each neighbor of $v_1$ is in $G'$, so has weight $W$.
+
+      \step Since $G$ has Property A, then, $v_1$ also has weight $W$.
+
+      \step So all vertices in $G$ have weight $W$.  That is, $G$ has Property $B$.
+    \end{block}
+    \step By Block~\ref{proofs: D}, the theorem holds for all graphs with $n+1$ vertices.
+  \end{block}
+  \step By Line~\ref{proofs: base}, the theorem holds for any graph with two vertices.
+  By Block~\ref{proofs: C}, for every $n\ge 2$,
+  it holds for any graph with $n+1$ vertices,
+  as long as it holds for every graph with $n$ vertices.
+  Inductively, it holds for all graphs with $n\ge 2$ vertices.
+\end{longFormProof}
+
+\paragraph{Solution.}
+% [review 2026-09-27] fix: the solution said G' "does not have to have Property A", but for finite graphs it always does (by the theorem); the error is that the step is unjustified (circular)
+The first error is in Step~\ref{proofs: WRONG}.
+Nothing established so far implies that $G'$ has Property A:
+deleting $v_1$ changes the neighborhoods (and so the neighbor averages) of $v_1$'s neighbors,
+so Property A for $G$ does not, by itself, give Property A for $G'$.
+(For finite graphs the statement happens to be true,
+but only as a consequence of the theorem we are trying to prove,
+so using it here is circular.)
+Another error is in the following step:
+$G'$ does not have to be connected, so the theorem does not apply to $G'$ (however this one can be fixed).
+
+\vspace*{-1em}
+\paragraph{Bonus question.}
+Suppose $G=(V,E)$ is an infinite connected graph with vertex weights and Property $A$.
+If all the vertex weights are non-negative, must $G$ also have Property $B$?  (The answer is no.  Can you find an example?)
+
+
+% \vfill\vfill \centerline{\emph{(continued)}} \vfill \newpage 
+
+
+\subsection{Exercises without solutions}
+
+\exercise\emph{(Proof by cases)}\label{proofs: exercise: cases}
+Consider the following long-form proof.
+Note that
+``positive'' means ``strictly greater than zero'', while
+``negative'' means ``strictly less than zero.''  
+
+\begin{theorem}[False!]
+  For every real number, its square is positive. That is, $\forall x\in\R,~x^2 > 0$.
+\end{theorem}
+\begin{longFormProof}[Proof (long form).  Find the error!]
+  \step Let $x\in \R$ be an arbitrary real number.
+  \begin{block}
+    \step \underline{Case 1.} Suppose $x$ is positive ($x > 0$).
+    \step Then $x^2$ is a product of two positive numbers, so $x^2$ is positive.
+  \end{block}
+  \begin{block}
+    \step \underline{Case 2.} Suppose $x$ is negative ($x < 0$).
+    \step Then $x^2$ is a product of two negative numbers, so $x^2$ is positive.
+  \end{block}
+  \step In either Case 1 or 2, $x^2$ is positive, so $x^2$ is positive.
+\end{longFormProof}
+
+Here is the same proof in short form.
+\begin{shortFormProof}
+  The proof is by cases.
+  If $x$ is positive, then $x^2$ is a product of two positive numbers, so is positive.
+  If $x$ is negative, then $x^2$ is a product of two negative numbers, so is positive.
+  In either case, $x^2$ is positive.
+  So $x^2$ is positive.
+\end{shortFormProof}
+
+Find the error.  What is the first step of the long-form proof that makes an assertion that is not necessarily true?
+In what situation does that assertion fail?
+
+\exercise \emph{(Proof practice --- red/blue/round/square)}
+
+Complete the proof of the following theorem.
+
+\begin{theorem}
+  In a set $S$ of objects, each is either red or blue, and each is either round or square. $S$ has at least one red object, at least one blue object, at least one round object, and at least one square object. Then $S$ has two objects that differ both in color and in shape.
+\end{theorem}
+\begin{longFormProof}
+  \step Let $S$ be the set of objects in question.
+
+  \begin{block}[proofs: objects]
+    \step \underline{Case 1.} Suppose all red objects in $S$ are the same shape.
+    \step Assume that the red objects are all square (the case when they are all round is symmetric).
+    \step \ldots
+    \step So, in Case 1, there exist two objects that differ both in color and in shape. 
+  \end{block}
+  
+  \begin{block}[proofs: objects 2]
+    \step \underline{Case 2.} Otherwise $S$ has a red-round object and a red-square object.
+    \step \ldots
+    \step So, in Case 2, there exist two objects that differ both in color and in shape.
+  \end{block}
+  
+  \step Case 1 or Case 2 must hold, and in either case the theorem holds,
+  so the theorem holds.
+\end{longFormProof}
+
+%%%%%
+
+\exercise\emph{(Understanding induction)} Find the error in the following proof by induction.
+
+\begin{theorem}\label{proofs: thm: marbles}
+  In any finite set of marbles, all the marbles are the same color.
+\end{theorem}
+
+\begin{longFormProof}[Proof (long form).  Where's the error?]
+  \step   Define $P(n) \equiv$
+  ``in any set $S$ of $n$ marbles, the marbles are the same color.''
+
+  \step We show by induction on $n$ that $P(n)$ holds for all integers $n\ge 0$.
+
+  \step First we consider the base cases, $n\in\{0, 1\}$.
+
+  \step\label{proofs: step: base case}
+  In any set of zero or one marbles,
+  all marbles are trivially the same color.
+  I.e., $P(0)$ and $P(1)$ hold.
+
+  \begin{block}\label{proofs: block: ind step}
+    \step Next we prove the inductive step.
+      Fix an arbitrary integer $n\ge 2$.
+    % \comment{block: $\forall$}
+    
+    \begin{block}\label{proofs: block: if}
+      \step\label{proofs: step: if}
+      Assume that $P(n-1)$ holds.
+        (We'll show that $P(n)$ holds.)
+      % \comment{block: if then}
+
+      \begin{block}\label{proofs: block: set}
+        \step Let $S=\{m_1, m_2, \ldots, m_{n}\}$ be an arbitrary set of $n$ marbles.
+        % \comment{block: $\forall$}
+
+        \step Let set $S_1 = \{m_1, m_2, \ldots, m_{n-1}\}$ contain the first $n-1$ marbles in $S$.
+
+        \step Let set $S_2 = \{m_2, m_3, \ldots, m_{n}\}$ contain the last $n-1$ marbles in $S$.
+
+        \step\label{proofs: step: C1}
+        $S_1$ has size $n-1$, and $P(n-1)$ holds (Step~\ref{proofs: step: if}),
+        so all marbles in $S_1$ are the same color.
+
+        \step\label{proofs: step: C2}
+        Likewise all marbles in $S_2$ are the same color.
+
+        \step Marble $m_2$ is in $S_1$, so by Step~\ref{proofs: step: C1},
+        each marble in $S_1$ is the same color as $m_2$.
+
+        \step Marble $m_2$ is also in $S_2$, so by Step~\ref{proofs: step: C2},
+        each marble in $S_2$ is the same color as $m_2$.
+
+        \step Each marble in $S$ is in $S_1$ or $S_2$,
+        so (by the previous two steps)
+        is the same color as $m_2$.
+
+        \step That is, all marbles in $S$ are all the same color.
+
+      \end{block}
+
+      \step By Block~\ref{proofs: block: set}, $P(n)$ holds.
+    \end{block}
+
+    \step By Block~\ref{proofs: block: if},
+    if $P(n-1)$ holds, then $P(n)$ holds.
+  \end{block}
+
+  \step By Block~\ref{proofs: block: ind step},
+  for any $n\ge 2$,
+  if $P(n-1)$ holds, then $P(n)$ holds.
+
+  \step By Step~\ref{proofs: step: base case}, $P(0)$ and $P(1)$ hold.
+
+  \step By the preceding two steps, and induction,
+  $P(n)$ holds for all integers $n \ge 0$.
+
+  \step That is, within any finite set of marbles,
+  all the marbles are the same color.
+\end{longFormProof}
+
+For comparison, here's the proof in short form.
+
+\begin{shortFormProof}
+  We show by induction on $n\ge 0$ that,
+  within any set $S$ of $n$ marbles, all the marbles are the same color.
+  For the base cases $n\in\{0,1\}$ this is true because $S$ contains at most one marble.
+  Consider any set $S$ of $n\ge 2$ marbles.
+  Assume the inductive hypothesis holds for any set of $n-1$ marbles.
+  Order the $n$ marbles in $S$ arbitrarily.
+  Let $S_1$ contain the first $n-1$ marbles in $S$.
+  Let $S_2$ contain the last $n-1$ marbles in $S$.
+  By the inductive assumption, within $S_1$
+  all marbles are the same color.
+  Likewise, within $S_2$
+  all marbles are the same color.
+  Since $S_1$ and $S_2$ both contain marble $m_2$,
+  all marbles in $S=S_1\cup S_2$ are the same color.
+\end{shortFormProof}
+
+\exercise \emph{(Proof practice---rationality (Problem 1.13 of \LLM (2018)))}
+
+Complete the proof of the following theorem.
+
+\begin{theorem}
+  Let 
+  \[p(x) = a_0 + a_1 x + a_2 x^2 + \cdots + a_{m-1} x^{m-1} + x^m\]
+  be an arbitrary polynomial with integer coefficients, whose highest-degree term
+  has coefficient 1.
+  Then any rational root of $p(x)$ is an integer.
+\end{theorem}
+\begin{longFormProof}
+  \step Let $p$ be an arbitrary polynomial as in the theorem,
+  and let $x$ be any rational root of $p$.
+
+  \step Fix integers $i$ and $j$ with $j>0$ such that $x=i/j$.
+  
+  \step \ldots
+
+  \step So $x$ is an integer.
+\end{longFormProof}
+
+\exercise \emph{(Proof practice, greedy algorithms---partition the integers)}
+
+The positive integers are partitioned into several subsets $A_1,A_2,\ldots ,A_n$ such that, 
+for each $i\in\{1,2,\ldots ,n\}$ and $x$ in $A_i$, $2x$ is not in $A_i$. 
+What is the minimum possible value of $n$?
+
+Complete the proof of the following theorem.
+\begin{theorem}
+  The minimum possible value of $n$ is 2.
+\end{theorem}
+\begin{longFormProof}
+  \step For any such partition $n$ is at least 2.
+  (Otherwise 1 and 2 would be in $A_1$.)
+
+  \step Define $A_1 = \ldots$ and $A_2 = \ldots$.
+  \step To finish we show that $A_1, A_2$ is a partition with the claimed property\ldots
+\end{longFormProof}
+
+\emph{Bonus question:} what if you want neither $2x$ nor $3x$ to be in $A_i$ with $x$?
+
+
+\exercise \emph{(Reasoning about processes---flipping disks upper bound)}\label{proofs: exercise: flipping discs}
+You have $n$ discs labeled $1,2,3,\ldots,n$ (not necessarily in that order),
+stacked one on top of each other (sort of like Towers of Hanoi).
+The basic operation you can do on the stack is the following:
+take some disc, and all the discs above it, and flip over that
+part of the stack.
+For example, you can take the stack on the left,
+and by applying the basic operation starting at disc 5, you can get the stack in the middle:
+
+\[\begin{array}{c}
+    \mathbf 3 \\ \mathbf 1 \\ \mathbf 4 \\ \mathbf 5 \\ 6 \\ 2
+  \end{array}
+  \hspace{1em}  \Longrightarrow  \hspace{1em}
+  \begin{array}{c}
+    \mathbf 5 \\ \mathbf 4 \\ \mathbf 1 \\ \mathbf 3 \\ 6 \\ 2
+  \end{array}
+  \hspace{1em}  \Longrightarrow  \hspace{1em}  \cdots  \hspace{1em}  \Longrightarrow  \hspace{1em}
+  \begin{array}{c}
+     1 \\  2 \\  3 \\  4 \\ 5 \\ 6
+  \end{array}
+\]
+
+The goal is to get to the stack on the right, in which the discs are ordered.
+Give a long-form proof of the following theorem.
+\begin{theorem}
+  For any initial stack of $n$ discs,
+  there is a sequence of at most $2\,n$ basic operations that ends with the discs stacked in order
+  (1 on top, 2 next, \ldots, $n$ on the bottom).
+\end{theorem}
+
+\exercise \emph{(Reasoning about processes---flipping disks lower bound)}
+Give a long-form proof of the following theorem,
+for the problem defined in Exercise~\ref{proofs: exercise: flipping discs}.
+\begin{theorem}
+  For any $n\ge 1$, there is some initial way to stack the $n$ discs
+  such that any sequence of basic operations that ends with the discs stacked in order
+  has at least $n-1$ operations.
+\end{theorem}
+(For every $n$, define a particular initial stacking of the $n$ discs,
+then prove that there is no sequence of less than $n$ operations that orders them.)
+
+\exercise \emph{(Proof practice---boys and girls around a table)} % $\star$
+Complete the proof of the following theorem.
+(\emph{Hint:} make sure your reasoning is complete and covers all possible arrangements.
+It's not enough to observe that one particular kind of arrangement fails.)
+
+\begin{theorem} 
+  Fifty chairs are arranged evenly spaced around a round table.
+  For any seating arrangement of  25 boys and 25 girls
+  (placing one boy or girl in each chair),
+  at least one person has a girl on each side.
+\end{theorem}
+\begin{longFormProof}
+  \step Suppose for contradiction that there is an arrangement
+  where nobody sits between two girls. 
+  \step \ldots
+  \step This is a contradiction, so some person sits between two girls.
+\end{longFormProof}
+
+\exercise \emph{(Proof practice---inclusion/exclusion for reals)} $\star$~~Prove the following theorem.
+
+\begin{theorem}
+  Define $f(x,y,z) = |x|+|y|+|z|-|x+y|-|x+z|-|y+z|+|x+y+z|$.
+  Every triple $x,y,z$ of real numbers satisfies the inequality $f(x,y,z)\ge 0$.
+\end{theorem}
+
+\exercise \emph{(Proof practice---handshakes after the party)} $\star$~{}
+
+\emph{Setup:} $N+1$ couples (where $N\ge 0$) attend a dinner. At the end of the dinner, one person (Alice) asks each other person to write down the number of distinct people with whom he or she shook hands at the dinner. Surprisingly, all numbers $0,1,2,\ldots,2N$ are written down. Assuming that no person shook hands with their partner, how many people did Alice shake hands with at the dinner?
+(\emph{Hint:} one person shook hands with $2N$ people. What about that person's partner?)
+
+Complete the proof of the following theorem.
+
+\begin{theorem}
+  Alice shook hands with $N$ people.
+\end{theorem}
+\begin{longFormProof}
+  \step We prove by induction on $N$ that, in any such scenario,
+  Alice shakes hands with $N$ people.
+  \step In the base case, $N=0$, \ldots
+  \begin{block}[proofs: alice]
+    \step For the induction step, consider any $n\ge 1$,
+    and assume that the statement holds for any such scenario with $N=n-1$ couples.
+    We show that the statement holds for any such party scenario with $N=n$ couples.
+    \step \ldots
+  \end{block}
+  \step \ldots
+\end{longFormProof}
+
+
+\exercise \emph{(Induction---Hanoi lower bound)} $\star$~~Check out the towers of hanoi puzzle (\url{https://en.wikipedia.org/wiki/Tower_of_Hanoi}),
+then complete the proof of the following theorem.
+
+\begin{theorem}
+  Any legal sequence of moves (which never puts any disc on top of a smaller disk,
+  and moves $N$ discs from one peg to another) takes at least $2^N-1$ moves.
+\end{theorem}
+
+\begin{longFormProof}
+  \step The proof is by induction on $N\in\{1,2,3,\ldots\}$.
+  \step The base case $N=1$ holds because moving one disc requires at least $2^1-1 = 1$ move.
+  \begin{block}[proofs: hanoi]
+    \step For the induction step, consider any $n\ge 1$,
+    and assume that the theorem holds for $N=n$.
+    \step We show that the theorem holds for $N=n+1$\ldots
+  \end{block}
+  \step \ldots
+\end{longFormProof}
+
+
+% \vfill\vfill \centerline{\emph{(continued)}} \vfill
+% \newpage 
+
+\exercise \emph{(Proof practice---all pairs with different sums)} $\star \star$
+
+Complete the proof of the following theorem.
+\begin{theorem}
+  A subset $S$ of $\{1,2,\ldots ,100\}$ has the following property:
+  for every quadruple $u,v,w,x$ of distinct numbers in $S$, the sum of $u$ and $v$ 
+  differs from the sum of $w$ and $x$.
+  Then the size of $S$ is at most fifteen.
+\end{theorem}
+\begin{longFormProof}
+  \step Consider any such subset $S$.
+  \step \ldots
+  \step Therefore the size of $S$ is at most fifteen.
+\end{longFormProof}
+
+For more problems, see \url{https://www.cs.ucr.edu/~neal/puzzles} (those marked ``P'').
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "long_form_proofs"
+%%% End:
+

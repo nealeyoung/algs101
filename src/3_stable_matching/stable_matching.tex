@@ -1,0 +1,757 @@
+\documentclass[11pt]{article}
+
+
+\input{macros} 
+
+% \usepackage{pdfx}
+
+
+\begin{document}
+
+% \setcounter{section}{1}
+
+\doTitle{3}{Stable Matching}{Stable Matching}
+\newpage
+
+We use the 4-step recipe for presenting an algorithm, as described in \LN{prelim}.
+Below we mostly follow the definitions and analysis from \KT Section 1.1.
+
+\section{Problem definition}\doHeader{Problem definition}
+
+The \emph{Stable Matching} (historically known as~\emph{Stable Marriage}) problem is defined as follows.
+\begin{description}
+\item[input:]
+  \begin{mylist}[-]
+    \item a positive integer $n$, implicitly defining $n$ hospitals ($h_1, \ldots, h_n$)
+      and $n$ doctors ($d_1, \ldots, d_n$)
+    \item $2n$ \emph{preference lists}:
+      for each hospital, a permutation of the doctors,
+      and for each doctor, a permutation of the hospitals.
+\end{mylist}
+
+\item[output:]
+  A \emph{stable matching}, defined as follows.
+
+  A \emph{matching} $M$ is a collection of hospital/doctor pairs
+  such that each hospital or doctor is in at most one pair in $M$.
+  For each pair $(h,d)$ in $M$, we say $M$ \emph{matches} hospital $h$ and doctor $d$,
+  and that $h$ and $d$ are \emph{matched}.
+  %
+  The matching $M$ is \emph{perfect} if $M$ matches each hospital and doctor
+  (i.e., each is in one pair in $M$, so $|M| = n$).
+  %
+  In a perfect matching, a pair $(h,d)$ is an \emph{unstable pair} (also known as an \emph{instability})
+  if $h$ and $d$ prefer each other to their matches in $M$.
+  %
+  A \emph{stable matching} is a perfect matching with no instabilities.
+\end{description}
+
+\emph{[To build intuition, consider examples.
+    See Section~\ref{matching: sec: sources} for pointers to textbooks that have motivation and examples.]}
+
+\paragraph{There can be more than one stable matching.}  
+For a given instance (input), there can be more than one stable matching.
+(For example, suppose each hospital has a different first choice.
+Then matching each hospital to his first choice is stable.
+Likewise, if each doctor has a different first choice, matching each doctor to her first choice is stable.
+Use these observations to build an example with $n=2$ that has more than one stable matching.
+% [review 2026-09-27] fix: the claim fails for n = 1 (one instance, one stable matching, but 2^{1/2} > 1); restricted to n >= 2 (was "for every n")
+\emph{Challenge:} show that, for every $n \ge 2$, there is an instance with at least $2^{n/2}$ distinct stable matchings.)
+
+\paragraph{Problem variants.}  
+% [review 2026-09-27] fix: in the roommates problem each person ranks the n-1 other people, not n (was "all $n$ other people")
+There are many possible variants of this problem.  For example: Allow having more hospitals than doctors.  Or allow incomplete preference lists (where a doctor prefers to be unmatched than matched to someone not on their list).  What we discuss below extends cleanly to these variants.  One can consider a variant without two different types (the ``roommates problem'': given $n$ people (where $n$ is even), each with a preference list ordering all $n-1$ other people, find a stable matching.  (\KWSlides have an example for this variant that has no stable matching.)
+
+\paragraph{Exercise:}
+Find an algorithm that, given an instance and a perfect matching, outputs all the unstable pairs (if any).
+It should run in $O(n^2)$ (linear) time.  (It helps to precompute arrays $A$ and $B$ such that $A[h][d]$ gives the rank of doctor $d$ in $h$'s preference list, while $B[d][h]$ gives the rank of $h$ in $d$'s preference list.)
+
+\newpage
+
+\section{Algorithm definition (Gale-Shapley algorithm)}\doHeader{Algorithm}
+
+First consider the brute-force algorithm: \emph{Enumerate all $n{!}$ possible perfect matchings.  For each, check if it is stable, and if so halt and return that matching.}
+%
+This algorithm takes at least $\Omega(n!\, n^2)$ time, which is super-exponential, way too slow to be practical for large $n$.
+Considering that modern CPUs have GHz clocks --- they do billions ($10^9$) of operations per second
+% [review 2026-09-27] fix: the estimate "10^{n/30} seconds, over a year for n ~ 225" was wrong; at 10^9 ops/s, n! n^2 operations take n! n^2 / 10^9 s, which exceeds a year already at n = 17 (17! 17^2 / 10^9 ~ 1.0e8 s ~ 3.3 years; n = 16 gives ~62 days)
+--- this algorithm would currently require more than on the order of $n!\,n^2/10^9$ seconds ---
+over a year already for $n\approx 17$.
+
+Instead, Gale and Shapley proposed the following algorithm.
+It is conventionally described as an iterative process that maintains a matching.
+The matching is initially empty.
+In each iteration, the algorithm chooses any unmatched hospital.
+That hospital makes an offer to some doctor
+--- the doctor that it prefers the most,
+among doctors that it has not previously made offers to.
+The doctor (tentatively) accepts the offer and becomes matched to that hospital
+if that new match is better for the doctor the doctor's current match (or if the doctor is not yet matched).
+The process halts when every hospital is either matched or has made offers to all doctors.
+Pseudo-code is shown in Figure~\ref{matching: fig: alg}.
+
+% \smallskip
+
+% See Fig.~\ref{matching: fig: alg} for the proposed algorithm.
+
+\begin{figure}[t]
+\noindent~\framebox{~~\parbox{0.95\textwidth}{\small
+\begin{steps}
+  \step Maintain a matching, initially empty.
+  \step While there is an unmatched hospital who has not made an offer to to every doctor:
+  \begin{block}
+    \step Choose any such hospital $h$.
+    \step[matching: S0] Among doctors that hospital $h$ has not previously made an offer to, let $d$ be the one $h$ prefers most.
+    \step[matching: S1] Hospital $h$ makes an offer to doctor $d$, with the following outcome:
+    \step[matching: S2]~~If doctor $d$ is unmatched, $d$ \emph{tentatively accepts} the offer, and $h$ and $d$ become matched.
+    \step[matching: S3]~~Else, if $d$ prefers his or her current match, say $h'$, to $h$, then $d$ \emph{rejects} $h$, and stays matched to $h'$.
+    \step[matching: S4]~~Else, $d$ tentatively accepts the offer: $d$ rejects $h'$, and becomes matched to $h$ instead of $h'$.
+  \end{block}
+  \step Finally, return the (possibly incomplete) matching formed by the currently matched pairs.
+\end{steps}
+}}
+\caption{The Gale-Shapley (hospitals-propose) algorithm for Stable Matching.}\label{matching: fig: alg}
+\end{figure}
+
+% \newpage
+
+% \medskip 
+
+Next we consider the following questions:
+
+\begin{enumerate}
+\item Does this algorithm always terminate?
+
+\item Does it always return a perfect matching?
+
+\item Does it always return a stable matching?  (That is, is it correct?)
+
+\item How can we implement this algorithm efficiently?  What run time can we achieve?
+\end{enumerate}
+
+For intuition, trace the execution of the algorithm on this input:\,\footnote{source: \KWSlides}
+
+\begin{quote}
+  \begin{tabular}{c|ccccc}
+    hospitals & 1st & 2nd & 3rd & 4th & 5th \\ \hline
+    A & V & W & X & Y & Z \\
+    B & W & X & Y & V & Z \\
+    C & X & Y & V & W & Z \\
+    D & Y & V & X & W & Z \\
+    E & V & X & W & Y & Z
+  \end{tabular}
+  ~~~~
+  \begin{tabular}{c|ccccc}
+    doctors & 1st & 2nd & 3rd & 4th & 5th \\ \hline
+    V & B & C & D & E & A \\
+    W & C & D & E & A & B \\
+    X & D & E & A & B & C \\
+    Y & E & A & B & C & D \\
+    Z & A & B & C & D & E
+  \end{tabular}
+\end{quote}
+
+\continued 
+
+\section{Bounding the worst-case run-time}\doHeader{Run time}
+
+Does the algorithm have to terminate?  Why?
+We start by bounding the number of iterations.
+
+\begin{lemma}[e.g.~\KT p.\,7 (1.3)]\label{matching: lemma: iterations}
+  In any execution of the algorithm, there are at most $n^2$ iterations.
+\end{lemma}
+\begin{longFormProof}
+
+  \step Consider an arbitrary execution of the algorithm.
+
+  \step In each iteration, one hospital makes an offer to one doctor. 
+
+  \step By Lines~\ref{matching: S0} and~\ref{matching: S1} of the algorithm, no hospital makes an offer to the same doctor twice.
+
+  \step By two steps above, there are at most $n^2$ iterations (one for each hospital/doctor pair).
+\end{longFormProof}
+
+\smallskip  
+(Question about long-form proofs: which of the four types of block does the above proof use?)
+\smallskip 
+
+The algorithm can be implemented so that each iteration takes constant time.  (How?  Of course, we have to keep track of the current matching, and, for each hospital $h$, which doctor $h$ should next make an offer to.  This is easy to do.  The main challenge is to somehow preprocess the input so that, given any doctor and two hospitals, one can check in $O(1)$ time which hospital the doctor prefers.  To do this, precompute an array $A$ such that $A[d][h]$ is the rank of $h$ in $d$'s preference list. See, e.g., \KT Section 2.3.)  This and the lemma imply that the algorithm can be implemented to run in $O(n^2)$ time.  Note that the input has size $\Theta(n^2)$.  We conclude that the algorithm can be implemented to run in time \emph{linear} in the input size:
+
+\begin{lemma}
+  The Gale-Shapley algorithm can be implemented to run in time linear in the input size.
+\end{lemma}
+
+\pythonCode{stable_matching.py}
+It implements the Gale-Shapley algorithm and, for comparison, exhaustive search.
+Running it shows that Gale-Shapley is much faster than exhaustive search.
+
+\continued
+
+\section{Proving that the algorithm is correct}\doHeader{Correctness}
+
+Recall that an algorithm is \emph{correct} if,
+for every possible input, the algorithm returns a correct output (in this case, a stable matching).
+We prove this next.
+We start with some useful observations and a utility lemma.
+Consider any execution of the algorithm. 
+
+\begin{observation}[\KT p.\,7 (1.1)]\label{matching: obs: doctors improve}
+  Consider any doctor $d$.
+  Doctor $d$ is not matched until the first iteration in which $d$ receives an offer.
+  After that $d$ always remains matched, and in each iteration, $d$ either keeps their current match,
+  or rejects that match and becomes matched to a hospital that $d$ prefers more.
+\end{observation}
+
+Observation~\ref{matching: obs: doctors improve} follows by inspection of Lines~\ref{matching: S2}--\ref{matching: S4} of the algorithm.
+
+\begin{observation}[\KT p.\,7 (1.2)]\label{matching: obs: hospitals worsen}
+  Fix any hospital $h$.
+  Let $d'_1, d'_2, \ldots, d'_k$ be the doctors $h$ makes offers to over the course of the execution,
+  in the order that $h$ makes offers to them.
+  Then $d'_1, d'_2, \ldots, d'_k$ is a prefix of $h$'s preference list.
+  In other words, $h$ prefers $d'_1$ to $d'_2$, and $d'_2$ to $d'_3$, and so on,
+  and $h$ prefers $d'_k$ to each doctor that $h$ does not make an offer to.
+\end{observation}
+
+Observation~\ref{matching: obs: hospitals worsen} follows by inspection of Line~\ref{matching: S0} of the algorithm.
+
+% \continued
+
+We need one more utility lemma before we prove correctness.
+
+\begin{lemma}[\KT p.\,8 (1.5)]\label{matching: lemma: perfect}
+  Any execution of the algorithm returns a perfect matching.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider an arbitrary execution of the algorithm.
+  % \comhospitalst{block: $\forall$}
+
+  \step By Lemma~\ref{matching: lemma: iterations}, it terminates, so (by inspection of the algorithm) returns some matching $M$.
+
+  \begin{block}[matching: B11]
+    \step[matching: line: assumption] Suppose for contradiction that at least one hospital or doctor is unmatched in $M$.
+    % \comhospitalst{block: contradiction}
+    
+    \step $M$ matches each hospital to at most one doctor, and vice versa.
+
+    \step Also, there are $n$ hospitals and $n$ doctors.
+
+    \step[matching: B113] So, there must be both an unmatched hospital, say, $h$, \emph{and} an unmatched doctors, say, $d$.
+
+    \step By Line~2 of the algorithm (the termination condition), $h$ made an offer to $d$ at some point.
+
+    \step So, by Observation~\ref{matching: obs: doctors improve}, $d$ remains matched at the end (so is matched in $M$).
+
+    \step This is a contradiction, since $d$ is not matched in $M$ (per Step~\ref{matching: B113} above).
+  \end{block}
+  
+  \step By Block~\ref{matching: B11}, each person is matched in $M$.  That is, $M$ is a perfect matching.
+\end{longFormProof}
+
+\continued
+
+To finish we show that the perfect matching is stable. 
+
+\begin{lemma}[correctness; \KT p.\,8 (1.6)]\label{matching: lemma: correctness}
+  Any execution of the algorithm returns a stable matching.
+\end{lemma}
+\begin{longFormProof}
+
+  \step Consider an arbitrary execution of the algorithm.
+  % \comhospitalst{block: $\forall$}
+
+  \step Let $M$ be the perfect matching it returns (by Lemma~\ref{matching: lemma: perfect}).
+
+  \begin{block}[matching: C1]
+    \step Consider any hospital/doctor pair $(h, d)$.  We will show that $(h, d)$ is not an unstable pair.
+    % \comhospitalst{block: $\forall$}
+
+    \step Let doctor $d'$ and hospital $h'$ be their matches in $M$.  (They exist, since $M$ is perfect.)
+
+    \step Note that $d'\ne d$ and $h'\ne h$ (otherwise $h$ and $d$ are a matched pair, so are not an unstable pair).
+
+    \begin{block}[matching: C11]
+
+      \step \underline{Case 1.}
+      First consider the case that $h$ never made an offer to $d$ during the execution.
+      
+      \step Hospital $h$ did make an offer to doctor $d'$,
+      so, by Observation~\ref{matching: obs: hospitals worsen},
+      $h$ prefers $d'$ over $d$.
+
+      \step So $(h, d)$ is not an unstable pair.
+    \end{block}
+
+    \begin{block}[matching: C12]
+
+      \step \underline{Case 2.}
+      Otherwise $h$ did make an offer to $d$ during the execution.
+
+      \step By alg.~Lines~\ref{matching: S1}--\ref{matching: S4}, just after that,
+      doctor $d$ was matched to $h$ or a hospital $d$ prefers more.
+      
+      \step By Obs.~\ref{matching: obs: doctors improve}, $d$ prefers his/her final match $h'$ at least as much,
+       so $(h, d)$ is not an unstable pair.
+    \end{block}
+    
+    \step Case 1 or Case 2 holds, so $(h, d)$ is not an unstable pair.
+  \end{block}
+
+  \step By Block~\ref{matching: C1}, there are no unstable pairs, so $M$ is stable.
+\end{longFormProof}
+
+We've proven that the algorithm runs in linear time and is correct.
+
+\continued
+
+\section{Advanced topic: hospital-optimality}\doHeader{Hospital-optimality}\label{matching: sec: hospital optimal}
+
+We consider another interesting aspect.  (See also \KT p.\,9, ``Extensions''.)
+
+First we define the following terms.
+Fix any Stable Matching instance, say, $I$.  
+\begin{mylist}[-]
+  
+\item Doctor $d$ and hospital $h$ are \emph{feasible} for each other
+if there exists \emph{any} stable matching (for the instance $I$) that matches the pair $(h,d)$.
+Otherwise we say $d$ is infeasible for $h$ (and vice versa).
+
+\item The \emph{best} feasible doctor for a hospital $h$ is the doctor,
+among the feasible doctors for $h$,
+whom $h$ prefers most.
+Let $\best h$ denote this doctor.
+
+\item A stable matching is \emph{hospital-optimal}
+  if it matches each hospital $h$ to $\best h$.
+\end{mylist}
+
+The only possible hospital-optimal matching is $M = \{(h, \best h) : h\in\{1,\ldots,n\}\}$.
+Note that a-priori, this $M$ might not be a matching.
+(For example, it could be that two different hospitals have the same best feasible doctor $d$.
+No matching can match them both to $d$, so if this happens, there is no hospital-optimal matching.)
+Also, a-priori, the hospital-optimal matching might not be stable!
+
+Next we show that, not only does the hospital-optimal matching exist for every instance,
+but the Gale-Shapley algorithm (in the hospitals-propose form) always returns it!
+The proof requires a careful use of induction.
+It takes some work to get the underlying intuition!
+
+Consider any execution of the algorithm on any input.  We first prove two utility lemmas.  
+
+\begin{lemma}\label{matching: lemma: not best}
+  % [review 2026-09-27] fix: a doctor can also reject h while staying with its current match h' (Line 3.5), not only by accepting a new offer from h' (Line 3.6); the hypothesis now covers both kinds of rejection (was "to accept an offer from another hospital h'")
+  Suppose a doctor $d$ rejects some feasible hospital $h$ in favor of another hospital $h'$ (Line~\ref{matching: S3} or~\ref{matching: S4} of the algorithm).
+  Then $h'$ has a feasible doctor $d'$ that $h'$ prefers to $d$.
+\end{lemma}
+\begin{longFormProof}
+  \step Let $d$, $h$, and $h'$ be as in the statement of the lemma.  
+
+  \step Let $M$ be a stable matching that matches $h$ to $d$.  ($M$ exists by def'n of ``feasible''.)
+  
+  \step $M$ is stable, so $(h', d)$ is not an unstable pair for $M$.
+  
+  % [review 2026-09-27] fix: the rejection can happen via Line 3.5 (d keeps h') as well as Line 3.6 (d switches to h'); in both cases d prefers h' to h (was: cited Line 3.6 only)
+  \step Doctor $d$ rejects $h$ in favor of $h'$, so $d$ prefers $h'$ to $h$ (algorithm~Line~\ref{matching: S3} or~\ref{matching: S4}).
+
+  \step But $(h', d)$ is not an unstable pair for $M$, so hospital $h'$ must prefer its match in $M$, say $d'$, to $d$.
+
+  \step So $d'$ is a feasible doctor for $h'$ that $h'$ prefers to $d$. 
+\end{longFormProof}
+
+\begin{lemma}\label{matching: lemma: feasible rejection}  During the execution of the algorithm,
+  each hospital is rejected only by its infeasible doctors.
+\end{lemma}
+\begin{longFormProof}
+    \step Suppose for contradiction that some hospital is rejected by one of its feasible doctors.
+
+    \step Let $t$ be the \emph{first} time that this happens.
+    Let $h$ and $d$ be the hospital and doctor in question.
+
+    % [review 2026-09-27] fix: if d rejects h via Line 3.5, d accepts no offer at time t but stays with its current match h'; h' is now defined as the hospital d is matched to just after the rejection, covering Lines 3.5 and 3.6 (was "the hospital whose offer d accepts when rejecting h")
+    \step Let $h'$ be the hospital in favor of which $d$ rejects $h$, i.e., the hospital $d$ is matched to just after time $t$.    Note that $h' \ne h$.
+
+    \step By Lemma~\ref{matching: lemma: not best}, $h'$ has a feasible doctor, say $d'$, that $h'$ prefers to $d$.
+
+    % [review 2026-09-27] fix: if d rejects h via Line 3.5, h' made its offer to d before time t, not at time t (was "at time t")
+    \step Hospital $h'$ made an offer to $d$ (at or before time $t$), but prefers $d'$ more.
+
+    \step So  (by Obs.~\ref{matching: obs: hospitals worsen}), $h'$ previously made an offer to $d'$.
+
+    \step So hospital $h'$ must have been rejected by $d'$ before making an offer to $d$.
+
+    \step This contradicts that $t$ is the first time that a hospital was rejected by one of its feasible doctors.
+\end{longFormProof}
+
+\newpage
+
+
+From Lemma~\ref{matching: lemma: feasible rejection}, hospital-optimality of the final matching $M$ follows easily.
+
+\begin{lemma}[hospital optimality; \KT p.\,10 (1.7)]\label{matching: lemma: hospital optimal}
+  The matching output by the algorithm is hospital-optimal.
+\end{lemma}
+
+\begin{longFormProof}
+  \step Let $M$ be the matching output by the algorithm.
+
+  \begin{block}[matching: bo]
+    % [review 2026-09-27] fix: d is h's matched doctor, not hospital (was "its matched hospital in M")
+    \step Consider any hospital $h$.  Let $d$ be its matched doctor in $M$.  
+    % \comhospitalst{block: $\forall$}
+
+    \step $M$ is stable, so, by definition of feasible, $d$ is feasible for $h$.
+
+    \step By Observation~\ref{matching: obs: hospitals worsen}, $h$ was rejected by every doctor
+    that $h$ prefers to $d$.
+
+    \step By this and Lemma~\ref{matching: lemma: feasible rejection}, every doctor that $h$ prefers to $d$
+    % [review 2026-09-27] fix: the sentence lacked its verb (was "every doctor that h prefers to d infeasible for h"); added "is"
+    is infeasible for $h$.
+
+    % [review 2026-09-27] fix: d is a doctor, and best(h) is h's most-preferred feasible doctor (was "h's hospital in M" and "most-preferred feasible hospital")
+    \step So, $d$, who is $h$'s doctor in $M$, is $h$'s most-preferred feasible doctor.  That is, $d = \best h$.
+  \end{block}
+
+  \step By Block~\ref{matching: bo}, $M$ matches each hospital $h$ to $\best h$.
+  That is, $M$ is hospital-optimal.
+\end{longFormProof}
+
+We've proved that there is always a hospital-optimal matching, and the algorithm always outputs it.
+One consequence is that, for any instance, every possible execution of the algorithm yields the same matching.
+This was not obvious a-priori, as different executions can choose different hospitals in each iteration.
+
+Exercise~\ref{matching: exercise: girl pessimal} is to show that the algorithm's matching is \emph{doctor-pessimal}.
+
+% \medskip 
+
+% \noindent
+% \dotfill\ \emph{Lecture 2 ended here, but for the last three lemmas above, we did not do the proofs}\dotfill 
+
+\continued
+
+\section{External sources on Stable Matching}\doHeader{External sources}\label{matching: sec: sources}
+\small
+\begin{itemize}
+
+\item \KT Sections~1.1 and 2.3 (on implementation) and \KWSlides (for those chapters)
+
+\item
+  \JEGreedy Section 4.5;
+  \LLM (MIT Math for CS text) Section 6.4
+
+\item Lecture video (U.~Vazirani)\footnote{\url{https://archive.org/details/ucberkeley_webcast_8qhxIAWp-zk}} 
+
+\item Can the participants gain an advantage by misrepresenting their preferences?\footnote
+  {\url{https://math.stackexchange.com/questions/2775243}}
+
+\end{itemize}
+
+
+% \continued
+
+\section{Exercises}\doHeader{Exercises}
+
+\subsection{Exercises with solutions}
+
+\exercise\label{matching: prob: instance}\emph{(Unstable pairs)}
+Consider this instance of \prob{Stable Matching} with $n=3$ (with hospitals $X, Y, Z$ and doctors $A, B, C$).
+\[
+\begin{array}{|rccc|} \hline
+  X: & A & B & C\\
+  Y: & B & C & A\\
+  Z: & C & A & B \\ \hline
+\end{array}
+~~{}
+\begin{array}{|rccc|}\hline
+  A: & Z & Y & X\\
+  B: & X & Y & Z\\
+  C: & X & Z & Y \\\hline
+\end{array}
+\]
+
+List all pairs that are unstable for this input and matching  $\{(X, B), (Y, C), (Z, A)\}$.
+
+\solution
+$(Z, C)$ is the only unstable pair.
+
+(Each of the hospitals get its second choice,
+so a pair $(h, d)$ can be unstable only if doctor $d$ is hospital $h$'s first choice.
+So the only potentially unstable pairs are $(X, A)$, $(Y, B)$, and $(Z, C)$.
+These are the pairs $(h, d)$ where hospital $h$ prefers doctor $d$ to its matched doctor.
+Among these,
+pairs $(X, A)$ and $(Y, B)$ are not unstable, because $A$ and $B$ are matched to their first choices.
+But pair $(Z, C)$ is unstable, because $C$ is matched to his or her last choice.)
+
+\exercise \emph{(Gale-Shapley practice)}
+Consider executing the Gale-Shapley algorithm (hospitals-propose, as described in the lecture notes)
+on the input from Exercise~\ref{matching: prob: instance}.
+Can there be more than three iterations before the algorithm halts?
+
+\solution
+No.  Each hospital has a different first choice,
+so after the first three iterations,
+all hospitals are matched.
+
+\exercise
+\emph{(Gale-Shapley practice. Similar to the example on Page 173 of \JEGreedy.)}
+Show an execution of the Gale-Shapley (hospitals-propose) algorithm 
+on the input from Exercise~\ref{matching: prob: instance}
+modified so that the hospitals are $A, B, C$ and the doctors are $X, Y, Z$.
+
+\solution
+
+1. Hospital $A$ makes an offer to doctor $Z$.  $Z$ accepts.  Current matching is $\{(A, Z)\}$.
+
+2. Hospital $B$ makes an offer to doctor $X$.  $X$ accepts.  Current matching is $\{(A, Z), (B, X)\}$.
+
+3. Hospital $C$ makes an offer to doctor $X$.  $X$ rejects $C$.  Matching is unchanged.
+
+4. Hospital $C$ makes an offer to doctor $Z$.  $Z$ accepts $C$ and rejects $A$.  Current matching is $\{(B, X), (C, Z)\}$.
+
+5. Hospital $A$ makes an offer to doctor $Y$.  $Y$ accepts.  Final matching is  $\{(A, Y), (B, X), (C, Z)\}$.
+
+\exercise\label{matching: prob: before gale shapley}\emph{(Practice with another algorithm)}
+In 1951, before Gale and Shapley proposed their algorithm, a different algorithm was in use.  
+For instances with $n=3$, that algorithm is shown in Figure~\ref{matching: fig: other alg}.
+What is the output of that algorithm on the input from Exercise~\ref{matching: prob: instance}?
+
+\begin{figure}
+\begin{myframed}
+
+\begin{steps}
+  \step For each pair $(i,j)$ in $\langle (1,1), (1,2), (2,1), (1,3), (3,1), (2,2), (2,3), (3,2), (3,3) \rangle$, do:
+
+  \begin{steps}
+    \step Consider those hospital/doctor pairs $(h, d)$ such that $d$ is $h$'s $i$th choice,
+    $h$ is $d$'s $j$th choice, and neither $h$ nor $d$ are yet matched.
+    For each such pair $(h, d)$, match $h$ to $d$.
+  \end{steps}
+
+  \step Return the matched pairs.
+\end{steps}
+
+\end{myframed}
+\caption{In 1951, before Gale and Shapley proposed their algorithm, a different algorithm was in use.  
+  For instances with $n=3$, the algorithm is shown above.}\label{matching: fig: other alg}
+\end{figure}
+
+\solution
+First, here is the input in the form of a table of the ranks $(i, j)$ for each hospital/doctor pair:
+\[
+\begin{array}{|r|ccc|} \hline
+   & A & B & C \\ \hline
+  X & (1,3) & (2,1) & (3,1) \\
+  Y & (3,2) & \underline{(1,2)} & (2,3)\\
+  Z & (2,1) & (3,3) & \underline{(1,2)} \\ \hline
+\end{array}
+\]
+
+% [review 2026-09-27] fix: the entry (1,3) described is for hospital X and doctor A (row X, column A); Y is a hospital (was "doctor $Y$")
+(For example, $X$ ranks $A$ first, while $A$ ranks $X$ third, so the entry for hospital $X$ and doctor $A$ is $(1, 3)$.)
+
+In the first iteration, when $(i, j) = (1, 1)$, the algorithm doesn't match any pairs
+(because there are none with those ranks).
+In the second iteration, when $(i, j) = (1, 2)$, the algorithm matches $Y$ to $B$ and $Z$ to $C$.
+In the third iteration, when $(i, j) = (2,1)$, the algorithm doesn't match any pairs
+(because $B$ and $Z$ are already matched).
+In the fourth iteration, when $(i, j) = (1,3)$, the algorithm matches $X$ to $A$.
+After that, no more matches are made
+(because everybody is already matched).
+
+The algorithm returns matching $\{(X, A), (Y, B), (Z, C)\}$.
+In this case, 
+each hospital is matched to his first choice, so cannot be in any unstable pair.
+So there are no unstable pairs, and the matching is stable.
+
+
+\exercise\label{matching: exercise: girl pessimal}\emph{(prove Doctor-pessimality)}
+Section~\ref{matching: sec: hospital optimal} shows that the Gale-Shapley algorithm (with hospitals proposing) outputs a hospital-optimal matching.
+In this exercise you will show that the matching is \emph{doctor-pessimal},
+defined as follows (in the terminology from Section~\ref{matching: sec: hospital optimal}).
+Fix any Stable Matching instance $I$.
+For any doctor $d$, let $\worst d$ denote $d$'s least-preferred feasible hospital.
+A stable matching is \emph{doctor-pessimal} if it matches each doctor $d$ to $\worst d$.
+(In this case the matching must be $\{(\worst d, d) : d\in\{1,2,\ldots,n\}\}$,
+but note that a-priori this set of $n$ pairs might not be a matching, or might not be stable.)
+
+Prove the following lemma.  Hint: use hospital-optimality (Lemma~\ref{matching: lemma: hospital optimal}).
+
+\begin{lemma}[doctor pessimality; \KT p.\,11 (1.8)]\label{matching: lemma: doctor pessimal}
+  The matching output by the Gale-Shapley algorithm (hospitals-propose) is doctor-pessimal.
+\end{lemma}
+
+\solution
+\begin{longFormProof}
+  \step Assume for contradiction that some execution outputs a matching $M$ that isn't doctor pessimal.
+  \step Let $(h, d)$ be a matched pair in $M$ such that $h\ne \worst d$.  Let $h' = \worst d$.
+  \step Let $H'$ be a stable matching that matches $h'$ and $d$.
+  ($H'$ exists by definition of $h'=\worst d$.)
+  \step By Lemma~\ref{matching: lemma: hospital optimal}, $M$ is hospital-optimal, so $d=\best h$,
+  and $h$ prefers $d$ to its matched doctor in $H'$.
+  \step Since $H'$ is stable, $d$ must prefer his or her match in $H'$ (that is $h'$) to $h$.
+  \step Both $h$ and $h'$ are feasible for $d$, so this contradicts that $h'=\worst d$.
+\end{longFormProof}
+
+\exercise \emph{(Implement Gale-Shapley)}
+ Do the following Hacker-Rank challenge (implement the algorithm):
+\url{https://www.hackerrank.com/nealeyoung-algs101-stable-matching}.
+
+\solution 
+\pythonCode{stable_matching.py}
+
+\paragraph{External exercises with solutions}
+
+\begin{itemize}
+
+\item \KT:
+  Page 19, Solved Exercises 1 (reducing another problem to \prob{Stable Matching})
+  and 2 (a variant of \prob{Stable Matching}).
+
+\end{itemize}
+
+\subsection{Exercises without solutions}
+
+\exercise\emph{(Stable matching definition)}
+Describe a specific instance $I$ of Stable Matching with $n=3$
+that has only one stable matching.
+Describe the stable matching. Explain clearly why it is stable.
+Explain clearly why no other matching is.
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Another algorithm, proof problem 1)}
+Does the algorithm in Exercise~\ref{matching: prob: before gale shapley}
+return a \emph{perfect} matching for every input with $n=3$?
+If so, give a long-form proof that it does.
+If not, give a counter-example: describe a particular \prob{Stable Matching} instance with $n=3$
+and show that the algorithm does not give a perfect matching for that instance.
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Another algorithm, proof problem 2)}
+  Consider the following lemma and proof about the algorithm in Exercise~\ref{matching: prob: before gale shapley}:
+  
+\begin{lemma}
+  For any execution of this algorithm, if it returns a perfect matching $M$, then $M$ is stable.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any execution of the algorithm that returns a perfect matching $M$.
+
+  \begin{block}\label{matching: ZZZ}
+
+    \step Consider any pair $(h, d)$.
+
+    \begin{block}\label{matching: WWW}
+      % [review 2026-09-27] fix: the matching is M, not H (was "unstable for $H$"); H is not defined in this proof
+      \step Suppose for contradiction that $(h, d)$ is unstable for $M$.
+      
+      \step Let $d'$ and $h'$ be the respective matches of $h$ and $d$ in $M$ (they exist, as $M$ is perfect).
+
+      \step Because $(h, d)$ is an unstable pair, $h$ ranks $d$ above $d'$.
+
+      \step So, by inspection of the alg.~(Line 1), it considered the pair $(h, d)$ before the pair $(h, d')$. 
+
+      \step\label{matching: mnm} So, when the algorithm considered the pair $(h, d)$, hospital $h$ was not yet matched.
+
+      \step Likewise, since $(h, d)$ is unstable for $M$, doctor $d$ ranks $h$ above $h'$.
+
+      \step So, by inspection of the alg.~(Line 1), it considered the pair $(h, d)$ before the pair $(h', d)$. 
+
+      \step\label{matching: wnm} So, when the algorithm considered the pair $(h, d)$, doctor $d$ was not yet matched.
+
+      \step By Steps~\ref{matching: mnm} and~\ref{matching: wnm},
+      when the algorithm considered $(h, d)$, neither $h$ nor $d$ were matched.
+
+      \step So, by inspection of the algorithm, it must have matched $h$ to $d$ in that iteration.
+
+      \step But once a pair is matched, it stays matched, so $(h, d)$ is in $M$.
+
+      \step This is a contradiction, as no matched pair is unstable.
+    \end{block}
+    \step By Block~\ref{matching: WWW}, $(h, d)$ is not unstable for $M$. 
+  \end{block}
+  \step By Block~\ref{matching: ZZZ}, no pair is unstable for $M$.  That is, $M$ is stable.
+\end{longFormProof}
+
+What is the first line in this proof that makes an assertion that is not necessarily true?
+Describe an example (an input and an execution of the algorithm on that input)
+for which the assertion fails.
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Another algorithm, proof problem 3)}
+Does the algorithm in Exercise~\ref{matching: prob: before gale shapley}
+return a \emph{stable} matching for every input with $n=3$?
+If so, prove it.  If not, give a counter-example: describe a particular \prob{Stable Matching} instance with $n=3$
+and show that the algorithm does not give a stable matching for that instance.
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Gale-Shapley proof problem)}
+Prove or disprove the following assertion:
+
+\emph{In any execution of the hospitals-propose \prob{Stable Matching} algorithm,
+  there is some doctor that does not receive an offer before the last iteration.
+  (Note: we mean the algorithm described in the lecture notes
+  --- in each iteration, one hospital makes an offer to one doctor.)}
+
+If the assertion is false, describe a counter-example:
+a particular instance, and an execution of the algorithm on that instance,
+in which every doctor receives an offer before the start of the last iteration.
+If the assertion is true, give a long-form proof.
+You may reuse without proof any observations or lemmas from the lecture notes
+(but cite the observation or lemma by number when you do, to let the reader know).
+
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Gale-Shapley run-time)}
+Let $I$ be any instance of the Stable Matching problem
+in which all $n$ hospitals have the exact same preferences.
+As a function of $n$,
+how many iterations will any execution of the Gale-Shapley algorithm
+(hospitals-propose, as described in the lecture notes)
+do on input $I$?
+Explain your answer clearly.
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\exercise\emph{(Gale-Shapley proof problem)}
+Prove or disprove the following assertion:
+
+\emph{
+  In every execution of the hospitals-propose \prob{Stable Matching} algorithm,
+  there is at most one hospital that makes offers to every doctor.
+  (Note: we mean the algorithm described in the lecture notes
+--- in each iteration, one hospital makes an offer to one doctor.)}
+
+If the assertion is false, describe a counter-example:
+a particular instance, and an execution of the algorithm on that instance,
+in which at least two hospitals make offers to every doctor.
+If the assertion is true, give a long-form proof.
+You may reuse without proof any observations or lemmas from the lecture notes
+(but cite the observation or lemma by number when you do, to let the reader know).
+
+%%%%%%%%%%%%%%%% PROBLEM %%%%%%%%%%%%%%%%%
+
+\paragraph{External exercises without solutions}
+
+\begin{itemize}
+\item \JE Chapter 4 (Page 179), Exercises 9--13
+
+\item \KT (Page 22), Exercises 1--8
+
+\item \LLM (2018)  Page 207, Problems 6.16--6.32
+
+\end{itemize}
+
+\codeSection{
+  stable_matching.py}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

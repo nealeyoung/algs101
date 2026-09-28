@@ -1,0 +1,176 @@
+\section{Interval Partitioning}\label{greedy: sec: interval partitioning}\doHeader{Interval Partitioning}
+
+This example does \emph{not} follow the usual ``make one choice then recurse'' pattern,
+nor is the design motivated by maintaining the greedy invariant.
+The algorithm does build the solution iteratively,
+but we prove optimality of the solution by a combinatorial argument
+(a matching lower bound).
+
+\paragraph{Problem definition.}
+The Interval Partitioning problem is defined as follows:
+
+\begin{mylist}
+\item[\bf input:]
+  A collection of real intervals $I=([s_1, e_1], [s_2, e_2], …, [s_n, e_n])$, with $s_i \le e_i$ for all $i$.
+  % [review 2026-09-27] fix: endpoint was written $t_j$ but the intervals are $[s_j, e_j]$; changed to $e_j$
+  We use $J_j$ to denote $[s_j,e_j]$, and call $J_j$ a \emph{job}.
+  We think of $[s_j, e_j]$ as the time interval the job requires.
+
+\item[\bf output:]
+  A minimum-size partition of $I$ into pairwise-disjoint subsets.
+\end{mylist}
+
+\emph{Pairwise disjoint} means that every two intervals in $S$ are disjoint
+(that is, for every two intervals, their intersection is empty).
+Intuitively,
+we want to partition the jobs into a small number of groups,
+so that in each group no two jobs overlap.
+We can think of this as assigning each job to a server,
+so that each server can do all the jobs assigned to it while doing at most one job at a time.
+We want to minimize the number of servers.
+To build intuition, consider an example (ignore the dotted vertical line for now):
+
+\smallskip
+
+\centerline{
+  \begin{tikzpicture}[scale=0.5]\footnotesize
+  \draw (5,0) -- ++(-2,0) node[anchor=south] {$J_1$} -- ++(-2,0); 
+  \draw (7,1) -- ++(-2,0) node[anchor=south] {$J_2$} -- ++(-2,0); 
+  \draw (10,2) -- ++(-2.5,0) node[anchor=south] {$J_3$} -- ++(-3,0); 
+  \draw (8,0) -- ++(-.75,0) node[anchor=south] {$J_4$} -- ++(-1.25,0); 
+  \draw (12,3) -- ++(-2.75,0) node[anchor=south] {$J_5$} -- ++(-2.75,0); 
+  \draw (13,0) -- ++(-2,0) node[anchor=south] {$J_6$} -- ++(-2,0); 
+  \draw (14,1) -- ++(-1.5,0) node[anchor=south] {$J_7$} -- ++(-1.5,0); 
+  \draw[dotted] (6.6,-0.2) -- ++(0,3.5); 
+\end{tikzpicture}
+}
+
+\smallskip
+
+One correct solution is to partition the jobs by level (as shown above).
+That is, partition $I$ into the following four groups:
+\[\{J_1, J_4, J_6\}, \{J_2, J_7\}, \{J_5\}, \{J_3\}.\]
+
+Recall that the goal is to minimize the number of groups.
+Does this partition, with four groups, do that?
+Note that the four jobs $J_2$, $J_3$, $J_4$, and $J_5$ all share a common point (the dotted vertical line).
+That is, the intersection of their four intervals is non-empty.
+So no two of those jobs can be in the same group.
+So at least four groups are necessary.
+So the above partition is optimal.
+
+\paragraph{Algorithm.}
+We assume the jobs given in order of increasing \emph{start} time, so $s_1 \le s_2 \le \cdots \le s_n$.
+(If not, sort the jobs first in $O(n\log n)$ time.)
+The algorithm considers the jobs in the given order,
+maintaining as it goes a partition of the jobs seen so far.
+The partition is initially empty.
+For each job $J_j$, if there is already a group that $J_j$ can be added to
+(where $J_j$ is disjoint from all jobs already in that group),
+it adds $J_j$ to that group.
+Otherwise, it starts a new group containing just $J_j$:
+
+\begin{myframed}
+  \begin{steps}
+  \item[{\textsf{partition}$(I=\{J_1, J_2, \ldots, J_n\})$:}]
+    \comment{Assume jobs are ordered by start time}
+    \step initialize $P = \emptyset$.  \comment{\ldots initialize $p$ to the empty partition}
+    \step for $j=1$ to $n$ do:
+    \step~~~if there is a group $g\in P$ such that $J_j$ is disjoint from every job $J_i$ in $g$:
+    \step~~~~~~set $g = \{J_j\} \cup g$ \comment{\ldots add job $J_j$ to group $g$}
+    \step~~~else:
+    \step~~~~~~set $P = \big\{\{J_j\}\big\} \cup P$\comment{\ldots add a new group $\{J_j\}$ to $P$}
+    \step return $P$
+  \end{steps}
+\end{myframed}
+
+\paragraph{Correctness}
+\begin{lemma}
+  The algorithm is correct.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any execution of the algorithm on a \prob{Interval Partitioning} instance $I$.  
+
+  \step Let $j'$ be the last iteration in which a new group was added to $P$ in Line 6 of the algorithm.
+
+  \step Consider the time just before Line 6 was executed in iteration $j'$.
+
+  \step Let $P'$ be the partition $P$ at that time.  (So $P'$ doesn't include the new group $\{J_{j'}\}$.)
+
+  \step Each group $g\in P'$ contains some job, say $J_{c(g)}$, that overlaps $J_{j'}$
+  \\ because otherwise the algorithm (Lines 3 and 4) would have added $J_{j'}$ to group $g$.
+
+  \step So, for each $g\in P'$, the interval $[s_{c(g)}, e_{c(g)}]$ of job $J_{c(g)}$ overlaps the interval $[s_{j'}, e_{j'}]$ of $J_{j'}$.
+
+  \step The jobs are sorted by start time, so each start time $s_{c(g)}$ is at most the start time $s_{j'}$ of $J_{j'}$.
+
+  \step Hence each interval $[s_{c(g)}, e_{c(g)}]$ contains that start time $s_{j'}$.
+
+  \step Hence, there are $|P'|+1$ jobs (the jobs $\{J_{c(g)} : g\in P'\}$ and $J_{j'}$) that all contain $s_{j'}$.
+
+  \step In any valid partition, no pair of those $|P'|+1$ jobs can be in the same group (each pair overlaps).
+
+  \step Hence, in \emph{any} valid partition, the number of groups is at least $|P'|+1$.
+
+  \step After iteration $j'$, the algorithm doesn't add groups to $P$, so its final partition has size $|P'|+1$.
+
+  \step So any valid partition has as many groups as the partition returned by the algorithm.
+\end{longFormProof}
+
+Exercise~\ref{greedy: exercise: interval partitioning} % (Section~\ref{greedy: sec: exercises})
+asks you to consider whether the algorithm would work
+if it were to consider the jobs by increasing \emph{end time} (instead of start time).
+
+\subsection{Exercises}
+
+\exercise\label{greedy: exercise: interval partitioning}
+Modify the \prob{Interval Partitioning} algorithm in Section~\ref{greedy: sec: interval partitioning}
+so that it considers the jobs in order of increasing \emph{end time} (instead of start time).
+Consider the following invariant:
+\begin{quote}
+  \textsf{invariant:}
+  \em
+  For any two groups $g$ and $g'$ in the current partition $P$,
+  the last job added to $g$ and the last job added to $g'$ overlap.
+\end{quote}
+
+\begin{enumerate}[label=(\alph*)] 
+\item
+  Prove that, in any execution of the algorithm, if the invariant holds throughout,
+  then the output is an optimal solution.
+\item
+  Is the algorithm correct?
+  Prove that it is, or describe a counter-example
+  (an input for which the algorithm fails).
+\end{enumerate}
+
+\paragraph{External exercises without solutions}
+\begin{itemize}
+  \item \LLM Exercise 10.21 (Page 459). \JE Chapter 4, Exercise 5
+  \end{itemize}
+  
+
+\subsection{External sources on \prob{Interval Partitioning}}
+
+\begin{itemize}
+\item \KT Section 4.2 (``Scheduling All Intervals'') and \KWSlides (``Interval Partitioning'')
+\end{itemize}
+
+% This gives us the following iterative algorithm:
+
+% 1. Assume (by sorting the jobs if necessary) that the jobs are ordered by increasing ending time.
+% 2. Initialize A to the empty set.
+% 3. For each job J_d, in order of increasing ending time, do:
+% 4.   If J_d conflicts with any job in A, skip it.
+% 5.   Otherwise, add it to A.
+% 6. Return A.
+
+% It follows from the "general claim" above that the algorithm maintains the desired invariant.  Does this mean the algorithm is correct?  Not quite.  We know the invariant holds at the end.  So, the solution A at termination is a subset of some optimal solution S*.  But is A in fact an _entire_ optimal solution?  
+
+% Suppose for contradiction that A is a proper subset of S*.  Then there is at least one job, say J_d, that is in S* but not A.  The algorithm considered J_d in some iteration, and when it did, it did not add it (because it is not in A now).  So, that job must have a conflict with some job in A.  But A is a subset of S*, so that job also has a conflict with some job in S*.  This contradicts that S* is an independent set.  So we can conclude that A is not a proper subset of S*.  So it must equal S*.  So A is an optimal solution.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

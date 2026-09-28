@@ -1,0 +1,439 @@
+
+
+\section{Huffman Coding}\label{greedy: sec: huffman coding}\doHeader{Huffman Coding}
+
+Here is another example where the algorithm makes one greedy choice, then recurses.
+
+\paragraph{Problem definition.}
+The \prob{Huffman Coding} problem is defined as follows:
+
+\begin{mylist}
+\item[\bf input:]
+  An increasing sequence $p=(p_1, \ldots, p_n)$ of \emph{frequencies}
+  ($0\le p_1 \le p_2 \le \cdots \le p_n$).
+
+\item[\bf output:]
+  A rooted binary tree $T$ whose $n$ leaves consist of the $n$ frequencies.
+  The tree should have minimum cost, defined as
+  \(\cost T = \sum_{i=1}^n p_i \depth T {p_i}\),
+  where $\depth T {p_i}$ is the depth of the leaf for $p_i$ in $T$.
+  The cost is the (weighted) average leaf depth.
+\end{mylist}
+
+The problem models compressing a given file in a certain way.
+(See e.g.~\href{https://en.wikipedia.org/wiki/Huffman_coding}{here}.)
+
+% Given an instance $p$,
+% define a rooted binary tree $T$ to be a \emph{feasible solution (for $p$)}
+% if it has $n$ leaves, each assigned a frequency as described above.
+% A feasible $T$ is correct if it has minimum cost.
+% Let $\opt p $ be the minimum cost of any feasible solution:
+% \(\opt p  ~=~\min\{ \cost T : T \emph{ is feasible for } p\}\).
+% Given any feasible solution $T$,
+% say that $T$ is \emph{optimal (for $p$)} if $|T|=\opt p $.
+% So, given $p$, the problem is to find a feasible solution of minimum cost,
+% that is, an optimal solution.
+
+It's not obvious a-priori what a greedy algorithm for this problem should look like,
+because a solution $T$ is not just a subset of objects that can be chosen one by one.
+But we apply the same basic idea:
+to start, we look for some piece that must be ``part'' of an optimal tree.
+Let's consider some examples.
+Our goal is to discover properties that an optimal solution should have.
+
+Consider an example where $p=(0.5, 0.5)$.
+The optimal tree $T$ has two leaves, each of depth 1, and has cost 1.
+In fact, this tree is optimal for any instance with $n=2$ frequencies.
+Next consider an example where $p=(0.25, 0.25, 0.5)$.
+We should use the tree $T$ with $n=3$ leaves,
+whose two leftmost leaves are at depth 2 (holding $p_1$ and $p_2$, respectively),
+and with $p_3$ as the right child of the root.
+(Why is that?)
+This way the tree has cost $.5\cdot 1 +0.25\cdot 2+0.25\cdot 2 = 1.5$
+
+\newcommand{\calT}{{\cal T}}
+\newcommand{\Trees}{\ensuremath{{\cal S}}}
+
+Fix an arbitrary instance $p$.
+Define $\Trees$ to be the set of trees $T$ for $p$
+in which the two leaves $p_1$ and $p_2$ (with lowest frequencies) are siblings. 
+We argue next that there must be an optimal tree for $p$ that is in $\Trees$.
+
+First, does an optimal tree $T$ always have to have \emph{some}
+pair of leaves that are siblings?
+Yes  --- consider any deepest leaf $\ell$ in $T$;
+if $\ell$ doesn't have a sibling, then its parent only has one child.
+So we could replace the parent by $\ell$ and get a better tree.
+
+\begin{observation}\label{greedy: siblings}
+  There is an optimal tree $T$ for $p$ in which two of the deepest leaves are siblings.
+\end{observation}
+
+Next we show by an exchange argument that
+these siblings may as well be $p_1$ and $p_2$.
+
+\begin{lemma}\label{greedy: lemma: huffman 1}
+  There is an optimal tree $T$ for $p$ that is in $\Trees$ (i.e., $p_1$ and $p_2$ are siblings in $T$).
+\end{lemma}
+\begin{shortFormProof}
+  The proof is an exchange argument.
+  % [review 2026-09-27] fix: the Observation only gives SOME optimal tree with two deepest leaves as siblings, not every optimal tree; $T$ is now chosen to be such a tree
+  Let $T$ be an optimal tree in which two deepest leaves are siblings
+  (one exists by Observation~\ref{greedy: siblings}).  % Let $d$ be the maximum leaf depth in $T$.
+  Let $p_i$ and $p_j$ (with $i<j$) be two deepest leaves that are siblings.
+  Let tree $T'$ be obtained from $T$ by exchanging $p_1$ and $p_i$.
+  By the following calculation, $\cost{T'} \le \cost T$:
+  \begin{align*}
+    \cost {T'} - \cost T ~
+    &= ~ p_1 [\depth {T'} {p_1} - \depth {T} {p_1}]
+      % [review 2026-09-27] fix: stray "d" before \depth
+      + p_i [\depth {T'} {p_i} - \depth {T} {p_i}]
+    \\
+    &= ~ p_1 [\depth {\,T\,} {p_i} - \depth {T} {p_1}]
+      + p_i [\depth {\,T\,} {p_1} - \depth {T} {p_i}] \\
+    &= ~ (p_1-p_i) [\depth {T} {p_i} - \depth {T} {p_1}] \\
+    &\le ~ 0.
+  \end{align*}
+  The last line follows from $p_1 \le p_i$ and 
+  and $\depth T {p_i} \ge \depth T {p_1}$.
+
+  Next, let $T''$ be the tree obtained from $T'$ by exchanging $p_2$ and $p_j$.
+  Note that $p_2 \le p_j$ (as $j > i \ge 1$), and $\depth T {p_j} \ge \depth T {p_2}$,
+  so the same calculation as above shows $\cost {T''} \le \cost{T'}$.
+  From this it follows that $T''$ is also optimal.
+  And since $p_1$ and $p_2$ in $T''$
+  replace $p_i$ and $p_j$ in $T$,
+  leaves $p_1$ and $p_2$ are siblings in $T''$.
+  So $T''\in\Trees$.
+\end{shortFormProof}
+
+By Lemma~\ref{greedy: lemma: huffman 1}, $p$ has an optimal tree in $\Trees$.
+So it's enough to find a tree that is optimal among trees in $\Trees$?
+How do we do that?
+The next key insight is that in any tree $T\in\Trees$,
+\emph{we can think of the 3-node subtree consisting of $p_1$, $p_2$, and their parent
+  as a single leaf having frequency $p_1 + p_2$.}
+
+Next we make this intuition precise.
+
+\begin{definition}%\label{greedy: bijection}
+  Define $p'$ to be the instance 
+  obtained from instance $p$ by removing the two smallest frequencies $p_1$ and $p_2$,
+  replacing them by a single frequency $p_1+p_2$, 
+  and reordering the frequencies as necessary. 
+  So $p'$ has $n-1$ frequencies.
+
+  Define $\calT'$ to be the set of possible trees for $p'$.
+
+  Given any $T\in\Trees$,
+  let $R$ be the tree obtained from $T$
+  by replacing the leaves $p_1$, $p_2$, and their parent (a 3-node subtree)
+  by a single new leaf with frequency $p'_i = p_1+p_2$.
+  Call the process of obtaining $R$ from $T$ in this way
+  \emph{merging $p_1$ and $p_2$ in $T$}.
+
+  Let $\mu:\Trees \rightarrow \calT'$ be the function
+  where $\mu(T) = R$, where $R$ is obtained by merging $p_1$ and $p_2$ in $T$.
+\end{definition}
+The merging process is invertible as follows.
+Given any tree $R\in\calT'$,  obtain tree $T$ from $R$
+by finding the leaf with the frequency $p_1+p_2$ in $R$,
+and replacing it by a new node having two new children: leaves $p_1$ and $p_2$.
+Call the process of obtaining $T$ this way \emph{splitting $p'_i$ in $R$}.
+If we then merge $p_1$ and $p_2$ in $T$, we get $R$ back.
+That is, $\mu(T) = R$ and $T = \mu^{-1}(R)$.
+
+In short, $\mu$ is a bijection between the set $\Trees$ of trees for $p$
+(having $p_1$ and $p_2$ as siblings)
+and the set $\calT'$ of trees for $p'$.
+So solutions for $p$ (of the kind that we are after)
+correspond one-to-one with solutions for $p'$.
+But does the bijection preserve the \emph{cost}?
+For each $T\in\Trees$, if $R=\mu(T)$,
+is it the case that $\cost T = \cost R$?
+By considering an example, we can see that it's not the quite the case.
+However, the function just \emph{shifts} the cost in a predictable way: it decreases it by $p_1+p_2$:
+
+\begin{observation}\label{greedy: bijection}
+  For each tree $T\in\Trees$ and tree $R=\mu(T)$, $\cost T = \cost {R} + p_1 + p_2$.
+\end{observation}
+
+To see why the observation holds, let $d$ be the depth of $p_1$ and $p_2$ in $T$.
+The leaves $p_1$ and $p_2$ in $T$ contribute $d\cdot (p_1+p_2)$ to $\cost T$,
+whereas the leaf $p'_i$ in $R$ contributes $(d-1)\cdot(p_1+p_2)$ to $\cost {R}$.
+(And otherwise $T$ and $R$ are identical.)
+
+\smallskip
+In short, the function $\mu$ (merging $p_1$ and $p_2$)
+is a bijection (a one-to-one mapping, a.k.a.~correspondence)
+between $\Trees$ (the trees for $p$ in which $p_1$ and $p_2$ are siblings)
+and $\calT'$ (the trees for $p'$).
+Furthermore, the bijection preserves relative cost:
+given two trees $T_1$ and $T_2$ for $p$,
+it is the case that
+$\cost{T_1} \le \cost{T_2}$
+if and only if
+$\cost{ R_1} \le \cost{R_2}$,
+where $R_1 = \mu(T_1)$ and $R_2 = \mu(T_2)$.
+
+It follows that a tree $T\in\Trees$ is optimal for $p$
+if and only if
+$\mu(T)$ is optimal for $p'$.
+So, to compute an optimal tree $T$,
+it \emph{is} enough to compute an optimal tree $R$ for $p'$,
+and then take $T=\mu^{-1}(R)$.
+(That is, obtain $T$ by splitting its leaf of frequency $p_1+p_2$.)
+This is the gist of the next lemma.
+
+Recall that $p$ is an arbitrary instance with $n\ge 2$,
+and $p'$ is the instance obtained from $p$ by replacing $p_1$ and $p_2$ with $p_1+p_2$.
+The lemma says that, to compute an optimal tree for $p$,
+it suffices to compute an optimal tree for $p'$, then split $p_1+p_2$:
+
+\begin{lemma}\label{greedy: gc}
+  Let $R$ be any optimal tree for $p'$. 
+  Let $T = \mu^{-1}(R)$ be obtained by splitting the leaf of frequency $p_1+p_2$ in $R$.
+  % be the tree for $p$ obtained from $R$
+  % by replacing the leaf that has frequency $p'_i$
+  % by a node having two children,
+  % both leaves, with frequencies $p_1$ and $p_2$.
+  Then $T$ is optimal for $p$.
+\end{lemma}
+\begin{longFormProof}
+  \step Consider any $p$, $p'$, $R$, and $T=\mu^{-1}(R)$ as defined above.
+  We need to show $T$ is optimal for $p$.
+
+  \step Let $T^*$ be an optimal tree for $p$ in $\Trees$.
+  ($T^*$ exists by Lemma~\ref{greedy: lemma: huffman 1}.)
+
+  \step Let $R^* = \mu(T^*)$ be obtained by contracting $p_1$ and $p_2$ in $T^*$.
+  % be the tree obtained from $T^*$
+  % by replacing the leaves for $p_1$ and $p_2$ and their parent
+  % by a single leaf, and assigning that leaf the frequency $p'_i = p_1+p_2$.
+
+  \step[greedy: merge] By Observation~\ref{greedy: bijection}, $\cost {T^*} = \cost {R^*} + p_1 + p_2$,
+  and $\cost {T} = \cost {R} + p_1 + p_2$. 
+
+  \step[greedy: opt] Tree $R$ is optimal for $p'$, so $\cost R \le \cost {R^*}$. 
+
+  \step By Steps~\ref{greedy: merge} and~\ref{greedy: opt},
+  \( \cost T = \cost R + p_1 + p_2 \le \cost {R^*} + p_1 + p_2 = \cost {T^*}\).
+
+  \step That is, $\cost T \le \cost {T^*}$.
+  
+  \step Since $T^*$ has minimum cost for $p$,
+  it follows that $T$ does also.  So $T$ is optimal for $p$.
+\end{longFormProof}
+
+This gives us the following recursive algorithm:
+
+\newcommand{\Huffman}{\textsf{Huffman}\xspace}
+
+\begin{myframed}
+  \begin{steps}
+  \item[$\Huffman\big(p=(p_1,p_2,\ldots,p_n)\big)$:]
+    \comment{\normalsize --- recursive algorithm for \prob{Huffman Coding}  ---}
+    \step If $n = 1$: return the tree consisting of a single leaf $p_1$.
+    \step Let $p'$ be the instance obtained from $p$ by replacing $p_1$ and $p_2$ by $p_1+p_2$ and reordering.
+    \step Let $R = \Huffman(p')$.
+    \comment{(Recursively compute a tree for $p'$)}
+    \step Obtain new tree $T=\mu^{-1}(R)$ for $p$
+    by splitting the leaf of frequency $p_1+p_2$ in $R$
+
+    (replacing leaf $p_1+p_2$ by a new node with two new children, leaves $p_1$ and $p_2$).
+
+    \step Return $T$.
+  \end{steps}
+\end{myframed}
+
+The correctness of the recursive algorithm follows from Lemma~\ref{greedy: gc} by a simple induction.
+
+\begin{lemma}
+  The recursive algorithm is correct. 
+\end{lemma}
+\begin{longFormProof}
+  \step We show by induction on $n=|p|$ that \Huffman is correct for all instances $p$.
+
+  \step[greedy: base] For any instance with $n=1$, the one-node tree is optimal, so the algorithm is correct.
+  \begin{block}[greedy: ind]
+    % [review 2026-09-27] fix: inductive step needs $n \ge 2$ (for $n=1$ the algorithm returns at Line 1 and $p'$ is undefined); $n\ge 1$ changed to $n\ge 2$
+    \step Consider any $p$ with $n\ge 2$.
+    \begin{block}[greedy: if]
+      \step Assume that the algorithm is correct for all smaller instances.
+      \step Consider the execution of the algorithm on $p$.
+      
+      \step Let $p'$, $R= \Huffman(p')$, and $T=\mu^{-1}(R)$
+      be as computed in the algorithm.
+
+      \step By the inductive assumption, $R$ is optimal for the smaller instance $p'$.
+
+      \step So, by Lemma~\ref{greedy: gc}, the solution $T = \mu^{-1}(R)$
+      % [review 2026-09-27] fix: "optimal for $T$" should be "optimal for $p$" (the instance)
+      returned by $\Huffman(p)$ is optimal for $p$.
+    \end{block}
+    \step By Block~\ref{greedy: if}, 
+    if \Huffman is correct for all smaller instances,
+    then it is correct for $p$.
+  \end{block}
+  % [review 2026-09-27] fix: matches the inductive step, which covers $n \ge 2$; $n\ge 1$ changed to $n\ge 2$
+  \step By Block~\ref{greedy: ind}, for any $p$ with $n\ge 2$,
+  if \Huffman is correct for smaller instances,
+  it is correct for $p$.
+  \step By Step~\ref{greedy: base},  \Huffman is correct for all instances of size 1.
+  \step So, inductively,  \Huffman is correct for all instances.
+\end{longFormProof}
+
+We proved correctness of the recursive algorithm using
+the optimal-substructure property for the greedy choice.
+We showed how to \emph{reduce} the problem of computing an optimal tree for $p$
+to the problem of computing an optimal tree for the smaller instance $p'$.
+
+The algorithm is tail recursive except for the step of splitting the $p_1+p_2$.
+Try executing it on few examples to get intuition.
+We can unwind the tail recursion to get the following iterative algorithm:
+
+\newcommand{\iHuffman}{\textsf{iHuffman}\xspace}
+
+\begin{samepage}
+  \begin{myframed}
+    \begin{steps}
+    \item[$\iHuffman\big(p=(p_1,p_2,\ldots,p_n)\big)$:]
+      \comment{\normalsize --- iterative algorithm for \prob{Huffman Coding}  ---}
+      \step Initialize $C\leftarrow(t_1, t_2, \ldots, t_n)$,
+      where $t_i$ is a subtree consisting of a single leaf $p_i$.
+      \step For $i\leftarrow 1,2,\ldots,n-1$:
+      \begin{block}
+        \step Remove the two minimum-frequency subtrees $t_1$ and $t_2$ from $C$.
+        \step Construct a new subtree $t'$,
+        whose root is a new node with left and right subtrees $t_1$ and $t_2$.
+
+        The frequency of $t'$ is the sum of the frequencies of $t_1$ and $t_2$.
+        \step Insert $t'$ into $C$, and reorder the trees in $C$ by increasing frequency.
+      \end{block}
+      \step Return the single tree $t_1$ in $C$.
+    \end{steps}
+  \end{myframed}
+\end{samepage}
+
+The iterative algorithm maintains a collection $C=(t_1, t_2, \ldots, t_k)$ of subtrees.
+Initially, there are $n$ subtrees: subtree $t_i$ consists of a single leaf with frequency $p_i$.
+It maintains the \emph{frequency} of each subtree,
+which is defined to be the sum of the frequencies of its leaves.
+It keeps the collection $C$ ordered by increasing frequency.
+The algorithm repeats the following step:
+it removes the two minimum-frequency subtrees $t_1$ and $t_2$ from $C$,
+then replaces them by a single new subtree $T$,
+formed by a new root, having left subtree $t_i$ and right subtree $t_j$.
+It stops after $n-1$ iterations,
+when the collection has just one tree, and returns that tree.
+
+\paragraph{What is the greedy invariant?}
+If we tried to prove directly that the iterative algorithm is correct,
+we would do so by showing that it maintains the greedy invariant.
+In this case, that would be:
+
+\centerline{{\sf greedy invariant:}
+  \emph{There is an optimal tree $T$ that includes each subtree $t_i$ in $C$.}}
+
+\medskip
+
+One can prove that (i) this invariant is maintained in each iteration,
+and (ii) after the final iteration (when there is just one tree $t_1$ in $C$)
+the invariant implies that $t_1$ is an optimal tree for $p$.
+The proof of (i) generalizes the proof of Lemma~\ref{greedy: lemma: huffman 1}.
+We leave the proofs of (i) and (ii) as an exercise.
+
+\paragraph{Run time.}
+By storing the subtrees in $C$ in a heap, it is easy to obtain run time $O(n\log n)$.
+It is possible to reduce this to linear, $O(n)$ by the following clever observation.
+The initial frequencies are given in increasing order.
+In the sequence of subtrees that are produced and inserted into $C$,
+the frequencies increase with time.  That is, each subtree's frequency
+is at least as large as the frequency of the previously produced subtree.
+So, instead of holding $C$ in a heap,
+we can store $C$ as two ordered lists:
+the first containing the original singleton subtrees $t_i, t_{i+1}, \ldots, t_n$ in $C$
+and the second containing the other subtrees (each with more than one node) in $C$.
+When we create a new subtree, we add it to the end of the second list (in constant time).
+Then we can find the minimum-frequency subtree in $C$ in constant time
+--- it will be the first subtree on one of these two lists.
+%
+Here is what we have figured out:
+
+\begin{theorem}[Huffman]
+  There is an $O(n)$-time algorithm for \prob{Huffman Coding}
+  (or $O(n\log n)$ time if the given frequencies are not sorted).
+\end{theorem}
+
+
+% \paragraph{How the iterative algorithm follows from the recursive algorithm.} 
+% To get the iterative algorithm from the recursive algorithm,
+% we first modify the recursive algorithm to make it fully tail-recursive.
+% To do that, we make it precompute the subtree for each $p_i$ ``in advance'',
+% and pass these subtrees along with each recursive call.
+% For example, in the top-level call,
+% we know that in the final tree,
+% the two frequencies $p_1$ and $p_2$ will be siblings
+% in a 3-node subtree, say $t'$, with total frequency $p_1+p_2$.
+% Instead of waiting until the end to build that 3-node subtree $t'$
+% and insert it into the tree,
+% we build $t'$ in advance, and pass it down to the recursive call.
+% When the recursive call builds its tree, it just uses $t'$,
+% instead of the single leaf with frequency $p_1+p_2$.
+
+% Generally, at any point in the original algorithm,
+% when it constructs some new frequency $p_1+p_2$
+% by summing two previously constructed frequencies,
+% we already know what the subtrees for $p_1$ and $p_2$
+% are going to have to be in the end.
+% So, we also know what the subtree for  $p_1+p_2$ will have to be.
+% Inductively, for each frequency that the algorithm constructs,
+% we know, at the time the frequency is constructed
+% what the subtree associated with that frequency is going to end up being.
+% Instead of waiting to after the recursive all ends to construct it,
+% we pass the subtree down into the recursive call, which takes care of it.
+% The pseudo-code for the fully tail-recursive algorithm is below.
+% Initially, the $n$ subtrees $t_1, t_2, \ldots, t_n$ that we pass in
+% are just singleton trees: $t_i$ consists of just one leaf with frequency $p_i$.
+
+% \newcommand{\mHuffman}{\textsf{mHuffman}\xspace}
+
+% \begin{myframed}
+%   \begin{steps}
+%   \item[$\mHuffman\big(p=(p_1,p_2,\ldots,p_n),
+%     C=(t_1,t_2,\ldots,t_n)\big)$:]
+%     \comment{\normalsize --- modified recursive algorithm  ---}
+%     \step \emph{Note: $t_i$ is the ``pre-constructed'' subtree for frequency $p_i$.}
+%     \step If $n = 1$: return the tree $t_1$
+%     \step Let $p'$ be the instance obtained from $p$ by replacing $p_1$ and $p_2$ by $p_1+p_2$ and reordering.
+%     \step Construct new subtree $t$ with a new root and left and right subtrees $t_1$ and $t_2$.
+%     \step Let $C'$ be the collection of subtrees obtained from $C$ by replacing $t_1$ and $t_2$  by $t$ \ldots
+
+%     \hfill \ldots and ordering $C'$ to match $p'$.
+%     \step Return $\mHuffman(p', C')$.
+%   \end{steps}
+% \end{myframed}
+
+% Once we have the recursive algorithm in fully tail-recursive form above,
+% we just unwind the tail recursion.  This gives the iterative algorithm, \iHuffman.
+
+\pythonCode{greedy_algorithms/Huffman.py}
+
+\subsection{Exercises} 
+
+\begin{itemize}
+\item \JE  Chapter 4, Exercises 6--8.
+\item \DPV Chapter 5, Exercises 5.11--5.19, 5.28--5.30.
+\item \CLRS: Exercises in Section 16.3 (Page 436).
+\end{itemize}
+
+\subsection{External sources on \prob{Huffman Coding}}
+\begin{itemize}
+\item \JE Chapter 4.  \KT Chapter 4, Section 4.8. \CLRS Section 16.3
+\end{itemize}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "greedy_algorithms"
+%%% End:

@@ -1,0 +1,94 @@
+
+\section{Subset Sum}\label{dp: sec: subset sum}\doHeader{Subset Sum}
+
+\begin{mylist}
+\item[\bf input:] A sequence $x=(x_1, x_2, \ldots, x_n)$ of non-negative integers, and an integer target $T$.
+\item[\bf output:] \textsf{True} if some subsequence of $x$ sums to $T$, otherwise \textsf{False}.
+
+  (That is, \textsf{True} if there is a subset $S$ of $\{1,2,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$.)
+\end{mylist}
+
+The problem differs from \prob{Making Change} in that each integer can be used at most once.
+In what follows, for any subset $S\subseteq \{1,2,\ldots, n\}$,
+we say the subset \emph{yields $t$} if the corresponding subsequence of $x$ sums to $t$,
+% [review 2026-09-27] fix: the sum ranged over lowercase s, but the subset is S; changed s to S
+that is, if $\sum_{i\in S} x_i = t$.
+%
+The underlying collection of objects we are working with is the collection of subsets of $\{1,2,\ldots,n\}$.
+For our divide-and-conquer approach, we partition this collection into two types of subsets:
+\begin{itemize}
+\item[(A)] Subsets that don't contain $n$.   That is, subsets of $\{1,2,\ldots,n-1\}$.
+\item[(B)] Subsets that do contain $n$. That is, subsets of the form $S=S'\cup\{n\}$
+  % [review 2026-09-27] fix: the subset of {1..n-1} is S', not S; changed S to S'
+  where $S'\subseteq \{1,2,\ldots,n-1\}$.
+\end{itemize}
+
+
+Using this, we reduce our problem to two smaller problems:
+\begin{mylist}
+\item[(i)] There is a type-A subset yielding $T$
+  if and only some subset of $\{1,\ldots,n-1\}$ yields $T$.
+
+\item[(ii)] There is a type-B subset yielding $T$
+  if and only if some subset of $\{1,\ldots,n-1\}$ yields $T-x_n$.
+\end{mylist}
+
+Applying this reasoning recursively gives us the algorithm.  Here it is, using the four steps:
+
+\paragraph{subproblems and recurrence relation.}
+Fix any input $x=(x_1,\ldots,x_n)$ with target $T$.
+For each $i\in\{0,1,\ldots,n\}$ and each target $t\in\{0,1,\ldots,T\}$,
+define
+\[S(i, t) = \begin{cases}
+    \textsf{True} & \text{if there is a subset of $\{1,2,\ldots,i\}$ that yields $t$,} \\
+    \textsf{False} & \text{otherwise}.
+  \end{cases}
+\]
+The final answer is given by $S(n, T)$.
+The recurrence relation is
+% \paragraph{2. The recurrence relation.}
+% \begin{lemma} % $S(i, 0) = \textsf{True}$ for all $i$.  $S(0, t) = \textsf{False}$ for all $t>0$.  For $i, t>0$,
+  \[
+    S(i, t) =
+    \begin{cases}
+      \textsf{True} & \text{ if } t = 0 \text{ and } i=0, \\
+      \textsf{False} & \text{ if } t > 0 \text{ and } i=0,\\
+      S(i-1, t) \text{ or } S(i-1, t - x_i) & \text{ if } i > 0 \text{ and } x_i \le t, \\
+      S(i-1, t) & \text{ if } i > 0 \text{ and } x_i > t.
+    \end{cases}
+  \]
+% \end{lemma}
+
+\paragraph{correctness.} 
+The base cases of the recurrence relation are true by inspection.
+The rest holds by the reasoning above.
+That is, by definition $S(i, t)$ holds if and only if there is a subset of $\{1,\ldots,i\}$ yielding $t$.
+% [review 2026-09-27] fix: the case split for subproblem S(i,t) is on element i, not n; changed n to i in (A) and (B)
+This occurs if and only if (A) there is such a subset that \emph{doesn't} contain $i$,
+or (B) there is one that \emph{does} contain $i$.
+(A) occurs if and only if there is a subset of $\{1,\ldots,i-1\}$ yielding $t$,
+that is, if and only if $S(i-1, t)$ holds. 
+(B) occurs if and only if there is a subset of $\{1,\ldots,i-1\}$ yielding $t-x_i$,
+% [review 2026-09-27] fix: case (B) was equated with S(i-1,t); the subproblem for target t-x_i is S(i-1, t-x_i)
+that is, if and only if $x_i \le t$ and $S(i-1, t-x_i)$ holds.
+  
+\paragraph{run time.}
+There are $O(nT)$ subproblems, and for each the right-hand-side of the recurrence
+can be evaluated in constant time, so the total time for the algorithm
+(iterative, or recursive and memoized) is $O(nT)$.
+
+\begin{theorem}
+  There is an $O(nT)$-time algorithm for \prob{Subset Sum}.
+\end{theorem}
+
+\paragraph{reduction to finding a path in a graph.}
+Consider the graph with a vertex $v(i,t)$ for each subproblem $S(i, t)$,
+with edges representing the recurrence-relation dependencies as usual.
+The problem is then equivalent to asking whether this graph has a path from $v(0,0)$ to $v(n,T)$.
+
+\pythonCode{dynamic_programming/subset_sum.py}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

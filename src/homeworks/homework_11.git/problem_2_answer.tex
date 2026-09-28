@@ -1,0 +1,267 @@
+
+
+\newpage
+
+\paragraph{Problem 2 answer}\GradescopeComment{This should be on page 7 (top) of your PDF.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(a) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{3.5in}   % please don't edit this line, doing so will throw off the page layout 
+
+\paragraph{(a)}  
+
+% Define your reduction $r$
+% by defining, for every possible instance $(x=(x_1, x_2, \ldots, x_n), T)$ of  \prob{Subset Sum},
+% what output $r(x, T)$ the reduction gives.
+% The output will be a tuple $(G=(V, E), s, t, k)$.
+% Your definition must state precisely how $G$, $s$, $t$, and $k$ are defined for the given $(x, T)$.
+% \emph{Hint: Construct $G$ so its $s$-$t$ paths correspond to the subsets $S\subseteq\{1,\ldots,n\}$.}
+
+Fix an arbitrary \prob{Subset Sum} instance $(x=(x_1, x_2, \ldots, x_n), T)$.
+The output of the reduction $r$ on input $(x, T)$ is $r(x, T)=(G, s, t, k)$ where $G$, $s$, $t$ and $k$ are defined as follows.
+
+\bigskip 
+
+\begin{blue}
+
+  \REPLACEME
+  
+\end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(b) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{2in}   % please don't edit this line, doing so will throw off the page layout 
+
+\paragraph{(b)}  
+
+% Show that your reduction is a \emph{polynomial-time} reduction,
+% by explaining carefully how, given $(x, T)$, one can compute the output $r(x, T)=(G, s, t, k)$
+% in time polynomial in the input size $\Theta(n\log_2 T)$.
+
+\begin{blue}
+
+  \REPLACEME
+  
+\end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(c) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{3.2in}   % please don't edit this line, doing so will throw off the page layout 
+
+\paragraph{(c)}
+
+% Consider the example input $(x, T)$ with $x=(5, 9, 10, 20)$ and $T=29$.
+% Calculate the output $(G, s, t, k) = r(x, T)$ for this input.
+% Draw the resulting edge-weighted digraph.  What is $k$? 
+
+For the input $(x, T)$ with $x=(5, 9, 10, 20)$ and $T=29$,
+the output $r(x, T)$ of the reduction is as follows.
+% 
+The value of $k$ is
+\BLUE{
+  \REPLACEME
+.}
+
+Here is a drawing of the graph $G$:
+\smallskip
+
+\begin{center}
+\begin{blue}
+
+  \REPLACEME
+  
+    %   \begin{tikzpicture}[
+    %       vertex/.style={circle, inner sep=0pt, minimum width=15pt, draw}, 
+    %       label/.style={pos=0.5, fill=white, inner sep=2pt}, 
+    %       every path/.style={->}
+    %       ]
+
+    %     %% NODES 
+        
+    %     \node[vertex] (v0) {$v_0$}; 
+    %     \node[vertex] (v1) [right =of v0, yshift=0pt] {$v_1$}; 
+    %     \node[vertex] (v2) [right =of v1, yshift=0pt] {$v_2$}; 
+
+    %     %% EDGES AND EDGE WEIGHTS
+
+    %     \path (v0) edge[bend left=0] node [label] {1} (v1); 
+    %     \path (v1) edge[bend left=0] node [label] {2} (v2); 
+
+    %     \path (v0) edge[bend left=30] node [label] {3} (v2); 
+
+    %   \end{tikzpicture}
+
+    % Or you can delete the block above, and instead draw the forest by hand,
+    % scan it to a PDF, then include the PDF in your LaTeX document
+    % using these commands:
+
+    %   \includegraphics[height=2.5in,width=6in]{YOUR_FILE_NAME_HERE}   % FILE NAME WITHOUT THE .PDF EXTENSION
+
+    % See https://texblog.org/2012/02/23/crop-figures-with-includegraphics
+    % if you want to crop the included image.
+
+\end{blue}
+\end{center}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(d) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\newpage
+
+\paragraph{Problem 2 answer, continued}\GradescopeComment{This should be on page 8 (top) of your PDF.}
+
+\begin{answerBox}{2.8in}   % please don't edit this line, doing so will throw off the page layout
+  
+\paragraph{(d)}
+
+% Show the ``if'' direction.
+% Given an arbitrary \prob{Subset Sum} instance $(x, T)$,
+% let $G$, $s$, $t$, and $k$ be the output of your reduction $r$ given $(x, T)$.  That is, $(G, s, t, k) = r(x, T)$.
+% Describe carefully how, given any $s$-$t$ path $P$ in $G$ with $\weight P = k$,
+% one could obtain a subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$.
+
+Fix an arbitrary \prob{Subset Sum} instance $(x=(x_1, x_2, \ldots, x_n), T)$.
+% [review 2026-09-27] fix: K: reduction output written r(I) but the instance is (x, T) -> r(x, T)
+Let $G=(V,E)$, $s, t$, and $k$ be the output $r(x, T)$ of the reduction $r$ given $(x, T)$.
+Assume that $G$ has an $s$-$t$ path of weight $k$.
+Let $P$ be such a path.
+From $P$, a subset $S\subseteq \{1,\ldots, n\}$ such that $\sum_{i\in S} x_i = T$ can be obtained as follows.
+    
+\bigskip 
+
+\begin{blue}
+  \REPLACEME
+\end{blue}
+
+\bigskip 
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(e) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{1.5in}   % please don't edit this line, doing so will throw off the page layout 
+  
+\paragraph{(e)}
+
+% For the input $(x, T)$ from Part (b), the answer is \textsf{yes},
+% so, for $(G, s, t, k)=r(x, T)$, there should be an $s$-$t$ path in $G$ of weight $k$.
+% Draw such a path $P$ in $G$.
+% What is the subset $S\subseteq \{1,2,3,4\}$ corresponding to the path $P$?
+
+The value of $k$ is
+\BLUE{$
+  \REPLACEME
+  $.}
+
+An $s$-$t$ path of weight $k$ is \BLUE{\(P=(
+  \REPLACEME    % A comma-separated list of vertices.
+  )\)}
+
+The corresponding subset $S$ is \BLUE{\(S=\{
+  \REPLACEME                    % A comma-separated list of indices.
+\}\)}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2(f) ANSWER 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{answerBox}{2.5in}   % please don't edit this line, doing so will throw off the page layout 
+
+\paragraph{(f)} 
+
+% Now show the ``only if'' direction.
+% Given an arbitrary \prob{Subset Sum} instance $(x, T)$,
+% let $G=(V, E)$, $s$, $t$, and $k$ be the output of your reduction $r$ given $(x, T)$.  That is, $(G, s, t, k) = r(x, T)$.
+% Describe carefully how, given any subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$,
+% one could obtain from $S$ an $s$-$t$ path $P$ in $G$ with $\weight P = k$.
+
+Fix an arbitrary \prob{Subset Sum} instance $(x=(x_1,\ldots, x_n), T)$.
+Let $G=(V,E)$, $s, t$, and $k$ be the output $r(x, T)$ of the reduction $r$ given $(x, T)$.
+Assume that there is a subset $S\subseteq \{1,\ldots,n\}$ such that $\sum_{i\in S} x_i = T$.
+From $S$, an $s$-$t$ path $P$ with $\weight P = k$ can be obtained as follows.
+
+\bigskip 
+
+\begin{blue}
+  \REPLACEME 
+\end{blue}
+
+\end{answerBox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% 
+%% PROBLEM 2 COLLABORATORS AND CITATIONS 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\vfill
+
+\begin{answerBox}{2in}          % please don't edit this line, doing so will throw off the page layout
+  
+  \paragraph{Problem \arabic{problem} collaboration and citations}~\GradescopeComment
+  {This should be on page 8 (bottom) of your PDF.}
+
+  I collaborated on this problem with the following people:
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none
+    \end{itemize}
+  \end{blue}
+
+  My answers use ideas from the following sources (other than the lecture notes and textbooks): 
+  \begin{blue}
+    \begin{itemize}
+    \item \REPLACEME                    % write "none" if none
+    \end{itemize}
+  \end{blue}
+
+\end{answerBox}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "homework_11"
+%%% End:

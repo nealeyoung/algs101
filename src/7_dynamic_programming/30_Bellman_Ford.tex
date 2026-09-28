@@ -1,0 +1,107 @@
+
+\section{Single-Source Shortest Paths with Negative Weights}\label{dp: sec: BF}\doHeader{Shortest Paths w/ Negative Weights}
+
+\begin{mylist}
+\item[\bf input:]
+  An edge-weighted digraph $G=(V,E)$, and source vertex $s$.   (The weights can be negative.)
+  
+\item[\bf output:]
+  For each vertex $v\in V$, the shortest-path distance from $s$ to $v$.
+\end{mylist}
+
+
+\paragraph{subproblems and recurrence relation.}
+Fix an input instance $G=(V,E)$. 
+For each $w\in V$ and $i\in\{0, 1,2,\ldots,n-1\}$
+define $M(w, i)$
+to be the minimum weight of any $s$-to-$w$ path in $G$
+having exactly $i$ edges.
+(Notes: (i) If there is no such path, then $M(w, i) = \infty$.
+(ii) The path doesn't have to be simple.)
+The final answer is an array $d$
+% [review 2026-09-27] fix: stray variable u in "for all u,w in V" (only w is quantified); removed u
+where $d[w] = \min\big\{M(w, i) : i\in\{0,1,\ldots, n-1\}\big\}$ for all $w\in V$.
+% [review 2026-09-27] fix: Observation 5.7 assumes no negative cycles in the whole graph, but is applied assuming none reachable from s; added the clause "applied to the subgraph reachable from s"
+(If no negative-weight cycle is reachable from $s$, then by \noteLink{greedy}{greedy.simple}{Observation 5.7} of \LN{greedy}
+(applied to the subgraph of $G$ reachable from $s$)
+there is a shortest path from $s$ to $w$ that is simple, so has at most $n-1$ edges,
+so this will be the true shortest-path distance.)
+Here is the recurrence relation:
+\[M(w,i) =
+  \begin{cases}
+    0 & \text{if } i=0 \text{ and } w=s, \\
+    \infty & \text{if } i=0 \text{ and } w\ne s, \\
+    % \min\Big(M(w, i-1), 
+    \min \big\{ M(u, i-1) + \weight {u, w} \,\big|\, (u, w)\in E\big\} %\Big)
+    & \text{if } i > 0.
+  \end{cases}
+\]
+As usual we define the minimum of an empty set to be $\infty$.
+
+\paragraph{correctness.}
+For the first two (base) cases, the recurrence holds by inspection.
+For the main case of the recurrence ($i> 0$), the intuition is as follows.
+$M(w, i)$ is the minimum weight of any $i$-edge path from $s$ to $w$.
+As $i>0$, each such path consists of an $(i-1)$-edge path from $s$ to $u$, followed by the edge $(u, w)$, for some in-neighbor $u$ of $w$.
+For a given final edge $(u, w)$, among the $i$-edge paths ending in $(u, w)$,
+the shortest consists of a shortest $(i-1)$-edge path to $u$, followed by the edge $(u, w)$,
+so has weight $M(u, i-1) + \weight {u, w}$.
+
+\paragraph{time.}
+For a given $M(w, i)$, the time to evaluate the right-hand side of the recurrence
+is proportional to the in-degree of $w$, plus 1.
+Summing over the subproblems, the total time
+is proportional to $\sum_{i=0}^{n-1} \sum_{w\in V} 1+\textsf{in-degree}(w) = \sum_{i=0}^{n-1} n+m = n(n+m)$.
+So the algorithm (iterative, or recursive and memoized)
+takes time $\Theta(n(n+m))$, where $n=|V|$ and $m=|E|$.
+We can assume without loss of generality that $m=\Omega(n)$
+--- if not we can preprocess the graph to remove vertices that have no incident edges, after which $m \ge n/2$.
+Then this is $\Theta(nm)$.
+
+\begin{theorem}
+  There is an $O(nm)$-time algorithm for \prob{Single-Source Shortest Paths with Neg.~Wts}.
+\end{theorem}
+
+\paragraph{Detecting negative cycles.}
+The algorithm can be modified to detect negative-weight cycles reachable from $s$,
+if there are any, as follows.
+Recall that $d[v] = \min_{i\le n-1} M(v, i)$ is the $s$-to-$v$ distance as computed by the algorithm.
+The graph has a negative-weight cycle reachable from $s$ if and only if
+there is an edge $(u, w)$ such that $d[w] > d[u] + \weight {u, w}$.\footnote
+{By the reasoning above, if there is no such cycle, the algorithm computes distances correctly,
+  that is, $d[v] = \dist s v$ for all $v$.  This implies $d[w] \le d[u] + \weight {u ,w}$,
+  because $\dist s w \le \dist s u + \weight {u, w}$ for all $(u,w)$.
+
+  Conversely, suppose $d[w] \le d[u] + \weight {u, w}$ for all edges $(u,w)$.
+  Then $\weight{u, w} \ge d[w] - d[u]$.
+  For any cycle $C$ reachable from $s$,
+  summing this inequality over the edges in $C$ gives
+  \[\weight C = \sum_{(u,w) \in C} \weight{u,w} \ge \sum_{(u, w)\in C} d[w] - d[u] = 0.\]}
+
+\paragraph{Bellman-Ford algorithm.}
+The well-known and closely related Bellman-Ford algorithm achieves the same time bound.
+One variant of Bellman-Ford is as follows:
+\begin{myframed}
+  \begin{steps}
+  \item[] \textsf{Bellman-Ford}$(G=(V, E), s)$
+    \step initialize $d[s] = 0$ and $d[v] = \infty$ for $v\ne s$
+    \step for $j=1,2,\ldots, n-1$:
+    \step~~~for $w\in V$:
+    \step~~~~~~$d[w] = \min\big( d[w],\, \min\{ d[u] + \weight{u,w} : (u, w)\in E\} \big)$
+    \step return $d$
+  \end{steps}
+\end{myframed}
+
+To show correctness, we can use a similar argument to show by induction on $j$ that,
+after each iteration $j$, for all vertices $v\in V$,
+(i) $d[v]$ is \emph{at most} $\min_{i\le j} M(v, i)$ and
+(ii) $d[v]$ is the weight of some $s$-to-$v$ path.
+It follows that, if the graph has no negative cycles reachable from $s$,
+then, after iteration $n-1$, $d[v] = \dist s v$ for all $v\in V$.
+
+\pythonCode{dynamic_programming/Bellman_Ford.py}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:

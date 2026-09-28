@@ -1,0 +1,68 @@
+
+\section{Additional exercises on Divide and Conquer}\doHeader{Exercises}
+
+Each previous section of this note also contains at least one exercise.
+
+\paragraph{External exercises with solutions}
+
+\begin{itemize}
+\item \KT Page 242, Solved Exercises 1 and 2 (divide-and-conquer algorithms)
+\end{itemize}
+ 
+\paragraph{Exercise without solution}
+
+\newcommand{\seg}[2]{#1\!\to\! #2}
+
+\exercise \emph{(\prob{Recursive Bus Routes})}
+You have been commissioned to design a new bus system that will run along Huntington Avenue.  The bus system must provide service to $n$ stops (numbered $1,2,\ldots,n$) on the eastbound route.  Commuters may begin their trip at any stop $i$ and end at any step $j$ where $1\le i < j \le n$.  Here are some naive ways to design the system:
+\begin{itemize}
+\item You could have a bus run from stop 1 to stop $n$, stopping at every stop in between. The system would be cheap because it would only require $n-1$ route segments, $\{\seg 1 2, \seg 2 3, \ldots, \seg{(n-1)}n\}$, for the entire system. However, a person traveling from stop $1$ to stop $n$ would have to wait while the bus makes $n-1$ stops.
+
+\item You could have, for every pair of stops $i, j$ with $i < j$, a special express bus from $i$ to $j$.
+  No commuter would ever have to make more than one stop.
+  However, this system would be expensive as it requires ${n \choose 2} = \Theta(n^2)$ route segments,
+  $\{\seg i j : 1\le i < j \le n\}$.
+  
+\end{itemize}
+
+Using divide and conquer, you will find a compromise --- a set $S(n)$ of $\Theta(n \log n)$ route segments, with the property that a user can get from any stop $i$ to any stop $j > i$ using at most two segments in $S(n)$.
+That is, \emph{for every $i$ and $j$ with $1\le i< j\le n$, either the (direct) route segment $\seg i j$ is in $S(n)$,
+or, for some $m$ with $i<m<j$, the set $S(n)$ contains the two segments $\seg i m$ and  $\seg m j$.}
+
+\begin{enumerate}[label=(\alph*)]
+\item For each base case $n\in\{1,2\}$, describe a set $S(n)$ with these properties, and having size $n-1$.
+
+\item For each $n>2$,
+  give a definition for a set $T(n)$ of at most $n$ route segments such that,
+  for every pair of stops $(i, j)$ where $i$ is in the first half ($1\le i \le \ceil{n/2}$)
+  and $j$ is in the second half ($\ceil{n/2} < j \le n$),
+  a commuter can get from $i$ to $j$
+  using one or two segments in $T(n)$.
+
+\item For each $n>2$, give a definition for a full set $S(n)$ as in the problem statement.
+% [review 2026-09-27] fix: the partial solution defined in part (b) is named T(n), not M(n)
+(Extend the partial solution $T(n)$ by recursing twice, once on the first half and again on the second half.)
+
+\item Let $N(n) = |S(n)|$ (the number of segments in $S(n)$).
+  Give a recurrence relation for $N(n)$.  Use the the recursion-tree method to solve it.
+  % [review 2026-09-27] fix: cross-reference pointed to Exercise 4.4 (dc: exercise: recursion), which only refers back; the work to show, (i)-(v), is described in Exercise 4.2 (dc: exercise: recursion tree with solution)
+  Show your work as described for Exercise~\ref{dc: exercise: recursion tree with solution}.
+
+\end{enumerate}
+
+
+\paragraph{External exercises without solutions}\!\!\!\!\!\footnote
+{As mentioned in \LN{prelim}, solutions for exercises in \KT and some in \CLRS can be found online.}
+
+\begin{itemize}
+\item \KT Exercises 1--7 (Page 246).  \DPV 2.1--2.32 (Page 83). LLM 22.1--22.4 (Page 1017).
+\item \CLRS Exercises in Section 4.1 (Page 74), and Problems 4--1 through 4--6 (Page 107).
+\item \JE Chapter 1 Exercises 1--41 (Page 44)
+\end{itemize}
+ 
+\paragraph{External sources on Divide and Conquer:} See the previous sections, especially~Section~\ref{dc: sec: refs}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "divide_and_conquer"
+%%% End:

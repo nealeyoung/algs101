@@ -1,0 +1,177 @@
+
+\section{Longest Common Subsequence (with long-form proof)}\label{dp: sec: LCS}\doHeader{Longest Common Subsequence}
+
+\begin{mylist}
+\item[\bf input:]
+  A pair $I=(A[1..m], B[1..n])$ of sequences.
+
+\item[\bf output:]
+  The length of the longest common subsequence of $A$ and $B$.
+  (That is, the longest sequence that is a subsequence of both $A$ and $B$.)
+\end{mylist}
+
+\noindent
+Here is the algorithm. Fix any input instance $(A[1..m], B[1..n])$.
+
+\paragraph{subproblems and recurrence.}
+For each pair $(i, j)$ with $i\in\{0,1,\ldots, m\}$ and $j\in\{0,1,\ldots,n\}$,
+define $L[i, j]$ to be the length of the longest common subsequence
+between $A[1..i]$ and $B[1..j]$.  (The first $i$ elements in $A$,
+and the first $j$ elements in $B$.)  The final answer is $L(m, n)$.
+Here is the recurrence relation:
+\[\displaystyle L(i, j) =
+  \begin{cases}
+    0 & \text{ if } i=0 \text{ or } j=0,  \\
+    1 + L(i-1, j-1) & \text{ if } i, j > 0 \text{ and } A[i] = B[j], \\
+    \max (L(i-1, j), L(i, j-1)) & \text{ if } i, j > 0 \text{ and } A[i] \ne B[j].
+  \end{cases}\]
+
+\paragraph{correctness.}
+The intuition is as follows.
+In the case that $A[i] = B[j]$,
+there is a longest common subsequence of $A[1..i]$ and $B[1..j]$
+that ends in the common final element $A[i]$,
+and, before that final element, consists of
+a longest common subsequence of $A[1..i-1]$ and $B[1..j-1]$
+(of length $L(i-1, j-1)$).
+So in that case, $L(i,j) = 1 + L(i-1, j-1)$.
+
+In the case that $A[i] \ne B[j]$,
+every common subsequence $y$ of $A[1..i]$ and $B[1..j]$
+either (i) doesn't end with $A[i]$, or (ii) doesn't end with $B[j]$ (or both).
+In Case (i), $y$ is a common subsequence of $A[1..i-1]$ and $B[1..j]$.  
+In Case (ii), $y$ is a common subsequence of $A[1..i]$ and $B[1..j-1]$.  
+Thus, the set of common subsequences of $A[1..i]$ and $B[1..j]$
+is the union of two (not necessarily disjoint) subsets:
+\begin{mylist}
+\item[(i)] the set of common subsequences of $A[1..i-1]$ and $B[1..j]$, and 
+\item[(ii)] the set of common subsequences of $A[1..i]$ and $B[1..j-1]$.
+\end{mylist}
+So the length of the longest common subsequence of $A[1..i]$ and $B[1..j]$
+is the length of the longest sequence in these two subsets.
+That is, $L(i,j) = \max(L(i-1, j), L(i, j-1))$.
+A long-form proof of correctness is on the next page.
+
+\paragraph{time.}
+There are $(n+1)\cdot(m+1) = O(nm)$ subproblems,
+and for each, the right-hand side of the recurrence takes
+constant time to evaluate
+(assuming the smaller subproblems are already solved).
+So algorithm (iterative, or recursive and memoized)
+takes time $\Theta(nm)$.
+
+\begin{theorem}
+  There is an $O(nm)$-time algorithm for \prob{Longest Common Subsequence}.
+\end{theorem}
+
+\paragraph{reduction to Longest Path.}
+The problem is equivalent an instance of \prob{Longest Path}
+on a graph with a vertex $v_{ij}$ for each subproblem $L(i,j)$,
+and an edge for each dependency in the recurrence relation
+(with appropriate weight, 1 or 0).
+
+
+% \paragraph{External sources on \prob{Longest Common Subsequence}}
+
+% \newcommand{\URL}[1]{\par-- \parbox[t]{0.8\textwidth}{\url{#1}} \medskip\par}
+
+% \begin{itemize}\small
+% \item CLRS Section 15.4.  MIT lecture video:
+%   \URL{https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/video-lectures/lecture-15-dynamic-programming-longest-common-subsequence/}
+
+% \end{itemize}
+
+\continued
+
+\subsection*{Long-form proof of correctness for Longest Common Subsequence}
+
+Here's a long-form proof that the recurrence relation is correct.
+
+\begin{longFormProof}
+  \step Consider any pair $(i, j)$ with $i\in\{0,\ldots,m\}$ and $j\in\{0,\ldots, n\}$.
+  \begin{block}[dp: C1]
+    \step \underline{Case 1.}
+    Consider the case that $0\in \{i, j\}$. ($A[1..i]$ or $B[1..j]$ is the empty sequence.)
+    \step The only common subsequence is the empty one,
+    so $L(i, j) = 0$, and the recurrence is correct.
+  \end{block}
+  \begin{block}[dp: C2]
+    \step \underline{Case 2.}
+    Otherwise $i \ge 1$ and $j \ge 1$.
+    % \step So neither $A[1..i]$ nor $B[1..j]$ is the empty sequence.
+    \begin{block}[dp: C21]
+      \step \underline{Case 2.1.}
+      First consider the sub-case when $A[i] = B[j]$.
+      \step \underline{We first show that $L(i, j) \ge L(i-1, j-1) + 1$.}
+      \step Let $x = (x_1, x_2, \ldots, x_\ell)$ be a common subsequence
+      of $A[1..i-1]$ and $B[1..j-1]$, of length $L(i-1, j-1)$
+      (it exists by definition of $L$).
+      \step Let $x' = (x_1, x_2, \ldots, x_\ell, A[i])$ be obtained by appending $A[i]$ to $x$.
+      \step Since $A[i] = B[j]$, $x'$ is a subsequence of both $A[1..i]$ and $B[1..j]$.
+      \step[dp: GE1] So $L(i, j) \ge |x'| = L(i-1, j-1) + 1$.
+
+      \smallskip
+      \step \underline{Next we show $L(i, j) \le L(i-1, j-1) + 1$.}
+      \step Let $y = (y_1, y_2, \ldots, y_k)$ be a common subsequence
+      of $A[1..i]$ and $B[1..j]$, of length $L(i, j)$.
+
+      \step Let $y'=(y_1, y_2, \ldots, y_{k-1})$ be obtained from $y$ by removing the last element.
+      \step Sequence $y$ is a subsequence of $A[1..i]$,
+      so $y'$ is a subsequence of $A[1..i-1]$.  (Verify!)
+      \step Similarly, $y'$ is a subsequence of $B[1..j-1]$.
+      \step So $y'$ is a common subsequence of $A[1..i-1]$ and $B[1..j-1]$.
+      \step So $L(i-1, j-1)$ is at least $|y'| = L(i,j) - 1$.
+      Rearranging gives $L(i,j) \le L(i-1, j-1) + 1$.
+      \smallskip
+      \step By this and Step~\ref{dp: GE1}, $L(i,j) = L(i-1, j-1) + 1$.
+      \step \underline{So $L(i,j)$ equals the right-hand side of the recurrence
+        in Case 2.1 (when $A[i]= B[j]$).}
+    \end{block}
+    \smallskip
+    \begin{block}[dp: C22]
+      \step \underline{Case 2.2.}
+      In the remaining sub-case $A[i] \ne B[j]$.
+      \smallskip
+      \step \underline{First we show $L(i, j) \ge \max(L(i-1, j), L(i, j-1))$.}
+      \step Let $z$ be a common subsequence
+      of $A[1..i-1]$ and $B[1..j]$ of length $L(i-1, j)$.
+      % [review 2026-09-27] fix: z is a common subsequence of the prefixes A[1..i] and B[1..j], not of the single elements A[i] and B[j]
+      \step Then $z$ is also a common subsequence of $A[1..i]$ and $B[1..j]$.
+      \step So $L(i, j) \ge |z| = L(i-1, j)$.
+      \step[dp: GE2] By a symmetric argument,  $L(i, j) \ge L(i, j-1)$.
+      So $L(i,j) \ge \max(L(i-1, j), L(i, j-1))$.
+      \smallskip
+      \step \underline{Next we show that $L(i, j) \le \max(L(i-1, j), L(i, j-1))$.}
+      \step Let $y=(y_1, y_2, \ldots, y_\ell)$ be a common subsequence
+      of $A[1..i]$ and $B[1..j]$ of length $L(i,j)$.
+      \begin{block}[dp: C221]
+        \step \underline{Case 2.2.1} First consider the case that $y_\ell \ne A[i]$.
+        \step Then $y$ must be a subsequence of $A[1..i-1]$ (as well as $B[1..j]$).
+        \step So $L(i-1, j) \ge |y| = L(i, j)$.  That is $L(i, j) \le L(i-1, j)$.
+        \step So $L(i, j) \le \max( L(i-1, j), L(i, j-1))$.
+      \end{block}
+      \begin{block}[dp: C222]
+        \step \underline{Case 2.2.2} Otherwise (since $A[i] \ne B[j]$)
+        it must be that $y_\ell \ne B[j]$.
+        \step By an argument symmetric to the one in Case 2.2.1, $L(i, j) \le L(i, j-1)$.
+        \step So $L(i, j) \le \max( L(i-1, j), L(i, j-1))$.
+      \end{block}
+      \step By Blocks~\ref{dp: C221} and~\ref{dp: C222},  $L(i, j) \le \max( L(i-1, j), L(i, j-1))$.
+      \step By this and Step~\ref{dp: GE2},  $L(i, j) = \max( L(i-1, j), L(i, j-1))$.
+      \step \underline{So $L(i,j)$ equals the right-hand side of the recurrence in Case 2.2
+        ($A[i] \ne B[j]$).}
+    \end{block}
+    \step By Blocks~\ref{dp: C21} and~\ref{dp: C22},
+    $L(i,j)$ equals the right-hand side of the recurrence in Case 2
+    ($0\not\in \{i, j\}$).
+  \end{block}
+  \step By Blocks~\ref{dp: C1} and~\ref{dp: C2},
+  $L(i,j)$ equals the right-hand side of the recurrence (for any $i$, $j$).
+\end{longFormProof}
+
+\pythonCode{dynamic_programming/longest_common_subsequence.py}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "dynamic_programming"
+%%% End:
