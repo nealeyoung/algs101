@@ -58,6 +58,14 @@ cat > "$SITE/index.html" <<HTML
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lecture notes on Algorithms</title>
+<!-- Google Analytics: page views and pdf/zip clicks (enhanced measurement) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YHVWLMQRMT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YHVWLMQRMT');
+</script>
 <style>ol.homeworks > li { margin-bottom: 1.2em; }</style></head>
 <body style="font-family: system-ui, sans-serif; max-width: 42em; margin: 2em auto; padding: 0 1em; line-height: 1.5;">
 <h1>Lecture notes on Algorithms</h1>
