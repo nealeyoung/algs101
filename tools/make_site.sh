@@ -63,7 +63,7 @@ cat > "$SITE/index.html" <<HTML
 <h1>Lecture notes on Algorithms</h1>
 <p>These notes are for an undergraduate course on algorithms, covering the usual topics, but with more of an emphasis on learning to do proofs than is found in most courses. We take the perspective that being able to verify correctness (via detailed proofs) is an integral part of learning to design algorithms.</p>
 <p>draft of $(date '+%B %-d, %Y'), by N. Young. Built from <a href="https://github.com/nealeyoung/algs101">github.com/nealeyoung/algs101</a>.</p>
-<h2>Lecture notes</h2>
+<h2>Notes (PDF)</h2>
 <ol>$notes</ol>
 <ul>$appendices<li><a href="lecture_notes_on_algorithms.pdf">All lecture notes, as one book (PDF)</a></li></ul>
 <h2>Homework assignments</h2>
