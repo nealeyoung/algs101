@@ -268,7 +268,7 @@
   \title{Lecture Note #1\\ #2}
   % a note's \LNabstract, if it defines one before \doTitle, goes right below the title
   \date{\ifdefined\LNabstract\parbox{0.85\textwidth}{\normalsize\normalfont\LNabstract}\\[3ex]\fi
-    draft of \today, by N.~Young\\[2ex] {\small\copyrightNotice}}
+    draft of \today, by \href{\authorURL}{N.~Young}\\[2ex] {\small\copyrightNotice}}
   \maketitle
   {\small
     \hypertarget{TOC}{}
@@ -421,8 +421,9 @@
   \forcsvlist{\codefile}{#1}}
 % the copyright notice, for title pages and the homework first pages
 \newcommand{\licenseURL}{https://github.com/nealeyoung/algs101/blob/main/LICENSE}
+\newcommand{\authorURL}{https://www.cs.ucr.edu/\string~neal}
 \newcommand{\copyrightNotice}{%
-  \copyright\ 2018--2026 Neal E. Young.
+  \copyright\ 2018--2026 \href{\authorURL}{Neal E. Young}.
   Text: CC BY-NC-SA 4.0; code: MIT; except where noted.
   See \url{\licenseURL}.}
 % the published site: PDFs of the notes, and the homework assignments and templates

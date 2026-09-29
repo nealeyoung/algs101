@@ -70,7 +70,7 @@ cat > "$SITE/index.html" <<HTML
 <body style="font-family: system-ui, sans-serif; max-width: 42em; margin: 2em auto; padding: 0 1em; line-height: 1.5;">
 <h1>Lecture notes on Algorithms</h1>
 <p>These notes are for an undergraduate course on algorithms, covering the usual topics, but with more of an emphasis on learning to do proofs than is found in most courses. We take the perspective that being able to verify correctness (via detailed proofs) is an integral part of learning to design algorithms.</p>
-<p>draft of $(date '+%B %-d, %Y'), by N. Young. Built from <a href="https://github.com/nealeyoung/algs101">github.com/nealeyoung/algs101</a>.</p>
+<p>draft of $(date '+%B %-d, %Y'), by <a href="https://www.cs.ucr.edu/~neal">N. Young</a>. Built from <a href="https://github.com/nealeyoung/algs101">github.com/nealeyoung/algs101</a>.</p>
 <h2>Notes (PDF)</h2>
 <ol>$notes</ol>
 <ul>$appendices<li><a href="lecture_notes_on_algorithms.pdf">All lecture notes, as one book (PDF)</a></li></ul>
@@ -80,7 +80,7 @@ cat > "$SITE/index.html" <<HTML
 <p>The Python code, on GitHub (<a href="https://github.com/nealeyoung/algs101/tree/main/src/code">all files</a>),
 by lecture note.  Each lecture note also lists its code in its last section.</p>
 <ul>$code</ul>
-<p style="margin-top: 2em; font-size: 90%; color: #555;">&copy; 2018&ndash;2026 Neal E. Young.
+<p style="margin-top: 2em; font-size: 90%; color: #555;">&copy; 2018&ndash;2026 <a href="https://www.cs.ucr.edu/~neal">Neal E. Young</a>.
 The notes and homeworks are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
 and the code under the MIT License, except where noted; see <a href="https://github.com/nealeyoung/algs101/blob/main/LICENSE">LICENSE</a>.</p>
 </body>

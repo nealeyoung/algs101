@@ -1,6 +1,6 @@
 # Lecture notes on Algorithms
 
-Lecture notes on the design and analysis of algorithms, by Neal E. Young,
+Lecture notes on the design and analysis of algorithms, by [Neal E. Young](https://www.cs.ucr.edu/~neal),
 with Python code for many of the algorithms and LaTeX templates for homework
 assignments.
 
@@ -34,7 +34,7 @@ answer should be, and the student ID in the running head.
 
 ## License
 
-&copy; 2018&ndash;2026 Neal E. Young.  The notes and homeworks are licensed under
+&copy; 2018&ndash;2026 <a href="https://www.cs.ucr.edu/~neal">Neal E. Young</a>.  The notes and homeworks are licensed under
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) and the code
 under the MIT License, except for the third-party figures noted in
 [LICENSE](LICENSE).
