@@ -62,7 +62,7 @@ cat > "$SITE/index.html" <<HTML
 <body style="font-family: system-ui, sans-serif; max-width: 42em; margin: 2em auto; padding: 0 1em; line-height: 1.5;">
 <h1>Lecture notes on Algorithms</h1>
 <p>These notes are for a typical undergraduate course on algorithms, covering the usual topics, but with more of an emphasis on learning to do proofs than is found in most courses. We take the perspective that being able to verify correctness (via detailed proofs) is an integral part of learning to design algorithms.</p>
-<p>Neal E. Young. Built from <a href="https://github.com/nealeyoung/algs101">github.com/nealeyoung/algs101</a>.</p>
+<p>By Neal E. Young. Built from <a href="https://github.com/nealeyoung/algs101">github.com/nealeyoung/algs101</a>.</p>
 <h2>Lecture notes</h2>
 <ol>$notes</ol>
 <ul>$appendices<li><a href="lecture_notes_on_algorithms.pdf">All lecture notes, as one book (PDF)</a></li></ul>
