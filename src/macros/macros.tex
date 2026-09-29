@@ -266,7 +266,9 @@
   \renewcommand{\theequation}{#1.\arabic{equation}}
   \LNtocWidths
   \title{Lecture Note #1\\ #2}
-  \date{draft of \today, by N.~Young\\[2ex] {\small\copyrightNotice}}
+  % a note's \LNabstract, if it defines one before \doTitle, goes right below the title
+  \date{\ifdefined\LNabstract\parbox{0.85\textwidth}{\normalsize\normalfont\LNabstract}\\[3ex]\fi
+    draft of \today, by N.~Young\\[2ex] {\small\copyrightNotice}}
   \maketitle
   {\small
     \hypertarget{TOC}{}
